@@ -64,19 +64,11 @@ SER_STR("ProductVendor", 1, 1),
 SER_STR("ProductVersion", 1, 1),
 SER_END_ITEMS("IdentifyResponse", wsmid_identify);
 
-typedef struct {
-	const char *server;
-	int port;
-	const char *path;
-	const char *scheme;
-	const char *username;
-	const char *password;
-} ServerData;
 
-ServerData sd[] = {
-	{"localhost", 8889, "/wsman", "http", "wsman", "secret"}
-};
-
+static char  vendor = 0;
+static char version = 0;
+static char protocol = 0;
+static char *endpoint = NULL;
 
 int main(int argc, char** argv)
 {
@@ -84,13 +76,55 @@ int main(int argc, char** argv)
     WsManClient *cl;
     WsXmlDocH doc;
     actionOptions options;
+    char retval = 0;
+    u_error_t *error = NULL;
+
+    u_option_entry_t opt[] = {
+    { "product",	'p',	U_OPTION_ARG_NONE,	&vendor,
+		"Print Product Vendor",	NULL },
+    { "version",	'v',	U_OPTION_ARG_NONE,	&version,
+		"Print Product Version",	NULL  },
+    { "protocol",	'P',	U_OPTION_ARG_NONE,	&protocol,
+		"Print Protocol Version",	NULL  },
+    { "endpoint",	'u',	U_OPTION_ARG_STRING,	&endpoint,
+		"Endpoint in form of a URL", "<uri>" },
+    { NULL }
+    };
+
+    u_option_context_t *opt_ctx;	
+    opt_ctx = u_option_context_new("");
+    u_option_context_set_ignore_unknown_options(opt_ctx, FALSE);
+    u_option_context_add_main_entries(opt_ctx, opt, "wsmid_identify");
+    retval = u_option_context_parse(opt_ctx, &argc, &argv, &error);
+
+    u_option_context_free(opt_ctx);
+
+    if (error) {
+      if (error->message)
+        printf ("%s\n", error->message);
+      u_error_free(error);
+      return 1;
+    }
+    u_error_free(error);
+
+
+    u_uri_t *uri;
+    if (endpoint) {
+      u_uri_parse((const char *)endpoint, &uri);
+    }
+    if (!endpoint || !uri) {
+      fprintf(stderr, "endpoint option required\n");
+      return 1;
+    }
+
+
     wsman_client_transport_init(NULL);
-    cl = wsman_create_client( sd[0].server,
-        sd[0].port,
-        sd[0].path,
-        sd[0].scheme,
-        sd[0].username,
-        sd[0].password);		
+    cl = wsman_create_client( uri->host,
+        uri->port,
+        uri->path,
+        uri->scheme,
+        uri->user,
+        uri->pwd);		
     initialize_action_options(&options);
 
 
@@ -98,20 +132,28 @@ int main(int argc, char** argv)
 
     WsXmlNodeH soapBody = ws_xml_get_soap_body(doc);
     if (ws_xml_get_child(soapBody, 0, XML_NS_WSMAN_ID, "IdentifyResponse")) {
-         wsmid_identify *id = ws_deserialize(
-                cl->wscntx,
-                soapBody,
-                wsmid_identify_TypeInfo,
-                "IdentifyResponse",
-                XML_NS_WSMAN_ID,
-                XML_NS_WSMAN_ID,
-                0,
-                0);
-        printf(" Vendor: %s\n", id->ProductVendor);
-        printf(" Version: %s\n", id->ProductVersion);
-        printf(" Protocol Version: %s\n", id->ProtocolVersion);
-    }
+         wsmid_identify *id = ws_deserialize(cl->wscntx, soapBody,
+                                             wsmid_identify_TypeInfo,"IdentifyResponse",
+                                             XML_NS_WSMAN_ID, XML_NS_WSMAN_ID,
+                                             0,
+                                             0);
+    
+         if (vendor)
+           printf("%s\n", id->ProductVendor);
+         if (version)
+           printf("%s\n", id->ProductVersion);
+         if (protocol)
+           printf("%s\n", id->ProtocolVersion);
 
+         if (!protocol && !vendor && !version ) {
+           printf("%s %s supporting protocol %s\n", id->ProductVendor, id->ProductVersion,id->ProtocolVersion);
+         }
+           
+    }
+    if (uri) {
+      u_uri_free(uri);
+    }
+    
     if (doc) {			
         ws_xml_destroy_doc(doc);
     }
