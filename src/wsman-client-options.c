@@ -43,11 +43,9 @@
 
 #include "wsman-xml-api.h"
 #include "wsman-soap.h"
-#include "wsman-errors.h"
 #include "wsman-client-transport.h"
 #include "wsman-client-options.h"
 #include "wsman-debug.h"
-#include "wsman.h"
 
 #if 0
 static char *auth_methods[] = {

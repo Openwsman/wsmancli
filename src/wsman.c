@@ -52,7 +52,6 @@
 #include "wsman-client.h"
 #include "wsman-debug.h"
 #include "wsman-client-options.h"
-#include "wsman.h"
 #include "wsman-client-transport.h"
 
 
