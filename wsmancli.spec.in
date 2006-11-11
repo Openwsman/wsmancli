@@ -1,0 +1,35 @@
+Name:           wsmancli
+Version:       @PACKAGE_VERSION@
+Release:        1
+License:        BSD
+Url:            http://www.openwsman.org/
+Source:         %{name}-%{version}.tar.gz
+BuildRoot:      %{_tmppath}/%{name}-%{version}-build
+Group:          Applications/Management
+BuildRequires:  openwsman-devel
+Requires:       openwsman
+Summary:        Opensource Implementation of WS-Management - Command line Utility
+
+
+%description
+Part of openwsman, an Opensource Implementation of WS-Management 
+
+
+
+%prep
+%setup
+
+%build
+%configure 
+make
+
+%install
+make DESTDIR=%{buildroot} install
+%clean
+rm -rf "$RPM_BUILD_ROOT"
+
+%files
+%defattr(-,root,root)
+%{_bindir}/wsman
+%{_bindir}/wsmid_identfy
+

@@ -146,6 +146,7 @@ int main(int argc, char** argv)
            printf("%s\n", id->ProtocolVersion);
 
          if (!protocol && !vendor && !version ) {
+             printf("\n");
            printf("%s %s supporting protocol %s\n", id->ProductVendor, id->ProductVersion,id->ProtocolVersion);
          }
            

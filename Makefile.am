@@ -1,6 +1,6 @@
 SUBDIRS = src
 
 package: dist
-	cp openwsman.spec /usr/src/packages/SPEC
-	cp openwsman-*.tar.gz /usr/src/packages/SOURCES
-	rpmbuild -ba openwsman.spec
+	cp wsmancli.spec /usr/src/packages/SPEC
+	cp wsmancli-*.tar.gz /usr/src/packages/SOURCES
+	rpmbuild -ba wsmancli.spec

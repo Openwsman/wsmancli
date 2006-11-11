@@ -14,8 +14,7 @@ wsmid_identify_LDADD = \
 
 wsman_SOURCES = wsman.c \
 		wsman-client-options.c \
-		wsman-client-options.h \
-		wsman.h 
+		wsman-client-options.h 
 
 wsmid_identify_SOURCES = \
 		wsmid_identify.c
