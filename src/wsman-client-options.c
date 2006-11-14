@@ -89,6 +89,7 @@ static char *cim_namespace = NULL;
 static char *fragment = NULL;
 static char *wsm_filter = NULL;
 static char *wsm_dialect = NULL;
+static char *selectors = NULL;
 
 static unsigned long operation_timeout = 0;
 static unsigned long max_envelope_size = 0;
@@ -168,6 +169,8 @@ char wsman_parse_options(int argc, char **argv)
 		"maximal envelope size" ,	"<size>" },
     { "fragment",	'F',	U_OPTION_ARG_STRING,	&fragment,
 		"Fragment (Supported Dialects: XPATH)" , "<fragment>" },
+    { "selectors", 's', U_OPTION_ARG_STRING, &selectors,
+        "Selectors for fetching", "<name1=val1&name2=val2...>"},
     { NULL }
   };
 
@@ -444,6 +447,10 @@ char * wsman_options_get_fragment (void)
 char * wsman_options_get_filter (void)
 {	
   return wsm_filter;
+}   
+char * wsman_options_get_selectors(void)
+{   
+  return selectors;
 }   
 char * wsman_options_get_dialect (void)
 {	

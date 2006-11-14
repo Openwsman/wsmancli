@@ -191,6 +191,10 @@ int main(int argc, char** argv)
   if (wsman_options_get_dialect()) {
     options.dialect = wsman_options_get_dialect();
   }
+  if (wsman_options_get_selectors()) {
+    wsman_add_selectors_from_query_string(&options,
+                wsman_options_get_selectors());
+  }
 
   options.properties = wsman_options_get_properties();
   options.cim_ns = wsman_options_get_cim_namespace();
