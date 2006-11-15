@@ -1,16 +1,16 @@
 AM_CFLAGS = @CFLAGS@
 
 wsman_CFLAGS = \
-	       $(WSMAN_CFLAGS)
+	       $(OPENWSMAN_CFLAGS)
        
 wsman_LDADD = \
-       $(WSMAN_LIBS)
+       $(OPENWSMAN_LIBS) -lcurl
 
 wsmid_identify_CFLAGS = \
-	       $(WSMAN_CFLAGS)
+	       $(OPENWSMAN_CFLAGS)
        
 wsmid_identify_LDADD = \
-       $(WSMAN_LIBS)
+       $(OPENWSMAN_LIBS) -lcurl
 
 wsman_SOURCES = wsman.c \
 		wsman-client-options.c \
