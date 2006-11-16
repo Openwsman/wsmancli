@@ -39,10 +39,7 @@
 #include <unistd.h>
 
 #include "u/libu.h"
-
-
-#include "wsman-xml-api.h"
-#include "wsman-soap.h"
+#include "wsman-client-api.h"
 #include "wsman-client-transport.h"
 #include "wsman-client-options.h"
 #include "wsman-debug.h"
