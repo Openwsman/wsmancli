@@ -198,7 +198,7 @@ int main(int argc, char** argv)
 
   switch (op) {
   case  WSMAN_ACTION_TEST:
-    rqstDoc = ws_xml_read_file(ws_context_get_runtime(cl->wscntx),
+    rqstDoc = wsman_client_read_file(cl,
                                wsman_options_get_test_file(), "UTF-8", 0);
     wsman_send_request(cl, rqstDoc);
     doc = wsman_build_envelope_from_response(cl);
@@ -305,7 +305,7 @@ int main(int argc, char** argv)
         doc = wsenum_pull(cl, resource_uri, enumContext, options);
  
         wsman_output(doc);
-        if (cl->response_code != 200) {
+        if (wsman_get_client_response_code(cl) != 200) {
           break;
         }
         enumContext = wsenum_get_enum_context(doc);
@@ -321,9 +321,9 @@ int main(int argc, char** argv)
     retVal = 1;
   }
 
-  if (cl->response_code != 200) {
+  if (wsman_get_client_response_code(cl) != 200) {
     fprintf(stderr, "Connection failed. response code = %ld\n",
-            cl->response_code);
+            wsman_get_client_response_code(cl));
   }
 
   destroy_action_options(&options);

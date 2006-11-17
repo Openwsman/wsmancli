@@ -128,12 +128,12 @@ int main(int argc, char** argv)
 
     WsXmlNodeH soapBody = ws_xml_get_soap_body(doc);
     if (ws_xml_get_child(soapBody, 0, XML_NS_WSMAN_ID, "IdentifyResponse")) {
-         wsmid_identify *id = ws_deserialize(cl->wscntx, soapBody,
-                                             wsmid_identify_TypeInfo,"IdentifyResponse",
-                                             XML_NS_WSMAN_ID, XML_NS_WSMAN_ID,
-                                             0,
-                                             0);
-    
+         wsmid_identify *id = ws_deserialize(wsman_client_get_context(cl),
+                                     soapBody,
+                                     wsmid_identify_TypeInfo,"IdentifyResponse",
+                                     XML_NS_WSMAN_ID, XML_NS_WSMAN_ID,
+                                     0, 0);
+
          if (vendor)
            printf("%s\n", id->ProductVendor);
          if (version)
