@@ -104,21 +104,9 @@ TestData get_tests[] = {
     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
     "CreationClassName=OpenWBEM_UnitaryComputerSystem&Name=%sx",
     "/s:Envelope/s:Body/s:Fault/s:Code/s:Subcode/s:Value",
-    "wsman:InvalidSelectors",
+    "wsa:DestinationUnreachable",
     "/s:Envelope/s:Body/s:Fault/s:Detail/wsman:FaultDetail",
-    "http://schemas.dmtf.org/wbem/wsman/1/wsman/faultDetail/InvalidValue",
-    500,
-    0,
-    0
-  },
-  {
-    "Transfer Get with all selectors but with wrong values 2.",
-    "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
-    "CreationClassName=OpenWBEM_UnitaryComputerSystemx&Name=%s",
-    "/s:Envelope/s:Body/s:Fault/s:Code/s:Subcode/s:Value",
-    "wsman:InvalidSelectors",
-    "/s:Envelope/s:Body/s:Fault/s:Detail/wsman:FaultDetail",
-    "http://schemas.dmtf.org/wbem/wsman/1/wsman/faultDetail/InvalidValue",
+    "http://schemas.dmtf.org/wbem/wsman/1/wsman/faultDetail/InvalidResourceURI",
     500,
     0,
     0
@@ -205,8 +193,6 @@ static void transfer_get_test() {
     }
     CU_ASSERT_STRING_EQUAL(xpd, get_tests[i].detail_value );
     if (strcmp(xpd, get_tests[i].detail_value)) {
-        //printf("Expected %s;   returned %s\n",
-        //              get_tests[i].detail_value, xpd);
          goto RETURN;
     }
 
