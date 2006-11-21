@@ -324,6 +324,9 @@ int main(int argc, char** argv)
   if (wsman_get_client_response_code(cl) != 200) {
     fprintf(stderr, "Connection failed. response code = %ld\n",
             wsman_get_client_response_code(cl));
+    if (wsman_client_get_fault_string(cl)) {
+        fprintf(stderr, "%s\n", wsman_client_get_fault_string(cl));
+    }
   }
 
   destroy_action_options(&options);
