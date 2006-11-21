@@ -59,6 +59,7 @@ static TestData tests[] = {
     "Enumeration with non existent Resource URI.", 
     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystemxx", 
     NULL, 
+    NULL, 
     "/s:Envelope/s:Body/s:Fault/s:Code/s:Subcode/s:Value",
     "wsa:DestinationUnreachable",
     "/s:Envelope/s:Body/s:Fault/s:Detail/wsman:FaultDetail",
@@ -67,10 +68,10 @@ static TestData tests[] = {
     FLAG_NONE,
     0
   },
-
   {
     "Enumeration with valid Resource URI and Items Count Estimation.",
     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
+    NULL, 
     NULL, 
     "/s:Envelope/s:Header/wsman:TotalItemsCountEstimate",
     "3",
@@ -147,19 +148,7 @@ static int ntests = sizeof (tests) / sizeof (tests[0]);
 
 extern WsManClient *cl;
 
-/*
-static void wsman_output(WsXmlDocH doc) {
-  if (doc)
-    ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
-  else
-    printf("returned doc is null\n");
-  return;
-}
-*/
-
 actionOptions options;
-
-
 
 static void enumeration_test() {
     char *enumContext = NULL;
@@ -186,15 +175,15 @@ static void enumeration_test() {
 
     if (_debug) wsman_output(enum_response);
 
-    if (tests[i].fault_expr == NULL) {
+    if (tests[i].expr1 == NULL) {
         goto RETURN;
     }
-    xp = ws_xml_get_xpath_value(enum_response, tests[i].fault_expr);
+    xp = ws_xml_get_xpath_value(enum_response, tests[i].expr1);
     CU_ASSERT_PTR_NOT_NULL(xp);
     if (!xp) {
         goto RETURN;
     }
-    CU_ASSERT_STRING_EQUAL(xp, tests[i].fault_value );
+    CU_ASSERT_STRING_EQUAL(xp, tests[i].value1 );
 
 RETURN:
     if (enum_response) {

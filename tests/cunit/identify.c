@@ -56,28 +56,18 @@ static TestData tests[] = {
     "Testing Identify Request, check protocol version", 
     NULL, 
     NULL, 
+    NULL, 
     "/s:Envelope/s:Body/wsmid:IdentifyResponse/wsmid:ProtocolVersion",
     XML_NS_WS_MAN,
-    NULL,
-    NULL,
-    200,
-    FLAG_NONE,
-    0
-  },
-  {
-    "Testing Identify Request, check product version", 
-    NULL, 
-    NULL, 
     "/s:Envelope/s:Body/wsmid:IdentifyResponse/wsmid:ProductVersion",
     PACKAGE_VERSION,
-    NULL,
-    NULL,
     200,
     FLAG_NONE,
     0
   },
   {
     "Testing Identify Request, check product vendor", 
+    NULL, 
     NULL, 
     NULL, 
     "/s:Envelope/s:Body/wsmid:IdentifyResponse/wsmid:ProductVendor",
@@ -117,11 +107,11 @@ identify_test() {
         goto RETURN;
     }
 
-    if (tests[i].fault_value != NULL) {
-        xp = ws_xml_get_xpath_value(response, tests[i].fault_expr);
+    if (tests[i].value1 != NULL) {
+        xp = ws_xml_get_xpath_value(response, tests[i].expr1);
         CU_ASSERT_PTR_NOT_NULL(xp);
         if (xp) {
-          CU_ASSERT_STRING_EQUAL(xp, tests[i].fault_value );
+          CU_ASSERT_STRING_EQUAL(xp, tests[i].value1 );
         }
     }
 

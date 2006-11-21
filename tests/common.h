@@ -13,7 +13,12 @@ typedef struct {
   const char *password;
 } ServerData;
 
-typedef struct {						
+typedef struct {
+    char *xpath_expr;
+    char *expected_value;
+} XpathTest;
+
+typedef struct {
   /* Explanation of what you should see */
   const char *explanation;
 
@@ -23,15 +28,7 @@ typedef struct {
   /* Selectors in the form of a URI query   key=value&key2=value2 */
   char *selectors;
 
-    /* Fault Value */
-  char* fault_expr;
-  char* fault_value;
-
-    /* Fault detail */
-  char *detail_expr;
-  char *detail_value;
-
-
+  XpathTest xpath_test;
 
   /* What the final status code should be. */
   unsigned int final_status;		

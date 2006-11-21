@@ -46,9 +46,9 @@
 #include "common.h"
 
 
-TestData get_tests[] = {
+TestData put_tests[] = {
   {
-    "Transfer Get without any selectors.",
+    "Transfer Put without any selectors.",
     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem", 
     NULL,
     NULL,
@@ -62,7 +62,7 @@ TestData get_tests[] = {
   },
 
   {
-    "Transfer Get with non existent Resource URI.",
+    "Transfer Put with non existent Resource URI.",
     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystemxx",
     NULL, 
     NULL,
@@ -76,7 +76,7 @@ TestData get_tests[] = {
   },
 
   {
-    "Transfer Get with unsufficient selectors.",
+    "Transfer Put with unsufficient selectors.",
     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
     "Name=%s",
     NULL,
@@ -90,7 +90,7 @@ TestData get_tests[] = {
   },
 
   {
-    "Transfer Get with wrong selectors.",
+    "Transfer Put with wrong selectors.",
     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
     "CreationClassName=OpenWBEM_UnitaryComputerSystem&Namex=%s",
     NULL,
@@ -104,7 +104,7 @@ TestData get_tests[] = {
   },
 
   {
-    "Transfer Get with all selectors but with wrong values 1.",
+    "Transfer Put with all selectors but with wrong values.",
     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
     "CreationClassName=OpenWBEM_UnitaryComputerSystem&Name=%sx",
     NULL,
@@ -117,10 +117,10 @@ TestData get_tests[] = {
     0
   },
   {
-    "Transfer Get with correct selectors. Check response code",
-    "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
-    "CreationClassName=OpenWBEM_UnitaryComputerSystem&Name=%s",
-    NULL,
+    "Transfer Put with correct selectors and parameters. Check response code",
+    "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_TimeZoneSettingData",
+    "InstanceID=omc:timezone",
+    "TimeZone=US/Pacific",
     NULL,
     NULL,
     NULL,
@@ -130,84 +130,87 @@ TestData get_tests[] = {
   },
 };
 
-static int ntests = sizeof (get_tests) / sizeof (get_tests[0]);
+static int ntests = sizeof (put_tests) / sizeof (put_tests[0]);
 
 
 
 extern WsManClient *cl;
 actionOptions options;
 
-static void transfer_get_test() {
+static void transfer_put_test() {
     WsXmlDocH doc;
     char *xpf = NULL;
     char *xpd = NULL;
     static int i = 0; // executed test number.
-    char *old_selectors = get_tests[i].selectors;
+    char *old_selectors = put_tests[i].selectors;
 
 
-    if (get_tests[i].selectors) {
-        get_tests[i].selectors =
-              u_strdup_printf(get_tests[i].selectors, host, host, host);
+    if (put_tests[i].selectors) {
+        put_tests[i].selectors =
+              u_strdup_printf(put_tests[i].selectors, host, host, host);
     }
 
     reinit_client_connection(cl);
     initialize_action_options(&options);
 
-    if (get_tests[i].selectors != NULL) {
-       wsman_add_selectors_from_query_string (&options, get_tests[i].selectors);
+    if (put_tests[i].selectors != NULL) {
+       wsman_add_selectors_from_query_string (&options, put_tests[i].selectors);
+    }
+    if (put_tests[i].properties != NULL) {
+       wsman_add_properties_from_query_string (&options, put_tests[i].properties);
     }
 
 
-    doc = ws_transfer_get(cl, (char *)get_tests[i].resource_uri, options);
-    CU_ASSERT_TRUE(wsman_get_client_response_code(cl) == get_tests[i].final_status);
+    doc = ws_transfer_put(cl, (char *)put_tests[i].resource_uri, options);
+    CU_ASSERT_TRUE(wsman_get_client_response_code(cl) == put_tests[i].final_status);
 
     CU_ASSERT_PTR_NOT_NULL(doc);
     if (!doc) {
         goto RETURN;
     }
-
-    if (get_tests[i].expr1 == NULL) {
+    if (put_tests[i].expr1 == NULL) {
         goto RETURN;
     }
-    CU_ASSERT_PTR_NOT_NULL(get_tests[i].value1);
-    if (get_tests[i].value1 == NULL) {
+    CU_ASSERT_PTR_NOT_NULL(put_tests[i].value1);
+    if (put_tests[i].value1 == NULL) {
         goto RETURN;
     }
-    xpf = ws_xml_get_xpath_value(doc, get_tests[i].expr1);
+    xpf = ws_xml_get_xpath_value(doc, put_tests[i].expr1);
     CU_ASSERT_PTR_NOT_NULL(xpf);
     if (!xpf) {
         goto RETURN;
     }
-    CU_ASSERT_STRING_EQUAL(xpf, get_tests[i].value1);
+    CU_ASSERT_STRING_EQUAL(xpf, put_tests[i].value1);
 
-    if (strcmp(xpf, get_tests[i].value1)) {
+    if (strcmp(xpf, put_tests[i].value1)) {
+        //printf("Expected %s;   returned %s\n",
+        //           put_tests[i].value1, xpf);
          goto RETURN;
     }
-    if (get_tests[i].expr2 == NULL) {
+    if (put_tests[i].expr2 == NULL) {
         goto RETURN;
     }
-    xpd = ws_xml_get_xpath_value(doc, get_tests[i].expr2);
+    xpd = ws_xml_get_xpath_value(doc, put_tests[i].expr2);
     CU_ASSERT_PTR_NOT_NULL(xpd);
     if (!xpd) {
         goto RETURN;
     }
-    CU_ASSERT_PTR_NOT_NULL(get_tests[i].value2);
-    if (get_tests[i].value2 == NULL) {
+    CU_ASSERT_PTR_NOT_NULL(put_tests[i].value2);
+    if (put_tests[i].value2 == NULL) {
         goto RETURN;
     }
-    CU_ASSERT_STRING_EQUAL(xpd, get_tests[i].value2 );
-    if (strcmp(xpd, get_tests[i].value2)) {
+    CU_ASSERT_STRING_EQUAL(xpd, put_tests[i].value2 );
+    if (strcmp(xpd, put_tests[i].value2)) {
          goto RETURN;
     }
-
 RETURN:
     u_free(xpf);
     u_free(xpd);
     if (doc) {
         ws_xml_destroy_doc(doc);
     }
-    u_free((char *)get_tests[i].selectors);
-    get_tests[i].selectors = old_selectors;
+    u_free((char *)put_tests[i].selectors);
+    put_tests[i].selectors = old_selectors;
     destroy_action_options(&options);
     i++; // increase executed test number
 }
@@ -215,13 +218,13 @@ RETURN:
 
 
 
-int add_transfer_get_tests(CU_pSuite ps) {
+int add_transfer_put_tests(CU_pSuite ps) {
     int found_test = 0;
     int i;
         /* add the tests to the suite */
     for (i =0; i < ntests; i++) {
-            found_test += (NULL != CU_add_test(ps, get_tests[i].explanation,
-                                            (CU_TestFunc)transfer_get_test));
+            found_test += (NULL != CU_add_test(ps, put_tests[i].explanation,
+                                            (CU_TestFunc)transfer_put_test));
     }
     return (found_test > 0);
 }

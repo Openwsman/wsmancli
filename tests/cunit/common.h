@@ -22,15 +22,14 @@ typedef struct {
 
   /* Selectors in the form of a URI query   key=value&key2=value2 */
   char *selectors;
+  /* Properties in the form of a URI query   key=value&key2=value2 */
+  char *properties;
 
-    /* Fault Value */
-  char* fault_expr;
-  char* fault_value;
+  char* expr1;
+  char* value1;
 
-    /* Fault detail */
-  char *detail_expr;
-  char *detail_value;
-
+  char *expr2;
+  char *value2;
 
 
   /* What the final status code should be. */
@@ -49,5 +48,6 @@ int clean_test(void);
 int add_enumeration_tests(CU_pSuite ps);
 int add_identify_tests(CU_pSuite ps);
 int add_transfer_get_tests(CU_pSuite ps);
+int add_transfer_put_tests(CU_pSuite ps);
 
 #endif
