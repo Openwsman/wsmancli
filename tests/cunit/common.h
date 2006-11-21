@@ -20,6 +20,8 @@ typedef struct {
   /* Resource UR to test against */
   const char *resource_uri;
 
+  const char *method;
+
   /* Selectors in the form of a URI query   key=value&key2=value2 */
   char *selectors;
   /* Properties in the form of a URI query   key=value&key2=value2 */
@@ -49,5 +51,6 @@ int add_enumeration_tests(CU_pSuite ps);
 int add_identify_tests(CU_pSuite ps);
 int add_transfer_get_tests(CU_pSuite ps);
 int add_transfer_put_tests(CU_pSuite ps);
+int add_invoke_tests(CU_pSuite ps);
 
 #endif

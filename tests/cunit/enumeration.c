@@ -60,6 +60,7 @@ static TestData tests[] = {
     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystemxx", 
     NULL, 
     NULL, 
+    NULL, 
     "/s:Envelope/s:Body/s:Fault/s:Code/s:Subcode/s:Value",
     "wsa:DestinationUnreachable",
     "/s:Envelope/s:Body/s:Fault/s:Detail/wsman:FaultDetail",
@@ -71,6 +72,7 @@ static TestData tests[] = {
   {
     "Enumeration with valid Resource URI and Items Count Estimation.",
     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
+    NULL, 
     NULL, 
     NULL, 
     "/s:Envelope/s:Header/wsman:TotalItemsCountEstimate",

@@ -12,6 +12,7 @@ wsman_cunit_tests_SOURCES = run_tests.c \
 		    common.c \
 		    common.h \
 		    identify.c \
+		    invoke.c \
 		    enumeration.c \
 		    transfer_get.c \
 		    transfer_put.c 

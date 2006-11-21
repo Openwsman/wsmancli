@@ -46,9 +46,9 @@
 #include "common.h"
 
 
-TestData put_tests[] = {
+TestData invoke_tests[] = {
   {
-    "Transfer Put without any selectors.",
+    "Custom Method without any selectors.",
     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem", 
     NULL,
     NULL,
@@ -63,7 +63,7 @@ TestData put_tests[] = {
   },
 
   {
-    "Transfer Put with non existent Resource URI.",
+    "Custom Method with non existent Resource URI.",
     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystemxx",
     NULL,
     NULL, 
@@ -78,7 +78,7 @@ TestData put_tests[] = {
   },
 
   {
-    "Transfer Put with unsufficient selectors.",
+    "Custom Method with unsufficient selectors.",
     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
     NULL,
     "Name=%s",
@@ -93,7 +93,7 @@ TestData put_tests[] = {
   },
 
   {
-    "Transfer Put with wrong selectors.",
+    "Custom Method with wrong selectors.",
     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
     NULL,
     "CreationClassName=OpenWBEM_UnitaryComputerSystem&Namex=%s",
@@ -108,7 +108,7 @@ TestData put_tests[] = {
   },
 
   {
-    "Transfer Put with all selectors but with wrong values.",
+    "Custom Method with all selectors but with wrong values.",
     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
     NULL,
     "CreationClassName=OpenWBEM_UnitaryComputerSystem&Name=%sx",
@@ -122,7 +122,7 @@ TestData put_tests[] = {
     0
   },
   {
-    "Transfer Put with correct selectors and parameters check for new value",
+    "Custom Method with correct selectors and parameters check for new value",
     "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_TimeZoneSettingData",
     NULL,
     "InstanceID=omc:timezone",
@@ -135,7 +135,7 @@ TestData put_tests[] = {
     FLAG_DUMP_REQUEST,
   },
   {
-    "Transfer Put with correct selectors and parameters reset value",
+    "Custom Method with correct selectors and parameters reset value",
     "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_TimeZoneSettingData",
     NULL,
     "InstanceID=omc:timezone",
@@ -149,79 +149,78 @@ TestData put_tests[] = {
   },
 };
 
-static int ntests = sizeof (put_tests) / sizeof (put_tests[0]);
+static int ntests = sizeof (invoke_tests) / sizeof (invoke_tests[0]);
 
 
 
 extern WsManClient *cl;
 actionOptions options;
 
-static void transfer_put_test() {
+static void invoke_test() {
     WsXmlDocH doc;
     char *xpf = NULL;
     char *xpd = NULL;
     static int i = 0; // executed test number.
-    char *old_selectors = put_tests[i].selectors;
+    char *old_selectors = invoke_tests[i].selectors;
 
 
-    if (put_tests[i].selectors) {
-        put_tests[i].selectors =
-              u_strdup_printf(put_tests[i].selectors, host, host, host);
+    if (invoke_tests[i].selectors) {
+        invoke_tests[i].selectors =
+              u_strdup_printf(invoke_tests[i].selectors, host, host, host);
     }
 
     reinit_client_connection(cl);
     initialize_action_options(&options);
 
-    if (put_tests[i].selectors != NULL) {
-       wsman_add_selectors_from_query_string (&options, put_tests[i].selectors);
+    if (invoke_tests[i].selectors != NULL) {
+       wsman_add_selectors_from_query_string (&options, invoke_tests[i].selectors);
     }
-    if (put_tests[i].properties != NULL) {
-       wsman_add_properties_from_query_string (&options, put_tests[i].properties);
+    if (invoke_tests[i].properties != NULL) {
+       wsman_add_properties_from_query_string (&options, invoke_tests[i].properties);
     }
-    options.flags = put_tests[i].flags;
+    options.flags = invoke_tests[i].flags;
 
 
-    doc = ws_transfer_put(cl, (char *)put_tests[i].resource_uri, options);
-    //ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
-    CU_ASSERT_TRUE(wsman_get_client_response_code(cl) == put_tests[i].final_status);
+    doc = wsman_invoke (cl, (char *)invoke_tests[i].resource_uri, (char *)invoke_tests[i].method, options);
+    CU_ASSERT_TRUE(wsman_get_client_response_code(cl) == invoke_tests[i].final_status);
 
     CU_ASSERT_PTR_NOT_NULL(doc);
     if (!doc) {
         goto RETURN;
     }
-    if (put_tests[i].expr1 == NULL) {
+    if (invoke_tests[i].expr1 == NULL) {
         goto RETURN;
     }
-    CU_ASSERT_PTR_NOT_NULL(put_tests[i].value1);
-    if (put_tests[i].value1 == NULL) {
+    CU_ASSERT_PTR_NOT_NULL(invoke_tests[i].value1);
+    if (invoke_tests[i].value1 == NULL) {
         goto RETURN;
     }
-    xpf = ws_xml_get_xpath_value(doc, put_tests[i].expr1);
+    xpf = ws_xml_get_xpath_value(doc, invoke_tests[i].expr1);
     CU_ASSERT_PTR_NOT_NULL(xpf);
     if (!xpf) {
         goto RETURN;
     }
-    CU_ASSERT_STRING_EQUAL(xpf, put_tests[i].value1);
+    CU_ASSERT_STRING_EQUAL(xpf, invoke_tests[i].value1);
 
-    if (strcmp(xpf, put_tests[i].value1)) {
+    if (strcmp(xpf, invoke_tests[i].value1)) {
         //printf("Expected %s;   returned %s\n",
-        //           put_tests[i].value1, xpf);
+        //           invoke_tests[i].value1, xpf);
          goto RETURN;
     }
-    if (put_tests[i].expr2 == NULL) {
+    if (invoke_tests[i].expr2 == NULL) {
         goto RETURN;
     }
-    xpd = ws_xml_get_xpath_value(doc, put_tests[i].expr2);
+    xpd = ws_xml_get_xpath_value(doc, invoke_tests[i].expr2);
     CU_ASSERT_PTR_NOT_NULL(xpd);
     if (!xpd) {
         goto RETURN;
     }
-    CU_ASSERT_PTR_NOT_NULL(put_tests[i].value2);
-    if (put_tests[i].value2 == NULL) {
+    CU_ASSERT_PTR_NOT_NULL(invoke_tests[i].value2);
+    if (invoke_tests[i].value2 == NULL) {
         goto RETURN;
     }
-    CU_ASSERT_STRING_EQUAL(xpd, put_tests[i].value2 );
-    if (strcmp(xpd, put_tests[i].value2)) {
+    CU_ASSERT_STRING_EQUAL(xpd, invoke_tests[i].value2 );
+    if (strcmp(xpd, invoke_tests[i].value2)) {
          goto RETURN;
     }
 RETURN:
@@ -230,8 +229,8 @@ RETURN:
     if (doc) {
         ws_xml_destroy_doc(doc);
     }
-    u_free((char *)put_tests[i].selectors);
-    put_tests[i].selectors = old_selectors;
+    u_free((char *)invoke_tests[i].selectors);
+    invoke_tests[i].selectors = old_selectors;
     destroy_action_options(&options);
     i++; // increase executed test number
 }
@@ -239,13 +238,13 @@ RETURN:
 
 
 
-int add_transfer_put_tests(CU_pSuite ps) {
+int add_invoke_tests(CU_pSuite ps) {
     int found_test = 0;
     int i;
         /* add the tests to the suite */
     for (i =0; i < ntests; i++) {
-            found_test += (NULL != CU_add_test(ps, put_tests[i].explanation,
-                                            (CU_TestFunc)transfer_put_test));
+            found_test += (NULL != CU_add_test(ps, invoke_tests[i].explanation,
+                                            (CU_TestFunc)invoke_test));
     }
     return (found_test > 0);
 }

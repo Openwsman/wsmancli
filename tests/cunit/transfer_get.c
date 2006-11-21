@@ -52,6 +52,7 @@ TestData get_tests[] = {
     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem", 
     NULL,
     NULL,
+    NULL,
     "/s:Envelope/s:Body/s:Fault/s:Code/s:Subcode/s:Value",
     "wsman:InvalidSelectors",	    
     "/s:Envelope/s:Body/s:Fault/s:Detail/wsman:FaultDetail",
@@ -64,6 +65,7 @@ TestData get_tests[] = {
   {
     "Transfer Get with non existent Resource URI.",
     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystemxx",
+    NULL,
     NULL, 
     NULL,
     "/s:Envelope/s:Body/s:Fault/s:Code/s:Subcode/s:Value",
@@ -78,6 +80,7 @@ TestData get_tests[] = {
   {
     "Transfer Get with unsufficient selectors.",
     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
+    NULL,
     "Name=%s",
     NULL,
     "/s:Envelope/s:Body/s:Fault/s:Code/s:Subcode/s:Value",
@@ -92,6 +95,7 @@ TestData get_tests[] = {
   {
     "Transfer Get with wrong selectors.",
     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
+    NULL,
     "CreationClassName=OpenWBEM_UnitaryComputerSystem&Namex=%s",
     NULL,
     "/s:Envelope/s:Body/s:Fault/s:Code/s:Subcode/s:Value",
@@ -106,6 +110,7 @@ TestData get_tests[] = {
   {
     "Transfer Get with all selectors but with wrong values 1.",
     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
+    NULL,
     "CreationClassName=OpenWBEM_UnitaryComputerSystem&Name=%sx",
     NULL,
     "/s:Envelope/s:Body/s:Fault/s:Code/s:Subcode/s:Value",
@@ -119,6 +124,7 @@ TestData get_tests[] = {
   {
     "Transfer Get with correct selectors. Check response code",
     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
+    NULL,
     "CreationClassName=OpenWBEM_UnitaryComputerSystem&Name=%s",
     NULL,
     NULL,
