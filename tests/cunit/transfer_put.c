@@ -132,7 +132,7 @@ TestData put_tests[] = {
     NULL,
     NULL,
     200,
-    FLAG_DUMP_REQUEST,
+    0
   },
   {
     "Transfer Put with correct selectors and parameters reset value",

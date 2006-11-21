@@ -49,8 +49,8 @@
 TestData invoke_tests[] = {
   {
     "Custom Method without any selectors.",
-    "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem", 
-    NULL,
+    "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_InitdService",
+    "ServiceStatus",
     NULL,
     NULL,
     "/s:Envelope/s:Body/s:Fault/s:Code/s:Subcode/s:Value",
@@ -64,8 +64,8 @@ TestData invoke_tests[] = {
 
   {
     "Custom Method with non existent Resource URI.",
-    "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystemxx",
-    NULL,
+    "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_InitdServicex",
+    "ServiceStatus",
     NULL, 
     NULL,
     "/s:Envelope/s:Body/s:Fault/s:Code/s:Subcode/s:Value",
@@ -78,19 +78,47 @@ TestData invoke_tests[] = {
   },
 
   {
-    "Custom Method with unsufficient selectors.",
-    "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
+    "Custom Method without parameters. (StopService)",
+    "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_InitdService",
+    "StopService",
+    "SystemCreationClassName=OMC_UnitaryComputerSystem&SystemName=%s&Name=postfix",
     NULL,
-    "Name=%s",
+    "/s:Envelope/s:Body/n1:StopService_OUTPUT/ReturnValue",
+    "0",
     NULL,
-    "/s:Envelope/s:Body/s:Fault/s:Code/s:Subcode/s:Value",
-    "wsman:InvalidSelectors",
-    "/s:Envelope/s:Body/s:Fault/s:Detail/wsman:FaultDetail",
-    "http://schemas.dmtf.org/wbem/wsman/1/wsman/faultDetail/InsufficientSelectors",
-    500,
+    NULL,
+    200,
     0,
     0
   },
+  {
+    "Custom Method without parameters. (ServiceStatus)",
+    "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_InitdService",
+    "ServiceStatus",
+    "SystemCreationClassName=OMC_UnitaryComputerSystem&SystemName=%s&Name=postfix",
+    NULL,
+    "/s:Envelope/s:Body/n1:ServiceStatus_OUTPUT/ReturnValue",
+    "3",
+    NULL,
+    NULL,
+    200,
+    0,
+    0
+  },
+  {
+    "Custom Method without parameters. (StartService)",
+    "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_InitdService",
+    "StartService",
+    "SystemCreationClassName=OMC_UnitaryComputerSystem&SystemName=%s&Name=postfix",
+    NULL,
+    "/s:Envelope/s:Body/n1:StartService_OUTPUT/ReturnValue",
+    "0",
+    NULL,
+    NULL,
+    200,
+    0,
+    0
+  } /*,
 
   {
     "Custom Method with wrong selectors.",
@@ -146,7 +174,7 @@ TestData invoke_tests[] = {
     NULL,
     200,
     0,
-  },
+  }, */
 };
 
 static int ntests = sizeof (invoke_tests) / sizeof (invoke_tests[0]);
@@ -180,8 +208,8 @@ static void invoke_test() {
     }
     options.flags = invoke_tests[i].flags;
 
-
     doc = wsman_invoke (cl, (char *)invoke_tests[i].resource_uri, (char *)invoke_tests[i].method, options);
+    //ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
     CU_ASSERT_TRUE(wsman_get_client_response_code(cl) == invoke_tests[i].final_status);
 
     CU_ASSERT_PTR_NOT_NULL(doc);

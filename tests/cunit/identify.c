@@ -57,6 +57,7 @@ static TestData tests[] = {
     NULL, 
     NULL, 
     NULL, 
+    NULL, 
     "/s:Envelope/s:Body/wsmid:IdentifyResponse/wsmid:ProtocolVersion",
     XML_NS_WS_MAN,
     "/s:Envelope/s:Body/wsmid:IdentifyResponse/wsmid:ProductVersion",
@@ -67,6 +68,7 @@ static TestData tests[] = {
   },
   {
     "Testing Identify Request, check product vendor", 
+    NULL, 
     NULL, 
     NULL, 
     NULL, 
