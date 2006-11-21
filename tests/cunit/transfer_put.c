@@ -117,12 +117,24 @@ TestData put_tests[] = {
     0
   },
   {
-    "Transfer Put with correct selectors and parameters. Check response code",
+    "Transfer Put with correct selectors and parameters check for new value",
     "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_TimeZoneSettingData",
     "InstanceID=omc:timezone",
     "TimeZone=US/Pacific",
+    "/s:Envelope/s:Body/p:OMC_TimeZoneSettingData/p:TimeZone",
+    "US/Pacific",
     NULL,
     NULL,
+    200,
+    FLAG_DUMP_REQUEST,
+  },
+  {
+    "Transfer Put with correct selectors and parameters reset value",
+    "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_TimeZoneSettingData",
+    "InstanceID=omc:timezone",
+    "TimeZone=US/Eastern",
+    "/s:Envelope/s:Body/p:OMC_TimeZoneSettingData/p:TimeZone",
+    "US/Eastern",
     NULL,
     NULL,
     200,
@@ -159,9 +171,11 @@ static void transfer_put_test() {
     if (put_tests[i].properties != NULL) {
        wsman_add_properties_from_query_string (&options, put_tests[i].properties);
     }
+    options.flags = put_tests[i].flags;
 
 
     doc = ws_transfer_put(cl, (char *)put_tests[i].resource_uri, options);
+    //ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
     CU_ASSERT_TRUE(wsman_get_client_response_code(cl) == put_tests[i].final_status);
 
     CU_ASSERT_PTR_NOT_NULL(doc);
