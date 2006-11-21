@@ -118,22 +118,22 @@ TestData invoke_tests[] = {
     200,
     0,
     0
-  } /*,
+  } ,
 
   {
-    "Custom Method with wrong selectors.",
-    "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
+    "Custom Method with parameters .",
+    "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_SystemTimeService",
+    "ManageSystemTime",
+    "SystemCreationClassName=OMC_UnitaryComputerSystem&SystemName=%s&CreationClassName=OMC_SystemTimeService&Name=timeservice",
+    "GetRequest=TRUE",
+    "/s:Envelope/s:Body/n1:ManageSystemTime_OUTPUT/ReturnValue",
+    "0",
     NULL,
-    "CreationClassName=OpenWBEM_UnitaryComputerSystem&Namex=%s",
     NULL,
-    "/s:Envelope/s:Body/s:Fault/s:Code/s:Subcode/s:Value",
-    "wsman:InvalidSelectors",
-    "/s:Envelope/s:Body/s:Fault/s:Detail/wsman:FaultDetail",
-    "http://schemas.dmtf.org/wbem/wsman/1/wsman/faultDetail/UnexpectedSelectors",
-    500,
+    200,
     0,
     0
-  },
+  } /*,
 
   {
     "Custom Method with all selectors but with wrong values.",
@@ -230,11 +230,6 @@ static void invoke_test() {
     }
     CU_ASSERT_STRING_EQUAL(xpf, invoke_tests[i].value1);
 
-    if (strcmp(xpf, invoke_tests[i].value1)) {
-        //printf("Expected %s;   returned %s\n",
-        //           invoke_tests[i].value1, xpf);
-         goto RETURN;
-    }
     if (invoke_tests[i].expr2 == NULL) {
         goto RETURN;
     }
@@ -248,9 +243,6 @@ static void invoke_test() {
         goto RETURN;
     }
     CU_ASSERT_STRING_EQUAL(xpd, invoke_tests[i].value2 );
-    if (strcmp(xpd, invoke_tests[i].value2)) {
-         goto RETURN;
-    }
 RETURN:
     u_free(xpf);
     u_free(xpd);
