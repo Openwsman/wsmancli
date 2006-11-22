@@ -6,8 +6,8 @@ Url:            http://www.openwsman.org/
 Source:         %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Group:          Applications/Management
-BuildRequires:  openwsman-devel
-Requires:       openwsman
+BuildRequires:  openwsman-devel pkgconfig curl-devel
+Requires:       openwsman curl
 Summary:        Opensource Implementation of WS-Management - Command line Utility
 
 
@@ -31,5 +31,4 @@ rm -rf "$RPM_BUILD_ROOT"
 %files
 %defattr(-,root,root)
 %{_bindir}/wsman
-%{_bindir}/wsmid_identfy
-
+%{_bindir}/wsmid_identify
