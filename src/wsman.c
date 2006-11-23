@@ -34,7 +34,7 @@
  * @author Vadim Revyakin
  */
 
-#include "wsman_config.h"
+#include "config.h"
 
 #include <stdio.h>
 #include <stdlib.h>
