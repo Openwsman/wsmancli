@@ -49,12 +49,12 @@
 TestData put_tests[] = {
   {
     "Transfer Put without any selectors.",
-    "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem", 
+    "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
     NULL,
     NULL,
     NULL,
     "/s:Envelope/s:Body/s:Fault/s:Code/s:Subcode/s:Value",
-    "wsman:InvalidSelectors",	    
+    "wsman:InvalidSelectors",
     "/s:Envelope/s:Body/s:Fault/s:Detail/wsman:FaultDetail",
     "http://schemas.dmtf.org/wbem/wsman/1/wsman/faultDetail/InsufficientSelectors",
     500, 
@@ -147,6 +147,19 @@ TestData put_tests[] = {
     200,
     0,
   },
+  {
+    "Transfer Put with correct selectors and no parameters",
+    "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_TimeZoneSettingData",
+    NULL,
+    "InstanceID=omc:timezone",
+    NULL,
+    "/s:Envelope/s:Body/p:OMC_TimeZoneSettingData/p:TimeZone",
+    "US/Eastern",
+    NULL,
+    NULL,
+    200,
+    0,
+  },
 };
 
 static int ntests = sizeof (put_tests) / sizeof (put_tests[0]);
@@ -161,30 +174,40 @@ static void transfer_put_test() {
     char *xpf = NULL;
     char *xpd = NULL;
     static int i = 0; // executed test number.
-    char *old_selectors = put_tests[i].selectors;
+    char *selectors = NULL;
 
 
     if (put_tests[i].selectors) {
-        put_tests[i].selectors =
+        selectors =
               u_strdup_printf(put_tests[i].selectors, host, host, host);
     }
 
-    reinit_client_connection(cl);
     initialize_action_options(&options);
 
     if (put_tests[i].selectors != NULL) {
-       wsman_add_selectors_from_query_string (&options, put_tests[i].selectors);
+       wsman_add_selectors_from_query_string (&options, selectors);
     }
     if (put_tests[i].properties != NULL) {
-       wsman_add_properties_from_query_string (&options, put_tests[i].properties);
+       wsman_add_properties_from_query_string (&options,
+                                               put_tests[i].properties);
     }
     options.flags = put_tests[i].flags;
 
 
     doc = ws_transfer_put(cl, (char *)put_tests[i].resource_uri, options);
     //ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
-    CU_ASSERT_TRUE(wsman_get_client_response_code(cl) == put_tests[i].final_status);
-
+    CU_ASSERT_TRUE(wsman_get_client_response_code(cl) ==
+                                               put_tests[i].final_status);
+    if (wsman_get_client_response_code(cl) !=
+                            put_tests[i].final_status) {
+        if (verbose) {
+            printf("Expected = %ld, Returned = %ld\n",
+                           put_tests[i].final_status,
+                           wsman_get_client_response_code(cl));
+            ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
+        }
+        goto RETURN;
+    }
     CU_ASSERT_PTR_NOT_NULL(doc);
     if (!doc) {
         goto RETURN;
@@ -204,8 +227,10 @@ static void transfer_put_test() {
     CU_ASSERT_STRING_EQUAL(xpf, put_tests[i].value1);
 
     if (strcmp(xpf, put_tests[i].value1)) {
-        //printf("Expected %s;   returned %s\n",
-        //           put_tests[i].value1, xpf);
+        if (verbose) {
+            printf("Expected %s;   returned %s\n",
+                     put_tests[i].value1, xpf);
+        }
          goto RETURN;
     }
     if (put_tests[i].expr2 == NULL) {
@@ -222,7 +247,11 @@ static void transfer_put_test() {
     }
     CU_ASSERT_STRING_EQUAL(xpd, put_tests[i].value2 );
     if (strcmp(xpd, put_tests[i].value2)) {
-         goto RETURN;
+        if (verbose) {
+            printf("Expected %s;   returned %s\n",
+                     put_tests[i].value2, xpd);
+        }
+        goto RETURN;
     }
 RETURN:
     u_free(xpf);
@@ -230,8 +259,7 @@ RETURN:
     if (doc) {
         ws_xml_destroy_doc(doc);
     }
-    u_free((char *)put_tests[i].selectors);
-    put_tests[i].selectors = old_selectors;
+    u_free(selectors);
     destroy_action_options(&options);
     i++; // increase executed test number
 }

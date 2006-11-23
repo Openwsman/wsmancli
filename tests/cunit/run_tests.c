@@ -37,6 +37,9 @@
 #define TRUE    1
 #define FALSE	0
 
+int verbose = 0;
+char *host = "langley.home.planux.com";
+
 
 static CU_pSuite
 setup_client_suite(void) {
@@ -67,6 +70,13 @@ setup_client_suite(void) {
 int
 main(int argc, char** argv) {
    CU_pSuite pSuite = NULL;
+
+  if (getenv("OPENWSMAN_TEST_HOST")) {
+    host = getenv("OPENWSMAN_TEST_HOST");
+  }
+  if (getenv("OPENWSMAN_TEST_VERBOSE")) {
+    verbose = atoi(getenv("OPENWSMAN_TEST_VERBOSE"));
+  }
 
    /* initialize the CUnit test registry */
    if (CUE_SUCCESS != CU_initialize_registry())

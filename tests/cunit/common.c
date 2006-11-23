@@ -19,16 +19,12 @@
 
 
 WsManClient *cl;
-char *host = "langley.home.planux.com";
-
 
 
 
 int init_test(void) {
   wsman_client_transport_init(NULL);
-  if (getenv("OPENWSMAN_TEST_HOST")) {
-    host = getenv("OPENWSMAN_TEST_HOST");
-  }
+
   ServerData sd[] = {
     {"localhost", 8889, "/wsman", "http", "wsman", "secret"}
   };

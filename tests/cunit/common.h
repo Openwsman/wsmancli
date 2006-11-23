@@ -44,6 +44,7 @@ typedef struct {
 } TestData;
 
 extern char *host;
+extern int verbose;
 
 int init_test(void);
 int clean_test(void);
