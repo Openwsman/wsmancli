@@ -4,13 +4,13 @@ wsman_CFLAGS = \
 	       $(OPENWSMAN_CFLAGS)
        
 wsman_LDADD = \
-       $(OPENWSMAN_LIBS) -lcurl
+       $(OPENWSMAN_LIBS)
 
 wsmid_identify_CFLAGS = \
 	       $(OPENWSMAN_CFLAGS)
        
 wsmid_identify_LDADD = \
-       $(OPENWSMAN_LIBS) -lcurl
+       $(OPENWSMAN_LIBS)
 
 wsman_SOURCES = wsman.c \
 		wsman-client-options.c \
