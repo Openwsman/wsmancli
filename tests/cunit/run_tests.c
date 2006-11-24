@@ -53,6 +53,7 @@ setup_client_suite(void) {
 
    /* add the tests to the suite */
    num_tests += add_enumeration_tests(ps);
+   num_tests += add_pull_tests(ps);
    num_tests += add_identify_tests(ps);
    num_tests += add_transfer_get_tests(ps);
    num_tests += add_transfer_put_tests(ps);

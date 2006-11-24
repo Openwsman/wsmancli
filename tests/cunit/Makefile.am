@@ -15,6 +15,7 @@ wsman_cunit_tests_SOURCES = run_tests.c \
 		    invoke.c \
 		    enumeration.c \
 		    transfer_get.c \
+		    pull.c \
 		    transfer_put.c 
 
 noinst_PROGRAMS = wsman_cunit_tests 
