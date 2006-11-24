@@ -122,6 +122,20 @@ TestData get_tests[] = {
     0
   },
   {
+    "Transfer Get with all selectors (CIM_OperatingSystem).",
+    "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_OperatingSystem",
+    NULL,
+    "CSCreationClassName=Linux_ComputerSystem&CSName=%s&CreationClassName=Linux_OperatingSystem&Name=%s",
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    500,
+    0,
+    0
+  },
+  {
     "Transfer Get with correct selectors. Check response code",
     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
     NULL,
