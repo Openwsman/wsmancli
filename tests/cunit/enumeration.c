@@ -79,7 +79,7 @@ static TestData tests[] = {
     NULL, 
     NULL, 
     NULL, 
-    500,
+    200,
     FLAG_ENUMERATION_OPTIMIZATION,
     200
   },
@@ -93,8 +93,9 @@ static TestData tests[] = {
     NULL, 
     NULL, 
     NULL, 
-    500,
-    FLAG_ENUMERATION_OPTIMIZATION | FLAG_ENUMERATION_ENUM_EPR | FLAG_ENUMERATION_COUNT_ESTIMATION ,
+    200,
+    FLAG_ENUMERATION_OPTIMIZATION | FLAG_ENUMERATION_ENUM_EPR |
+                                              FLAG_ENUMERATION_COUNT_ESTIMATION ,
     200
   },
   {
@@ -107,7 +108,7 @@ static TestData tests[] = {
     NULL, 
     NULL, 
     NULL, 
-    500,
+    200,
     FLAG_ENUMERATION_OPTIMIZATION | FLAG_ENUMERATION_ENUM_EPR,
     200
   },
@@ -121,7 +122,7 @@ static TestData tests[] = {
     NULL, 
     NULL, 
     NULL, 
-    500,
+    200,
     FLAG_ENUMERATION_OPTIMIZATION | FLAG_ENUMERATION_ENUM_OBJ_AND_EPR,
     200
   },
