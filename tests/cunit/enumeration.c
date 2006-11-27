@@ -132,7 +132,7 @@ static TestData tests[] = {
     NULL, 
     NULL, 
     "/s:Envelope/s:Header/wsman:TotalItemsCountEstimate",
-    "3",
+    NULL,
     NULL,
     NULL,
     200,
@@ -212,6 +212,7 @@ static void enumeration_test() {
     char *enumContext = NULL;
     static int i = 0;
     char *xp = NULL;
+    int num;
 
     reinit_client_connection(cl);
     initialize_action_options(&options);
@@ -242,8 +243,24 @@ static void enumeration_test() {
     if (!xp) {
         goto RETURN;
     }
-    CU_ASSERT_STRING_EQUAL(xp, tests[i].value1 );
-
+    if (tests[i].value1) {
+        CU_ASSERT_STRING_EQUAL(xp, tests[i].value1);
+        if (strcmp(xp, tests[i].value1)) {
+            if (verbose) {
+                printf("\nExpected <positive digital>\nReturned %s      ", xp);
+            }
+        }
+        goto RETURN;
+    } else {
+        num = atoi(xp);
+        CU_ASSERT_TRUE(num > 0);
+        if (num <= 0) {
+            if (verbose) {
+                printf("\nExpected <positive digital>\nReturned %s      ", xp);
+            }
+        }
+        goto RETURN;
+    }
 RETURN:
     if (enum_response) {
         ws_xml_destroy_doc(enum_response);

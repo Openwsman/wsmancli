@@ -201,10 +201,10 @@ static void transfer_put_test() {
     if (wsman_get_client_response_code(cl) !=
                             put_tests[i].final_status) {
         if (verbose) {
-            printf("Expected = %ld, Returned = %ld\n",
+            printf("\nExpected = %ld, Returned = %ld        ",
                            put_tests[i].final_status,
                            wsman_get_client_response_code(cl));
-            ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
+         //   ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
         }
         goto RETURN;
     }
@@ -228,7 +228,7 @@ static void transfer_put_test() {
 
     if (strcmp(xpf, put_tests[i].value1)) {
         if (verbose) {
-            printf("Expected %s;   returned %s\n",
+            printf("Expected %s\nReturned %s       ",
                      put_tests[i].value1, xpf);
         }
          goto RETURN;
@@ -248,7 +248,7 @@ static void transfer_put_test() {
     CU_ASSERT_STRING_EQUAL(xpd, put_tests[i].value2 );
     if (strcmp(xpd, put_tests[i].value2)) {
         if (verbose) {
-            printf("Expected %s;   returned %s\n",
+            printf("\nExpected %sReturned %s       ",
                      put_tests[i].value2, xpd);
         }
         goto RETURN;

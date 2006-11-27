@@ -55,7 +55,7 @@
 
 static TestData pull_tests[] = {
   {
-    "Enumeration with non existent Resource URI.", 
+    "Pull. Enumeration with non existent Resource URI.", 
     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystemxx", 
     NULL, 
     NULL, 
@@ -69,7 +69,7 @@ static TestData pull_tests[] = {
     0
   },
   {
-    "Enumeration with non existent Resource URI. (Optimized)", 
+    "Pull. Enumeration with non existent Resource URI. (Optimized)", 
     "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_InitdService", 
     NULL, 
     NULL, 
@@ -83,7 +83,7 @@ static TestData pull_tests[] = {
     200
   },
   {
-    "Enumeration with non existent Resource URI. (Optimized/EPR/Count)", 
+    "Pull. Enumeration with non existent Resource URI. (Optimized/EPR/Count)", 
     "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_InitdService", 
     NULL, 
     NULL, 
@@ -93,11 +93,12 @@ static TestData pull_tests[] = {
     NULL, 
     NULL, 
     200,
-    FLAG_ENUMERATION_OPTIMIZATION | FLAG_ENUMERATION_ENUM_EPR | FLAG_ENUMERATION_COUNT_ESTIMATION ,
+    FLAG_ENUMERATION_OPTIMIZATION | FLAG_ENUMERATION_ENUM_EPR |
+                                         FLAG_ENUMERATION_COUNT_ESTIMATION ,
     200
   },
   {
-    "Enumeration with non existent Resource URI. (Optimized/EPR)", 
+    "Pull. Enumeration with non existent Resource URI. (Optimized/EPR)", 
     "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_InitdService", 
     NULL, 
     NULL, 
@@ -111,7 +112,7 @@ static TestData pull_tests[] = {
     200
   },
   {
-    "Enumeration with non existent Resource URI. (Optimized/ObjEPR)", 
+    "Pull. Enumeration with non existent Resource URI. (Optimized/ObjEPR)", 
     "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_InitdService", 
     NULL, 
     NULL, 
@@ -125,13 +126,13 @@ static TestData pull_tests[] = {
     200
   },
   {
-    "Enumeration with valid Resource URI and Items Count Estimation.",
+    "Pull. Enumeration with valid Resource URI and Items Count Estimation.",
     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
     NULL, 
     NULL, 
     NULL, 
     "/s:Envelope/s:Header/wsman:TotalItemsCountEstimate",
-    "3",
+    NULL,
     NULL,
     NULL,
     200,
@@ -211,6 +212,7 @@ static void pull_test() {
     char *enumContext = NULL;
     static int i = 0;
     char *xp = NULL;
+    int num;
 
     reinit_client_connection(cl);
     initialize_action_options(&options);
@@ -223,7 +225,16 @@ static void pull_test() {
     options.max_elements = pull_tests[i].max_elements;
     WsXmlDocH enum_response = wsenum_enumerate(cl,
                                 (char *)pull_tests[i].resource_uri, options);
-    CU_ASSERT_TRUE(wsman_get_client_response_code(cl) == pull_tests[i].final_status );
+    CU_ASSERT_TRUE(wsman_get_client_response_code(cl) ==
+                                                pull_tests[i].final_status);
+    if (wsman_get_client_response_code(cl) != pull_tests[i].final_status) {
+        if (verbose) {
+            printf("\nExpected = %ld\nReturned = %ld       ",
+                   pull_tests[i].final_status,
+                   wsman_get_client_response_code(cl));
+        }
+        goto RETURN;
+    }
     CU_ASSERT_PTR_NOT_NULL(enum_response);
 
     if (enum_response) {
@@ -232,13 +243,12 @@ static void pull_test() {
         enumContext = NULL;
     }
 
-    while (enumContext != NULL)
-    {                       
-        WsXmlDocH docp = wsenum_pull(cl, (char *)pull_tests[i].resource_uri, enumContext,
-                options);
+    while (enumContext != NULL) {
+        WsXmlDocH docp = wsenum_pull(cl, (char *)pull_tests[i].resource_uri,
+                                     enumContext, options);
         CU_ASSERT_PTR_NOT_NULL(docp);
         if (!docp) {
-            break;
+            goto RETURN;
         }
         if (pull_tests[i].expr1 == NULL) {
             goto RETURN;
@@ -248,7 +258,26 @@ static void pull_test() {
         if (!xp) {
             goto RETURN;
         }
-        CU_ASSERT_STRING_EQUAL(xp, pull_tests[i].value1 );
+        if (pull_tests[i].value1) {
+            CU_ASSERT_STRING_EQUAL(xp, pull_tests[i].value1);
+            if (strcmp(xp, pull_tests[i].value1)) {
+                if (verbose) {
+                    printf("\nExpected <positive digital>\nReturned %s      ",
+                            xp);
+                }
+            }
+            goto RETURN;
+        } else {
+            num = atoi(xp);
+            CU_ASSERT_TRUE(num > 0);
+            if (num <= 0) {
+                if (verbose) {
+                    printf("\nExpected <positive digital>\nReturned %s      ",
+                           xp);
+                }
+            }
+            goto RETURN;
+        }
         enumContext = wsenum_get_enum_context(docp);
         ws_xml_destroy_doc(docp);
     }

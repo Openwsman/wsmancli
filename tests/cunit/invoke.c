@@ -189,29 +189,40 @@ static void invoke_test() {
     char *xpf = NULL;
     char *xpd = NULL;
     static int i = 0; // executed test number.
-    char *old_selectors = invoke_tests[i].selectors;
+    char *selectors = NULL;
 
 
+    initialize_action_options(&options);
     if (invoke_tests[i].selectors) {
-        invoke_tests[i].selectors =
+        selectors =
               u_strdup_printf(invoke_tests[i].selectors, host, host, host);
     }
 
     reinit_client_connection(cl);
-    initialize_action_options(&options);
 
-    if (invoke_tests[i].selectors != NULL) {
-       wsman_add_selectors_from_query_string (&options, invoke_tests[i].selectors);
+    if (selectors != NULL) {
+         wsman_add_selectors_from_query_string (&options, selectors);
     }
     if (invoke_tests[i].properties != NULL) {
-       wsman_add_properties_from_query_string (&options, invoke_tests[i].properties);
+       wsman_add_properties_from_query_string (&options,
+                                        invoke_tests[i].properties);
     }
     options.flags = invoke_tests[i].flags;
 
-    doc = wsman_invoke (cl, (char *)invoke_tests[i].resource_uri, (char *)invoke_tests[i].method, options);
+    doc = wsman_invoke(cl, (char *)invoke_tests[i].resource_uri,
+                                (char *)invoke_tests[i].method, options);
     //ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
-    CU_ASSERT_TRUE(wsman_get_client_response_code(cl) == invoke_tests[i].final_status);
-
+    CU_ASSERT_TRUE(wsman_get_client_response_code(cl) ==
+                                        invoke_tests[i].final_status);
+    if (wsman_get_client_response_code(cl) !=
+                         invoke_tests[i].final_status) {
+        if (verbose) {
+            printf("\nExpected = %ld\nReturned = %ld       ",
+                    invoke_tests[i].final_status,
+                    wsman_get_client_response_code(cl));
+        }
+        goto RETURN;
+    }
     CU_ASSERT_PTR_NOT_NULL(doc);
     if (!doc) {
         goto RETURN;
@@ -229,7 +240,14 @@ static void invoke_test() {
         goto RETURN;
     }
     CU_ASSERT_STRING_EQUAL(xpf, invoke_tests[i].value1);
-
+    if (strcmp(xpf, invoke_tests[i].value1)) {
+       if (verbose) {
+            printf("\nExpected = %s\nReturned = %s      ",
+                invoke_tests[i].value1,
+                xpf);
+        }
+        goto RETURN;
+    }
     if (invoke_tests[i].expr2 == NULL) {
         goto RETURN;
     }
@@ -243,14 +261,20 @@ static void invoke_test() {
         goto RETURN;
     }
     CU_ASSERT_STRING_EQUAL(xpd, invoke_tests[i].value2 );
+    if (strcmp(xpd, invoke_tests[i].value2)) {
+       if (verbose) {
+            printf("\nExpected = %s\nReturned = %s         ",
+                invoke_tests[i].value2,
+                xpd);
+        }
+    }
 RETURN:
     u_free(xpf);
     u_free(xpd);
     if (doc) {
         ws_xml_destroy_doc(doc);
     }
-    u_free((char *)invoke_tests[i].selectors);
-    invoke_tests[i].selectors = old_selectors;
+    u_free(selectors);
     destroy_action_options(&options);
     i++; // increase executed test number
 }
