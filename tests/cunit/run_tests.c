@@ -38,7 +38,7 @@
 #define FALSE	0
 
 int verbose = 0;
-char *host = "langley.home.planux.com";
+char *host = "vpro.home.planux.com";
 
 
 static CU_pSuite

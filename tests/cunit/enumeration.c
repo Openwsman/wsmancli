@@ -32,7 +32,7 @@
  * @author Anas Nashif
  * @author Nathan Rakoff
  */
-#include "wsman_config.h"
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -226,10 +226,16 @@ static void enumeration_test() {
     options.max_elements = tests[i].max_elements;
     WsXmlDocH enum_response = wsenum_enumerate(cl,
                                 (char *)tests[i].resource_uri, options);
+
     CU_ASSERT_TRUE(wsman_get_client_response_code(cl) == tests[i].final_status );
     CU_ASSERT_PTR_NOT_NULL(enum_response);
     if (enum_response) {
         enumContext = wsenum_get_enum_context(enum_response);
+        if (enumContext)
+          wsenum_release(cl,
+                       (char *)tests[i].resource_uri, 
+                       enumContext,
+                       options);
     } else {
         goto RETURN;
     }
