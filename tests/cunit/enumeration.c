@@ -70,7 +70,7 @@ static TestData tests[] = {
     0
   },
   {
-    "Enumeration with non existent Resource URI. (Optimized)", 
+    "Enumeration  (Optimized)", 
     "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_InitdService", 
     NULL, 
     NULL, 
@@ -84,7 +84,7 @@ static TestData tests[] = {
     200
   },
   {
-    "Enumeration with non existent Resource URI. (Optimized/EPR/Count)", 
+    "Enumeration  (Optimized/EPR/Count)", 
     "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_InitdService", 
     NULL, 
     NULL, 
@@ -98,7 +98,7 @@ static TestData tests[] = {
     200
   },
   {
-    "Enumeration with non existent Resource URI. (Optimized/EPR)", 
+    "Enumeration (Optimized/EPR)", 
     "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_InitdService", 
     NULL, 
     NULL, 
@@ -112,7 +112,7 @@ static TestData tests[] = {
     200
   },
   {
-    "Enumeration with non existent Resource URI. (Optimized/ObjEPR)", 
+    "Enumeration (Optimized/ObjEPR)", 
     "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_InitdService", 
     NULL, 
     NULL, 
