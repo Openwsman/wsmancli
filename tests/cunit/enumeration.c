@@ -79,7 +79,7 @@ static TestData tests[] = {
     NULL, 
     NULL, 
     NULL, 
-    200,
+    500,
     FLAG_ENUMERATION_OPTIMIZATION,
     200
   },
@@ -93,7 +93,7 @@ static TestData tests[] = {
     NULL, 
     NULL, 
     NULL, 
-    200,
+    500,
     FLAG_ENUMERATION_OPTIMIZATION | FLAG_ENUMERATION_ENUM_EPR | FLAG_ENUMERATION_COUNT_ESTIMATION ,
     200
   },
@@ -107,7 +107,7 @@ static TestData tests[] = {
     NULL, 
     NULL, 
     NULL, 
-    200,
+    500,
     FLAG_ENUMERATION_OPTIMIZATION | FLAG_ENUMERATION_ENUM_EPR,
     200
   },
@@ -121,7 +121,7 @@ static TestData tests[] = {
     NULL, 
     NULL, 
     NULL, 
-    200,
+    500,
     FLAG_ENUMERATION_OPTIMIZATION | FLAG_ENUMERATION_ENUM_OBJ_AND_EPR,
     200
   },
@@ -225,10 +225,11 @@ static void enumeration_test() {
     WsXmlDocH enum_response = wsenum_enumerate(cl,
                                 (char *)tests[i].resource_uri, options);
     CU_ASSERT_TRUE(wsman_get_client_response_code(cl) == tests[i].final_status );
+    CU_ASSERT_PTR_NOT_NULL(enum_response);
     if (enum_response) {
         enumContext = wsenum_get_enum_context(enum_response);
     } else {
-        enumContext = NULL;
+        goto RETURN;
     }
 
     if (_debug) wsman_output(enum_response);
