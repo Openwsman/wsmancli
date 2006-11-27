@@ -292,7 +292,12 @@ int main(int argc, char** argv)
     WsXmlDocH enum_response = wsenum_enumerate(cl,
                                                resource_uri,  options);
     if (enum_response) {
-      wsman_output(enum_response);
+      if (wsman_get_client_response_code(cl) == 200 ||
+                wsman_get_client_response_code(cl) == 500) {
+        wsman_output(enum_response);
+      } else {
+          break;
+      }
       enumContext = wsenum_get_enum_context(enum_response);
       ws_xml_destroy_doc(enum_response);
     } else {
@@ -304,10 +309,11 @@ int main(int argc, char** argv)
       while (enumContext !=NULL) {
         doc = wsenum_pull(cl, resource_uri, enumContext, options);
  
-        wsman_output(doc);
-        if (wsman_get_client_response_code(cl) != 200) {
+        if (wsman_get_client_response_code(cl) != 200 &&
+                wsman_get_client_response_code(cl) != 500) {
           break;
         }
+        wsman_output(doc);
         enumContext = wsenum_get_enum_context(doc);
         if (doc) {
           ws_xml_destroy_doc(doc);
