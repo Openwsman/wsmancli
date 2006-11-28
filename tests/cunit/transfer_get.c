@@ -108,7 +108,7 @@ TestData get_tests[] = {
   },
 
   {
-    "Transfer Get with all selectors but with wrong values 1.",
+    "Transfer Get with all selectors but with wrong values.",
     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
     NULL,
     "CreationClassName=OpenWBEM_UnitaryComputerSystem&Name=%sx",
@@ -125,7 +125,8 @@ TestData get_tests[] = {
     "Transfer Get with all selectors (CIM_OperatingSystem).",
     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_OperatingSystem",
     NULL,
-    "CSCreationClassName=OMC_UnitaryComputerSystem&CSName=%s&CreationClassName=OMC_OperatingSystem&Name=Linux",
+    "CSCreationClassName=OMC_UnitaryComputerSystem&CSName=%s"
+                     "&CreationClassName=OMC_OperatingSystem&Name=Linux",
     NULL,
     NULL,
     NULL,

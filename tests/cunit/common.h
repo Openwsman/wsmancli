@@ -41,6 +41,10 @@ typedef struct {
 
   unsigned int		max_elements;
 
+  /* pairs of string filter/value. The last pair is NULL/NULL */
+  char **filters;
+  char **common_filters;
+
 } TestData;
 
 extern char *host;
@@ -54,5 +58,7 @@ int add_transfer_get_tests(CU_pSuite ps);
 int add_transfer_put_tests(CU_pSuite ps);
 int add_invoke_tests(CU_pSuite ps);
 int add_pull_tests(CU_pSuite ps);
+
+void check_response_header(char *action);
 
 #endif

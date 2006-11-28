@@ -45,3 +45,7 @@ int clean_test(void) {
   wsman_client_transport_fini();
   return 0;
 }
+
+void check_response_header(char *action) {
+    }
+

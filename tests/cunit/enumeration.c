@@ -53,6 +53,25 @@
 static int _debug = 0;
 
 
+static char *filters1[] = {
+    "/s:Envelope/s:Body/s:Fault/s:Code/s:Subcode/s:Value",
+     "wsa:DestinationUnreachable",
+     "/s:Envelope/s:Body/s:Fault/s:Detail/wsman:FaultDetail",
+     "http://schemas.dmtf.org/wbem/wsman/1/wsman/faultDetail/InvalidResourceURI",
+     NULL, NULL
+};
+
+static char *filters2[] = {
+   "s:Envelope/s:Body/wsen:EnumerateResponse/wsman:Items/wsa:EndpointReference/wsa:Address",
+    NULL,
+    NULL, NULL,
+};
+
+static char *filters3[] = {
+    "/s:Envelope/s:Header/wsman:TotalItemsCountEstimate",
+    NULL,
+    NULL, NULL,
+};
 
 static TestData tests[] = {
   {
@@ -60,14 +79,21 @@ static TestData tests[] = {
     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystemxx", 
     NULL, 
     NULL, 
-    NULL, 
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+/* 
     "/s:Envelope/s:Body/s:Fault/s:Code/s:Subcode/s:Value",
     "wsa:DestinationUnreachable",
     "/s:Envelope/s:Body/s:Fault/s:Detail/wsman:FaultDetail",
     "http://schemas.dmtf.org/wbem/wsman/1/wsman/faultDetail/InvalidResourceURI",
+*/
     500,
     FLAG_NONE,
-    0
+    0,
+    &filters1,
   },
   {
     "Enumeration  (Optimized)", 
@@ -89,14 +115,15 @@ static TestData tests[] = {
     NULL, 
     NULL, 
     NULL, 
+    NULL,
     NULL, 
-    NULL, 
-    NULL, 
+    NULL,
     NULL, 
     200,
     FLAG_ENUMERATION_OPTIMIZATION | FLAG_ENUMERATION_ENUM_EPR |
                                               FLAG_ENUMERATION_COUNT_ESTIMATION ,
-    200
+    200,
+    &filters2,
   },
   {
     "Enumeration (Optimized/EPR)", 
@@ -138,7 +165,9 @@ static TestData tests[] = {
     NULL,
     200,
     FLAG_ENUMERATION_COUNT_ESTIMATION,
-    0
+    0,
+    &filters3,
+
   }, /*
      {
      "Enumeration with valid Resource URI.",
@@ -214,6 +243,7 @@ static void enumeration_test() {
     static int i = 0;
     char *xp = NULL;
     int num;
+    int j;
 
     reinit_client_connection(cl);
     initialize_action_options(&options);
@@ -231,44 +261,42 @@ static void enumeration_test() {
     CU_ASSERT_PTR_NOT_NULL(enum_response);
     if (enum_response) {
         enumContext = wsenum_get_enum_context(enum_response);
-        if (enumContext)
-          wsenum_release(cl,
-                       (char *)tests[i].resource_uri, 
-                       enumContext,
-                       options);
     } else {
         goto RETURN;
     }
 
     if (_debug) wsman_output(enum_response);
 
-    if (tests[i].expr1 == NULL) {
+    if (tests[i].filters == NULL) {
         goto RETURN;
     }
-    xp = ws_xml_get_xpath_value(enum_response, tests[i].expr1);
-    CU_ASSERT_PTR_NOT_NULL(xp);
-    if (!xp) {
-        goto RETURN;
-    }
-    if (tests[i].value1) {
-        CU_ASSERT_STRING_EQUAL(xp, tests[i].value1);
-        if (strcmp(xp, tests[i].value1)) {
+
+    for (j = 0; tests[i].filters[j] != NULL; j += 2) {
+        u_free(xp);
+        xp = ws_xml_get_xpath_value(enum_response, tests[i].filters[j]);
+        CU_ASSERT_PTR_NOT_NULL(xp);
+        if (xp == NULL) {
             if (verbose) {
-                printf("\nExpected <positive digital>\nReturned %s      ", xp);
+                printf("\n No Xpath: %s      ", tests[i].filters[j]);
             }
+            continue;
         }
-        goto RETURN;
-    } else {
-        num = atoi(xp);
-        CU_ASSERT_TRUE(num > 0);
-        if (num <= 0) {
-            if (verbose) {
-                printf("\nExpected <positive digital>\nReturned %s      ", xp);
-            }
+        if (tests[i].filters[j + 1]) {
+             CU_ASSERT_STRING_EQUAL(xp, tests[i].filters[j + 1]);
+             if (verbose && strcmp(xp, tests[i].filters[j + 1])) {
+                printf("\nExpected:  %s\nReturned:  %s       ",
+                        tests[i].filters[j + 1], xp);
+             }
         }
-        goto RETURN;
     }
+
 RETURN:
+    if (enumContext) {
+        wsenum_release(cl,
+                       (char *)tests[i].resource_uri, 
+                       enumContext,
+                       options);
+    }
     if (enum_response) {
         ws_xml_destroy_doc(enum_response);
     }

@@ -56,8 +56,8 @@ setup_client_suite(void) {
    num_tests += add_pull_tests(ps);
    num_tests += add_identify_tests(ps);
    num_tests += add_transfer_get_tests(ps);
-   num_tests += add_transfer_put_tests(ps);
-   num_tests += add_invoke_tests(ps);
+//   num_tests += add_transfer_put_tests(ps);
+//   num_tests += add_invoke_tests(ps);
    if (num_tests == 0) {
         printf("No tests to run\n");
         // nothing to do 
