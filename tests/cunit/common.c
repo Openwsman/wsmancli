@@ -47,7 +47,7 @@ int clean_test(void) {
 }
 
 
-void check_response_header(WsXmlDocH doc, char *action) {
+void check_response_header(WsXmlDocH doc, long resp_code, char *action) {
     char *xp = NULL;
 
     xp = ws_xml_get_xpath_value(doc, "/s:Envelope/s:Header/wsa:To");
@@ -57,14 +57,18 @@ void check_response_header(WsXmlDocH doc, char *action) {
            "http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous");
     }
     u_free(xp);
-    /*
+
     xp = ws_xml_get_xpath_value(doc, "/s:Envelope/s:Header/wsa:Action");
     CU_ASSERT_PTR_NOT_NULL(xp);
-    if (xp != NULL && action != NULL) {
-        CU_ASSERT_STRING_EQUAL(xp, action);
+    if (xp != NULL) {
+        if (resp_code == 200 && action != NULL) {
+            CU_ASSERT_STRING_EQUAL(xp, action);
+        } else if (resp_code == 500) {
+            CU_ASSERT_STRING_EQUAL(xp,
+              "http://schemas.xmlsoap.org/ws/2004/08/addressing/fault");
+        }
     }
     u_free(xp);
-    */
     xp = ws_xml_get_xpath_value(doc, "/s:Envelope/s:Header/wsa:MessageID");
     CU_ASSERT_PTR_NOT_NULL(xp);
     u_free(xp);
