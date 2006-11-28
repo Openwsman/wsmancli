@@ -61,6 +61,7 @@ static char *filters1[] = {
      NULL, NULL
 };
 
+
 static char *filters2[] = {
    "/s:Envelope/s:Body/wsen:EnumerateResponse/wsman:Items[1]/wsa:EndpointReference/wsa:Address",
     NULL,
@@ -72,6 +73,7 @@ static char *filters3[] = {
     NULL,
     NULL, NULL,
 };
+
 
 static TestData tests[] = {
   {
@@ -93,7 +95,7 @@ static TestData tests[] = {
     500,
     FLAG_NONE,
     0,
-    &filters1,
+    filters1,
   },
   {
     "Enumeration  (Optimized)", 
@@ -123,7 +125,7 @@ static TestData tests[] = {
     FLAG_ENUMERATION_OPTIMIZATION | FLAG_ENUMERATION_ENUM_EPR |
                                               FLAG_ENUMERATION_COUNT_ESTIMATION ,
     200,
-    &filters2,
+    filters2,
   },
   {
     "Enumeration (Optimized/EPR)", 
@@ -166,8 +168,7 @@ static TestData tests[] = {
     200,
     FLAG_ENUMERATION_COUNT_ESTIMATION,
     0,
-    &filters3,
-
+    filters3,
   }, /*
      {
      "Enumeration with valid Resource URI.",
@@ -264,7 +265,8 @@ static void enumeration_test() {
     } else {
         goto RETURN;
     }
-
+    check_response_header(enum_response,
+       "http://schemas.xmlsoap.org/ws/2004/09/enumeration/EnumerateResponse");
     if (_debug) wsman_output(enum_response);
 
     if (tests[i].filters == NULL) {

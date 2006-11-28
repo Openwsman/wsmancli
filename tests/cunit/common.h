@@ -3,6 +3,7 @@
 #define _COMMON_H
 
 #include <CUnit/Basic.h> 
+#include "wsman-client-api.h"
 
 typedef struct {
   const char *server;
@@ -59,6 +60,7 @@ int add_transfer_put_tests(CU_pSuite ps);
 int add_invoke_tests(CU_pSuite ps);
 int add_pull_tests(CU_pSuite ps);
 
-void check_response_header(char *action);
+void check_response_header(WsXmlDocH doc, char *action);
+
 
 #endif
