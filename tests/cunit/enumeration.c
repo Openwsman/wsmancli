@@ -62,7 +62,7 @@ static char *filters1[] = {
 };
 
 static char *filters2[] = {
-   "s:Envelope/s:Body/wsen:EnumerateResponse/wsman:Items/wsa:EndpointReference/wsa:Address",
+   "/s:Envelope/s:Body/wsen:EnumerateResponse/wsman:Items[1]/wsa:EndpointReference/wsa:Address",
     NULL,
     NULL, NULL,
 };
