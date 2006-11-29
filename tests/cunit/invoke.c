@@ -56,7 +56,7 @@ TestData invoke_tests[] = {
     "wsman:InvalidSelectors",	    
     "/s:Envelope/s:Body/s:Fault/s:Detail/wsman:FaultDetail",
     "http://schemas.dmtf.org/wbem/wsman/1/wsman/faultDetail/InsufficientSelectors",
-    500, 
+    400, 
     0,
     0
   },
@@ -71,7 +71,7 @@ TestData invoke_tests[] = {
     "wsa:DestinationUnreachable",  
     "/s:Envelope/s:Body/s:Fault/s:Detail/wsman:FaultDetail",
     "http://schemas.dmtf.org/wbem/wsman/1/wsman/faultDetail/InvalidResourceURI",
-    500, 
+    400, 
     0,
     0
   },

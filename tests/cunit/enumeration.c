@@ -105,7 +105,7 @@ static TestData tests[] = {
     NULL,
     NULL,
     NULL,
-    500,
+    400,
     FLAG_NONE,
     0,
     filters1,

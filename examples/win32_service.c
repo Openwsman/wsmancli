@@ -153,6 +153,27 @@ static void print_info(CIM_Servie *service) {
         printf("\tDescription: %s\n\n", service->Description );
 }
 
+static int list_services(WsManClient *cl, WsXmlDocH doc, void *data)
+{
+
+  if (doc) {
+    WsXmlNodeH node = ws_xml_get_soap_body(doc);
+    node = ws_xml_get_child(node, 0,  XML_NS_ENUMERATION, WSENUM_PULL_RESP);
+    node = ws_xml_get_child(node, 0,  XML_NS_ENUMERATION, WSENUM_ITEMS);
+    if (ws_xml_get_child(node, 0, RESOURCE_URI , CLASSNAME )) {
+      CIM_Servie *service = ws_deserialize(wsman_client_get_context(cl),
+                                           node,
+                                           CIM_Servie_TypeInfo, CLASSNAME,
+                                           RESOURCE_URI, RESOURCE_URI,
+                                           0, 0);
+      print_info(service);
+    }
+    
+  }
+}
+
+
+
 int main(int argc, char** argv)
 {
 	
@@ -216,44 +237,8 @@ int main(int argc, char** argv)
     initialize_action_options(&options);
 
     if (listall) {
-        char *enumContext;
-        WsXmlDocH enum_response;
+      wsenum_enumerate_and_pull(cl, RESOURCE_URI, options, list_services, NULL );
 
-        enum_response = wsenum_enumerate(cl, RESOURCE_URI, options);
-        if (enum_response) {
-            if (!wsman_get_client_response_code(cl) == 200 ||
-                    !wsman_get_client_response_code(cl) == 500) {
-                return (1);
-            }
-            enumContext = wsenum_get_enum_context(enum_response);
-            ws_xml_destroy_doc(enum_response);
-        } else {
-            return(1);
-        }
-
-        while (enumContext !=NULL) {
-            doc = wsenum_pull(cl, RESOURCE_URI, enumContext, options);
-
-            if (wsman_get_client_response_code(cl) != 200 &&
-                    wsman_get_client_response_code(cl) != 500) {
-                return (1);
-            }
-            enumContext = wsenum_get_enum_context(doc);
-            if (doc) {
-                WsXmlNodeH node = ws_xml_get_soap_body(doc);
-                node = ws_xml_get_child(node, 0,  XML_NS_ENUMERATION, WSENUM_PULL_RESP);
-                node = ws_xml_get_child(node, 0,  XML_NS_ENUMERATION, WSENUM_ITEMS);
-                if (ws_xml_get_child(node, 0, RESOURCE_URI , CLASSNAME )) {
-                    CIM_Servie *service = ws_deserialize(wsman_client_get_context(cl),
-                            node,
-                            CIM_Servie_TypeInfo, CLASSNAME,
-                            RESOURCE_URI, RESOURCE_URI,
-                            0, 0);
-                    print_info(service);
-                }
-                ws_xml_destroy_doc(doc);
-            }
-        }
     } else if (start && argv[1]) {
         //wsman_set_action_option(&options,FLAG_DUMP_REQUEST );
         wsman_add_selectors_from_query_string(&options, u_strdup_printf("Name=%s", argv[1]));

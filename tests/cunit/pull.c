@@ -68,7 +68,7 @@ static TestData pull_tests[] = {
     "wsa:DestinationUnreachable",
     "/s:Envelope/s:Body/s:Fault/s:Detail/wsman:FaultDetail",
     "http://schemas.dmtf.org/wbem/wsman/1/wsman/faultDetail/InvalidResourceURI",
-    500,
+    400,
     FLAG_NONE,
     0
   },
