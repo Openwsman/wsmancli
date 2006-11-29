@@ -11,10 +11,13 @@ wsmid_identify_SOURCES = \
 
 win32_service_SOURCES = \
 		win32_service.c
+enum_epr_SOURCES = \
+		enum_epr.c
 		
 bin_PROGRAMS = \
 	wsmid_identify \
-	win32_service
+	win32_service \
+	enum_epr
    
 
 
