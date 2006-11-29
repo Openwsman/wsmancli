@@ -1,15 +1,16 @@
 AM_CFLAGS = @CFLAGS@
 
-wsman_CFLAGS = \
-	       $(OPENWSMAN_CFLAGS)
-       
 wsman_LDADD = \
        $(OPENWSMAN_LIBS)
 
-wsmid_identify_CFLAGS = \
-	       $(OPENWSMAN_CFLAGS)
+CFLAGS = \
+       $(OPENWSMAN_CFLAGS)
        
 wsmid_identify_LDADD = \
+       $(OPENWSMAN_LIBS)
+
+
+wsman_service_LDADD = \
        $(OPENWSMAN_LIBS)
 
 wsman_SOURCES = wsman.c \
@@ -18,10 +19,14 @@ wsman_SOURCES = wsman.c \
 
 wsmid_identify_SOURCES = \
 		wsmid_identify.c
+
+wsman_service_SOURCES = \
+		wsman-service.c
 		
 bin_PROGRAMS = \
 	wsman \
-	wsmid_identify
+	wsmid_identify \
+	wsman-service
    
 
 
