@@ -21,12 +21,12 @@ wsmid_identify_SOURCES = \
 		wsmid_identify.c
 
 wsman_service_SOURCES = \
-		wsman-service.c
+		win32_service.c
 		
 bin_PROGRAMS = \
 	wsman \
 	wsmid_identify \
-	wsman-service
+	win32_service
    
 
 
