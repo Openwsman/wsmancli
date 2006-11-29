@@ -49,6 +49,11 @@
 #include "common.h"
 
 
+static char *filters2[] = {
+   "/s:Envelope/s:Body/wsen:PullResponse/wsman:Items/wsa:EndpointReference/wsa:Address",
+    NULL,
+    NULL, NULL,
+};
 
 
 
@@ -80,7 +85,7 @@ static TestData pull_tests[] = {
     NULL, 
     200,
     FLAG_ENUMERATION_OPTIMIZATION,
-    200
+    0
   },
   {
     "Pull. Enumeration (Optimized/EPR/Count)", 
@@ -95,7 +100,7 @@ static TestData pull_tests[] = {
     200,
     FLAG_ENUMERATION_OPTIMIZATION | FLAG_ENUMERATION_ENUM_EPR |
                                          FLAG_ENUMERATION_COUNT_ESTIMATION ,
-    200
+    10
   },
   {
     "Pull. Enumeration (Optimized/EPR)", 
@@ -109,7 +114,7 @@ static TestData pull_tests[] = {
     NULL, 
     200,
     FLAG_ENUMERATION_OPTIMIZATION | FLAG_ENUMERATION_ENUM_EPR,
-    200
+    10
   },
   {
     "Pull. Enumeration (Optimized/ObjEPR)", 
@@ -123,7 +128,7 @@ static TestData pull_tests[] = {
     NULL, 
     200,
     FLAG_ENUMERATION_OPTIMIZATION | FLAG_ENUMERATION_ENUM_OBJ_AND_EPR,
-    200
+    10
   },
   {
     "Pull. Enumeration with valid Resource URI and Items Count Estimation.",
@@ -138,66 +143,7 @@ static TestData pull_tests[] = {
     200,
     FLAG_ENUMERATION_COUNT_ESTIMATION,
     0
-  }, /*
-     {
-     "Enumeration with valid Resource URI.",
-     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
-     NULL, 
-     200,
-     FLAG_NONE,
-     0
-     },
-     {
-     "Enumeration with valid Resource URI and additional invalid selectors.",
-     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
-     NULL, 
-     200,
-     FLAG_NONE,
-     1
-     },	
-     {
-     "Enumeration with valid Resource URI/Count Estimation.",
-     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
-     NULL, 
-     200,
-     FLAG_ENUMERATION_COUNT_ESTIMATION,
-     0
-     },
-     {
-     "Enumeration with valid Resource URI/Optimization.",
-     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
-     NULL, 
-     200,
-     FLAG_ENUMERATION_OPTIMIZATION,
-     0
-     },	
-     {
-     "Enumeration with Count Estimation/Optimzation and get all elements.",
-     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
-     NULL, 
-     200,
-     FLAG_ENUMERATION_OPTIMIZATION | FLAG_ENUMERATION_COUNT_ESTIMATION,
-     10
-
-     },
-     {
-     "Enumeration with Count Estimation/Optimzation/Epr and get all elements.",
-     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
-     NULL, 
-     200,
-     FLAG_ENUMERATION_OPTIMIZATION | FLAG_ENUMERATION_COUNT_ESTIMATION | FLAG_ENUMERATION_ENUM_EPR,
-     10
-
-     },	
-     {
-     "Enumeration with Count Estimation/Optimzation/ObjAndEpr and get all elements.",
-     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
-     NULL, 
-     200,
-     FLAG_ENUMERATION_OPTIMIZATION | FLAG_ENUMERATION_COUNT_ESTIMATION | FLAG_ENUMERATION_ENUM_OBJ_AND_EPR,
-     10
-
-     }	*/
+  }
 };
 
 

@@ -1,4 +1,4 @@
-SUBDIRS = src tests
+SUBDIRS = src examples tests
 
 package: dist
 	cp wsmancli.spec /usr/src/packages/SPEC

@@ -282,8 +282,8 @@ int main(int argc, char** argv)
     if (wsman_options_get_optimize_enum()) 
     {
       wsman_set_action_option(&options, FLAG_ENUMERATION_OPTIMIZATION);            
-      options.max_elements = wsman_options_get_max_elements();
     }
+    options.max_elements = wsman_options_get_max_elements();
 
     if (wsman_options_get_estimate_enum()) {
       wsman_set_action_option(&options, FLAG_ENUMERATION_COUNT_ESTIMATION);

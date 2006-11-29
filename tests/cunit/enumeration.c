@@ -266,9 +266,8 @@ static void enumeration_test() {
         goto RETURN;
     }
     check_response_header(enum_response, wsman_get_client_response_code(cl),
-       "http://schemas.xmlsoap.org/ws/2004/09/enumeration/EnumerateResponse");
+       ENUM_ACTION_ENUMERATERESPONSE);
 
-http://schemas.xmlsoap.org/ws/2004/08/addressing/fault
     if (_debug) wsman_output(enum_response);
 
     if (tests[i].filters == NULL) {

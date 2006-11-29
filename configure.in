@@ -23,6 +23,7 @@ AC_OUTPUT([
 	wsmancli.spec
 	Makefile
 	src/Makefile
+	examples/Makefile
         tests/Makefile
         tests/cunit/Makefile
 ])

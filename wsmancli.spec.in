@@ -31,4 +31,3 @@ rm -rf "$RPM_BUILD_ROOT"
 %files
 %defattr(-,root,root)
 %{_bindir}/wsman
-%{_bindir}/wsmid_identify
