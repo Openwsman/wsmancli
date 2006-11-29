@@ -61,6 +61,6 @@ int add_invoke_tests(CU_pSuite ps);
 int add_pull_tests(CU_pSuite ps);
 
 void check_response_header(WsXmlDocH doc, long resp_code, char *action);
-
+void handle_filters(WsXmlDocH doc, char *f[]);
 
 #endif

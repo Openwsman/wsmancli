@@ -76,3 +76,41 @@ void check_response_header(WsXmlDocH doc, long resp_code, char *action) {
     CU_ASSERT_PTR_NOT_NULL(xp);
     u_free(xp);
 }
+
+
+
+void handle_filters(WsXmlDocH doc, char *f[])
+{
+    int j;
+    char *xp = NULL;
+
+    if (f == NULL) {
+        return;
+    }
+    for (j = 0; f[j] != NULL && f[j + 1] != NULL; j += 2) {
+        if (f[j] == NULL) {
+            continue;
+        }
+        char *val;
+        u_free(xp);
+        xp = ws_xml_get_xpath_value(doc, f[j]);
+        CU_ASSERT_PTR_NOT_NULL(xp);
+        if (xp == NULL) {
+            if (verbose) {
+                printf("\n No Xpath: %s      ", f[j]);
+            }
+            continue;
+        }
+        if (f[j + 1]) {
+            val = u_strdup_printf(f[j + 1], host);
+            CU_ASSERT_STRING_EQUAL(xp, val);
+            if (verbose && strcmp(xp, val)) {
+               printf("\nExpected:  %s\nReturned:  %s       ", val, xp);
+            }
+            u_free(val);
+        }
+    }
+}
+
+
+
