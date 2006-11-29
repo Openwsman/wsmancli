@@ -136,6 +136,22 @@ SER_UINT32("WaitHint",0,1),
 SER_END_ITEMS("CIM_Servie", CIM_Servie);
 
 static char *endpoint = NULL;
+char listall = 0;
+char stop = 0;
+char start = 0;
+char desc = 0;
+char status = 0;
+
+
+
+
+static void print_info(CIM_Servie *service) {
+    printf("%s\n", service->Name );
+    if (status)
+        printf("\tState: %s\n", service->State );
+    if (desc)
+        printf("\tDescription: %s\n\n", service->Description );
+}
 
 int main(int argc, char** argv)
 {
@@ -146,9 +162,20 @@ int main(int argc, char** argv)
     char retval = 0;
     u_error_t *error = NULL;
 
+
     u_option_entry_t opt[] = {
     { "endpoint",	'u',	U_OPTION_ARG_STRING,	&endpoint,
 		"Endpoint in form of a URL", "<uri>" },
+    { "list-all", 'l',	U_OPTION_ARG_NONE,	&listall,
+		"List all services", NULL },
+    { "desc", 'd',	U_OPTION_ARG_NONE,	&desc,
+		"Show service description", NULL },
+    { "stop", 's',	U_OPTION_ARG_NONE,	&stop,
+		"Stop service", NULL },
+    { "start", 'S',	U_OPTION_ARG_NONE,	&start,
+		"Start service", NULL },
+    { "status", 'X',	U_OPTION_ARG_NONE,	&status,
+		"Get service status", NULL },
     { NULL }
     };
 
@@ -188,45 +215,80 @@ int main(int argc, char** argv)
         uri->pwd);		
     initialize_action_options(&options);
 
-    char *enumContext;
-    WsXmlDocH enum_response;
+    if (listall) {
+        char *enumContext;
+        WsXmlDocH enum_response;
 
-    enum_response = wsenum_enumerate(cl, RESOURCE_URI, options);
-    if (enum_response) {
-      if (!wsman_get_client_response_code(cl) == 200 ||
-                !wsman_get_client_response_code(cl) == 500) {
-        return (1);
-      }
-      enumContext = wsenum_get_enum_context(enum_response);
-      ws_xml_destroy_doc(enum_response);
-    } else {
-      return(1);
-    }
-
-    while (enumContext !=NULL) {
-        doc = wsenum_pull(cl, RESOURCE_URI, enumContext, options);
-
-        if (wsman_get_client_response_code(cl) != 200 &&
-                wsman_get_client_response_code(cl) != 500) {
-            return (1);
+        enum_response = wsenum_enumerate(cl, RESOURCE_URI, options);
+        if (enum_response) {
+            if (!wsman_get_client_response_code(cl) == 200 ||
+                    !wsman_get_client_response_code(cl) == 500) {
+                return (1);
+            }
+            enumContext = wsenum_get_enum_context(enum_response);
+            ws_xml_destroy_doc(enum_response);
+        } else {
+            return(1);
         }
-        enumContext = wsenum_get_enum_context(doc);
+
+        while (enumContext !=NULL) {
+            doc = wsenum_pull(cl, RESOURCE_URI, enumContext, options);
+
+            if (wsman_get_client_response_code(cl) != 200 &&
+                    wsman_get_client_response_code(cl) != 500) {
+                return (1);
+            }
+            enumContext = wsenum_get_enum_context(doc);
+            if (doc) {
+                WsXmlNodeH node = ws_xml_get_soap_body(doc);
+                node = ws_xml_get_child(node, 0,  XML_NS_ENUMERATION, WSENUM_PULL_RESP);
+                node = ws_xml_get_child(node, 0,  XML_NS_ENUMERATION, WSENUM_ITEMS);
+                if (ws_xml_get_child(node, 0, RESOURCE_URI , CLASSNAME )) {
+                    CIM_Servie *service = ws_deserialize(wsman_client_get_context(cl),
+                            node,
+                            CIM_Servie_TypeInfo, CLASSNAME,
+                            RESOURCE_URI, RESOURCE_URI,
+                            0, 0);
+                    print_info(service);
+                }
+                ws_xml_destroy_doc(doc);
+            }
+        }
+    } else if (start && argv[1]) {
+        //wsman_set_action_option(&options,FLAG_DUMP_REQUEST );
+        wsman_add_selectors_from_query_string(&options, u_strdup_printf("Name=%s", argv[1]));
+        doc = wsman_invoke(cl, RESOURCE_URI,
+                                "StartService", options);
+        ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
+        ws_xml_destroy_doc(doc);
+    } else if (stop && argv[1]) {
+        //wsman_set_action_option(&options,FLAG_DUMP_REQUEST );
+        wsman_add_selectors_from_query_string(&options, u_strdup_printf("Name=%s", argv[1]));
+        doc = wsman_invoke(cl, RESOURCE_URI,
+                                "StopService", options);
+        ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
+        ws_xml_destroy_doc(doc);
+    } else if ( argv[1] ) {
+        //wsman_set_action_option(&options,FLAG_DUMP_REQUEST );
+        wsman_add_selectors_from_query_string(&options, u_strdup_printf("Name=%s", argv[1]));
+        doc = ws_transfer_get(cl, RESOURCE_URI,
+                                 options);
         if (doc) {
             WsXmlNodeH node = ws_xml_get_soap_body(doc);
-            node = ws_xml_get_child(node, 0,  XML_NS_ENUMERATION, WSENUM_PULL_RESP);
-            node = ws_xml_get_child(node, 0,  XML_NS_ENUMERATION, WSENUM_ITEMS);
             if (ws_xml_get_child(node, 0, RESOURCE_URI , CLASSNAME )) {
                 CIM_Servie *service = ws_deserialize(wsman_client_get_context(cl),
-                                     node,
-                                     CIM_Servie_TypeInfo, CLASSNAME,
-                                     RESOURCE_URI, RESOURCE_URI,
-                                     0, 0);
-                printf("Service %s is %s\n", service->Name, service->State );
-                printf("AcceptPause %d, AcceptStop %d\n", service->AcceptPause, service->AcceptStop );
+                        node,
+                        CIM_Servie_TypeInfo, CLASSNAME,
+                        RESOURCE_URI, RESOURCE_URI,
+                        0, 0);
+                desc = 1;
+                status = 1;
+                print_info(service);
             }
-            ws_xml_destroy_doc(doc);
         }
+        ws_xml_destroy_doc(doc);
     }
+
     if (uri) {
       u_uri_free(uri);
     }
