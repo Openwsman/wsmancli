@@ -293,6 +293,7 @@ int main(int argc, char** argv)
                                                resource_uri,  options);
     if (enum_response) {
       if (wsman_get_client_response_code(cl) == 200 ||
+                wsman_get_client_response_code(cl) == 400 ||
                 wsman_get_client_response_code(cl) == 500) {
         wsman_output(enum_response);
       } else {
@@ -310,6 +311,7 @@ int main(int argc, char** argv)
         doc = wsenum_pull(cl, resource_uri, enumContext, options);
  
         if (wsman_get_client_response_code(cl) != 200 &&
+                wsman_get_client_response_code(cl) != 400 &&
                 wsman_get_client_response_code(cl) != 500) {
           break;
         }
