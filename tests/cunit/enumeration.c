@@ -326,7 +326,7 @@ static void enumeration_test() {
     check_response_header(enum_response, wsman_get_client_response_code(cl),
        ENUM_ACTION_ENUMERATERESPONSE);
 
-if (i==11) ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(enum_response));
+//if (i==11) ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(enum_response));
 
     handle_filters(enum_response, filters);
     handle_filters(enum_response, tests[i].common_filters);
