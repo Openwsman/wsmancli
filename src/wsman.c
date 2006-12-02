@@ -33,13 +33,18 @@
  * @author Eugene Yarmosh
  * @author Vadim Revyakin
  */
-
+#ifdef HAVE_CONFIG_H
 #include "config.h"
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
+
 #include <errno.h>
 #include <time.h>
 
@@ -108,6 +113,7 @@ int main(int argc, char** argv)
   char *enumContext;
   WsXmlDocH rqstDoc;
   actionOptions options;    
+  WsXmlDocH enum_response;
    
   char *enumeration_mode, *binding_enumeration_mode, *resource_uri_with_selectors;
   char *resource_uri = NULL;
@@ -259,7 +265,7 @@ int main(int argc, char** argv)
     }
     break;        
   case WSMAN_ACTION_ENUMERATION:
-
+	
     enumeration_mode = wsman_options_get_enum_mode();
     binding_enumeration_mode = wsman_options_get_binding_enum_mode();
 
@@ -289,7 +295,7 @@ int main(int argc, char** argv)
       wsman_set_action_option(&options, FLAG_ENUMERATION_COUNT_ESTIMATION);
     }
         
-    WsXmlDocH enum_response = wsenum_enumerate(cl,
+    enum_response = wsenum_enumerate(cl,
                                                resource_uri,  options);
     if (enum_response) {
       if (wsman_get_client_response_code(cl) == 200 ||

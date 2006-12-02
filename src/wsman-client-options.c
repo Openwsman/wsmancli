@@ -31,12 +31,18 @@
 /**
  * @author Anas Nashif
  */
-
+#ifdef HAVE_CONFIG_H
 #include <config.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
+
 
 #include "u/libu.h"
 #include "wsman-client-api.h"
