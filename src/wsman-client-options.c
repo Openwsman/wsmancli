@@ -144,7 +144,7 @@ char wsman_parse_options(int argc, char **argv)
     { "proxyauth",	'Y',	U_OPTION_ARG_STRING,	&proxy_upwd,
 		"Proxy user:pwd",		"<proxyauth>" },
     { "auth",	'y', 	U_OPTION_ARG_STRING,	&authentication_method,
-		"Authentication Method",	"<basic|digest>" },
+		"Authentication Method",	"<basic|digest|gss>" },
     { "method",	'a',	U_OPTION_ARG_STRING,	&invoke_method,
 		"Method (Works only with 'invoke')", "<custom method>" },
     { "prop",	'k',	U_OPTION_ARG_STRING_ARRAY,	&properties,
