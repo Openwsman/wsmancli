@@ -7,7 +7,7 @@
     </URLs>
     <Credentials SecurityProfile="Basic">
         <Username>wsman</Username>
-        <Password>secret</Username>
+        <Password>secret</Password>
     </Credentials>
     <Scenario Description="6.1 Identify" Supported="true"/>
     <Scenario Description="6.1.1 Anonymous Identify" Supported="false"/>
@@ -25,30 +25,36 @@
     </Scenario>
     <Scenario Description="6.3 Get failure - invalid resoure URI" Supported="true">
         <Input>
-            <ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem</ResourceURI>
+            <ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystemx</ResourceURI>
         </Input>
     </Scenario>
     <Scenario Description="6.4 Get failure (MaxEnvelop exceeded)" Supported="true">
         <Input>
-            <ResourceURI/>
-            <SelectorSet/>
+            <ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem</ResourceURI>
+            <SelectorSet>
+                <Selector Name="CreationClassName">OMC_UnitaryComputerSystem</Selector>
+                <Selector Name="Name">vpro.home.planux.com</Selector>
+            </SelectorSet>
             <MaxEnvelope/>
         </Input>
     </Scenario>
     <Scenario Description="6.5 Get failure - invalid selectors" Supported="true">
         <Input>
-            <ResourceURI/>
-            <SelectorSet/>
+            <ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem</ResourceURI>
+            <SelectorSet>
+                <Selector Name="CreationClassName">OMC_UnitaryComputerSystem</Selector>
+                <Selector Name="Namex">vpro.home.planux.com</Selector>
+            </SelectorSet>
         </Input>
     </Scenario>
-    <Scenario Description="6.6 Get failure - operation timeout" Supported="true">
+    <Scenario Description="6.6 Get failure - operation timeout" Supported="false">
         <Input>
             <ResourceURI/>
             <SelectorSet/>
             <Timeout/>
         </Input>
     </Scenario>
-    <Scenario Description="6.7 Fragment Get" Supported="true">
+    <Scenario Description="6.7 Fragment Get" Supported="false">
         <Input>
             <ResourceURI/>
             <SelectorSet/>
@@ -63,7 +69,7 @@
     </Scenario>
     <Scenario Description="7.1 Enumerate" Supported="true">
         <Input>
-            <ResourceURI/>
+            <ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem</ResourceURI>
         </Input>
         <Response>
             <Item/>
@@ -95,7 +101,7 @@
             </Item>
         </Response>
     </Scenario>
-    <Scenario Description="7.5 Enumerate w/ XPath" Supported="true">
+    <Scenario Description="7.5 Enumerate w/ XPath" Supported="false">
         <Input>
             <ResourceURI/>
             <Expression/>
@@ -105,7 +111,7 @@
             <Item/>
         </Response>
     </Scenario>
-    <Scenario Description="7.6 Enumerate w/ SelectorFilter" Supported="true">
+    <Scenario Description="7.6 Enumerate w/ SelectorFilter" Supported="false">
         <Input>
             <ResourceURI/>
             <Expression/>
@@ -115,7 +121,7 @@
             <Item/>
         </Response>
     </Scenario>
-    <Scenario Description="7.7 Enumerate w/ Other Dialect" Supported="true">
+    <Scenario Description="7.7 Enumerate w/ Other Dialect" Supported="false">
         <Input>
             <ResourceURI/>
             <Dialect/>
@@ -126,7 +132,7 @@
             <Item/>
         </Response>
     </Scenario>
-    <Scenario Description="7.8 Enumerate w/ transform and EPR" Supported="true">
+    <Scenario Description="7.8 Enumerate w/ transform and EPR" Supported="false">
         <Input>
             <ResourceURI/>
             <Dialect/>
@@ -171,7 +177,7 @@
             <NewValue/>
         </Input>
     </Scenario>
-    <Scenario Description="9.2 Fragment Put" Supported="true">
+    <Scenario Description="9.2 Fragment Put" Supported="false">
         <Input>
             <ResourceURI/>
             <SelectorSet/>
@@ -182,7 +188,7 @@
 </InputMsg>
         </Input>
     </Scenario>
-    <Scenario Description="10 Eventing" Supported="true">
+    <Scenario Description="10 Eventing" Supported="false">
         <Input>
             <ResourceURI/>
             <Dialect/>
