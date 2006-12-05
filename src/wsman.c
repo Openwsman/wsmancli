@@ -313,7 +313,8 @@ int main(int argc, char** argv)
        
     if (!wsman_options_get_step_request()) 
     {
-      while (enumContext !=NULL) {
+      while (enumContext !=NULL && enumContext[0] != 0 ) {
+
         doc = wsenum_pull(cl, resource_uri, enumContext, options);
  
         if (wsman_get_client_response_code(cl) != 200 &&
