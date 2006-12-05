@@ -16,7 +16,7 @@
             <ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem</ResourceURI>
             <SelectorSet>
                 <Selector Name="CreationClassName">OMC_UnitaryComputerSystem</Selector>
-                <Selector Name="Name">venus.us.dell.com</Selector>
+                <Selector Name="Name">anashif-mobl.ims.intel.com</Selector>
             </SelectorSet>
         </Input>
         <Response>
@@ -33,7 +33,7 @@
             <ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem</ResourceURI>
             <SelectorSet>
                 <Selector Name="CreationClassName">OMC_UnitaryComputerSystem</Selector>
-                <Selector Name="Name">venus.us.dell.com</Selector>
+                <Selector Name="Name">anashif-mobl.ims.intel.com</Selector>
             </SelectorSet>
             <MaxEnvelope/>
         </Input>
@@ -43,7 +43,7 @@
             <ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem</ResourceURI>
             <SelectorSet>
                 <Selector Name="CreationClassName">OMC_UnitaryComputerSystem</Selector>
-                <Selector Name="Namex">venus.us.dell.com</Selector>
+                <Selector Name="Namex">anashif-mobl.ims.intel.com</Selector>
             </SelectorSet>
         </Input>
     </Scenario>
