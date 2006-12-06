@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2006 sp2 U (http://www.altova.com) by Brian Reistad (Microsoft) -->
+<WSManInteropScenarios>
+    <URLs>
+        <HTTP>http:/192.168.0.19:8080/wsman/</HTTP>
+        <HTTPS/>
+    </URLs>
+    <Credentials SecurityProfile="Basic">
+        <Username>wsman</Username>
+        <Password>secret</Password>
+    </Credentials>
+    <Scenario Description="6.1 Identify" Supported="true"/>
+    <Scenario Description="6.1.1 Anonymous Identify" Supported="false"/>
+    <Scenario Description="6.2 Get" Supported="true">
+        <Input>
+            <ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem</ResourceURI>
+            <SelectorSet>  
+            	<Selector Name="Name">IPMI Controller 32</Selector>
+            	<Selector Name="CreationClassName">ComputerSystem</Selector>
+            </SelectorSet>
+        </Input>
+        <Response>
+            <!-- output goes here-->
+        </Response>
+    </Scenario>
+    <Scenario Description="6.3 Get failure - invalid resoure URI" Supported="true">
+        <Input>
+            <ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSyste</ResourceURI>
+	    <SelectorSet>  
+		<Selector Name="Name">IPMI Controller 32</Selector>
+		<Selector Name="CreationClassName">ComputerSystem</Selector>
+	     </SelectorSet>
+        </Input>
+    </Scenario>
+    <Scenario Description="6.4 Get failure (MaxEnvelop exceeded)" Supported="true">
+        <Input>
+            <ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem</ResourceURI>
+	    <SelectorSet>  
+		<Selector Name="Name">IPMI Controller 32</Selector>
+		<Selector Name="CreationClassName">ComputerSystem</Selector>
+	     </SelectorSet>
+            <MaxEnvelopeSize>8500</MaxEnvelopeSize>
+        </Input>
+    </Scenario>
+    <Scenario Description="6.5 Get failure - invalid selectors" Supported="true">
+        <Input>
+            <ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_NumericSensor</ResourceURI>
+            <SelectorSet>
+	          <Selector Name="CreationClassName">NumericSensor</Selector>	          
+    	    </SelectorSet>
+        </Input>
+    </Scenario>
+    <Scenario Description="6.6 Get failure - operation timeout" Supported="true">
+        <Input>
+            <ResourceURI>wsman:test/timeout</ResourceURI>
+            <Timeout>PT0.003S</Timeout>
+        </Input>
+    </Scenario>
+    <Scenario Description="6.7 Fragment Get" Supported="true">
+        <Input>
+            <ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem</ResourceURI>
+	    <SelectorSet>  
+		<Selector Name="Name">IPMI Controller 32</Selector>
+		<Selector Name="CreationClassName">ComputerSystem</Selector>
+		<Selector Name="NoPrefix">true</Selector>
+	     </SelectorSet>             
+            <Dialect>http://www.w3.org/TR/1999/REC-xpath-19991116</Dialect>
+            <Expression>/CIM_ComputerSystem/Roles</Expression>
+        </Input>
+        <Response>
+            <w:XmlFragment xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">
+                <!-- output goes here -->
+            </w:XmlFragment>
+        </Response>
+    </Scenario>
+    <Scenario Description="7.1 Enumerate" Supported="true">
+        <Input>
+            <ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_NumericSensor</ResourceURI>
+        </Input>
+        <Response>
+            <Item/>
+            <Item/>
+        </Response>
+    </Scenario>
+    <Scenario Description="7.2 Optimized Enumerate" Supported="true">
+        <Input>
+            <ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_NumericSensor</ResourceURI>
+            <MaxElements>2</MaxElements>
+        </Input>
+    </Scenario>
+    <Scenario Description="7.3 Enumerate failure" Supported="true">
+        <Input>
+            <ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_NumericSensor</ResourceURI>
+	    Bad EnumerationContxtId:uuid:bogas-context-0000-00000-0000
+        </Input>
+    </Scenario>
+    <Scenario Description="7.4 Enumerate ObjectAndEPR" Supported="true">
+        <Input>
+            <ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_NumericSensor</ResourceURI>
+        </Input>
+        <Response>
+            <Item>
+                <Obj/>
+                <EPR/>
+            </Item>
+            <Item>
+                <Obj/>
+                <EPR/>
+            </Item>
+        </Response>
+    </Scenario>
+    <Scenario Description="7.5 Enumerate w/ XPath" Supported="false">
+        <Input>
+            <ResourceURI/>
+            <Expression/>
+        </Input>
+        <Response>
+            <Item/>
+            <Item/>
+        </Response>
+    </Scenario>
+    <Scenario Description="7.6 Enumerate w/ SelectorFilter" Supported="false">
+        <Input>
+            <ResourceURI/>
+            <Expression/>
+        </Input>
+        <Response>
+            <Item/>
+            <Item/>
+        </Response>
+    </Scenario>
+    <Scenario Description="7.7 Enumerate w/ Other Dialect" Supported="false">
+        <Input>
+            <ResourceURI/>
+            <Dialect/>
+            <Expression/>
+        </Input>
+        <Response>
+            <Item/>
+            <Item/>
+        </Response>
+    </Scenario>
+    <Scenario Description="7.8 Enumerate w/ transform and EPR" Supported="false">
+        <Input>
+            <ResourceURI/>
+            <Dialect/>
+            <Expression/>
+        </Input>
+        <Response>
+            <Item>
+                <Obj/>
+                <EPR/>
+            </Item>
+            <Item>
+                <Obj/>
+                <EPR/>
+            </Item>
+        </Response>
+    </Scenario>
+    <Scenario Description="7.9 Enumerate Polymorphism" Supported="false">
+        <Input>
+            <ResourceURI/>
+        </Input>
+        <Response>
+            <Item/>
+            <Item/>
+        </Response>
+    </Scenario>
+    <Scenario Description="8.1 Invoke" Supported="true">
+        <Input xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">            
+            <ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_RecordLog</ResourceURI>
+            <wsman:SelectorSet xmlns:ns8="http://test.foo">
+	      <wsman:Selector Name="InstanceID">IPMI:IPMI Controller 32 SEL Log</wsman:Selector>
+	    </wsman:SelectorSet>
+            <MethodName>ClearLog</MethodName>
+            <InputMsg>
+              <p:ClearLog_INPUT xmlns:p="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_RecordLog"/></InputMsg>
+            </Input>
+        <Response>
+            <OutputMsg/>
+        </Response>
+    </Scenario>
+    <Scenario Description="9.1 Put " Supported="true">
+        <Input xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">
+            <ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_NumericSensor</ResourceURI>
+	<wsman:SelectorSet>
+	  <wsman:Selector Name="CreationClassName">NumericSensor</wsman:Selector>
+	  <wsman:Selector Name="DeviceID">10.0.32</wsman:Selector>
+	  <wsman:Selector Name="SystemName">IPMI Controller 32</wsman:Selector>
+	  <wsman:Selector Name="SystemCreationClassName">ComputerSystem</wsman:Selector>
+	</wsman:SelectorSet>
+            <NewValue>
+    <p:CIM_NumericSensor xml:lang="en-US"
+      xmlns:cim="http://schemas.dmtf.org/wbem/wsman/1/base"
+      xmlns:p="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_NumericSensor" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <p:Accuracy>0</p:Accuracy>
+      <p:Availability xsi:nil="true"/>
+      <p:BaseUnits>0</p:BaseUnits>
+      <p:Caption>OEM RESERVED(81.0.32)</p:Caption>
+      <p:CreationClassName>NumericSensor</p:CreationClassName>
+      <p:CurrentReading>0</p:CurrentReading>
+      <p:CurrentState>OK</p:CurrentState>
+      <p:Description>SEL Fullness(81.0.32):OEM RESERVED for OEM System Integrator defined entity 0</p:Description>
+      <p:DeviceID>81.0.32</p:DeviceID>
+      <p:ElementName>SEL Fullness(81.0.32)</p:ElementName>
+      <p:EnabledDefault>2</p:EnabledDefault>
+      <p:EnabledState>5</p:EnabledState>
+      <p:ErrorCleared xsi:nil="true"/>
+      <p:ErrorDescription xsi:nil="true"/>
+      <p:HealthState xsi:nil="true"/>
+      <p:Hysteresis>0</p:Hysteresis>
+      <p:InstallDate xsi:nil="true"/>
+      <p:IsLinear>true</p:IsLinear>
+      <p:LastErrorCode xsi:nil="true"/>
+      <p:LowerThresholdCritical>26</p:LowerThresholdCritical>
+      <p:LowerThresholdFatal>10</p:LowerThresholdFatal>
+      <p:LowerThresholdNonCritical>100</p:LowerThresholdNonCritical>
+      <p:MaxQuiesceTime xsi:nil="true"/>
+      <p:MaxReadable>255</p:MaxReadable>
+      <p:MinReadable>0</p:MinReadable>
+      <p:Name>SEL Fullness(81.0.32)</p:Name>
+      <p:NominalReading>48</p:NominalReading>
+      <p:NormalMax>63</p:NormalMax>
+      <p:NormalMin>47</p:NormalMin>
+      <p:OtherEnabledState xsi:nil="true"/>
+      <p:OtherSensorTypeDescription>OEM RESERVED</p:OtherSensorTypeDescription>
+      <p:PollingInterval xsi:nil="true"/>
+      <p:PossibleStates>OK</p:PossibleStates>
+      <p:PossibleStates>N/A</p:PossibleStates>
+      <p:PossibleStates>at or below lower non-critical threshold</p:PossibleStates>
+      <p:PossibleStates>at or below lower critical threshold</p:PossibleStates>
+      <p:PossibleStates>at or below lower non-recoverable threshold</p:PossibleStates>
+      <p:PossibleStates>at or above upper non-critical threshold</p:PossibleStates>
+      <p:PossibleStates>at or above upper critical threshold</p:PossibleStates>
+      <p:PossibleStates>at or above upper non-recoverable threshold</p:PossibleStates>
+      <p:PowerManagementSupported xsi:nil="true"/>
+      <p:PowerOnHours xsi:nil="true"/>
+      <p:RateUnits>0</p:RateUnits>
+      <p:RequestedState>12</p:RequestedState>
+      <p:Resolution>0</p:Resolution>
+      <p:SensorType>1</p:SensorType>
+      <p:Status xsi:nil="true"/>
+      <p:StatusInfo xsi:nil="true"/>
+      <p:SystemCreationClassName>ComputerSystem</p:SystemCreationClassName>
+      <p:SystemName>IPMI Controller 32</p:SystemName>
+      <p:TimeOfLastStateChange xsi:nil="true"/>
+      <p:Tolerance xsi:nil="true"/>
+      <p:TotalPowerOnHours xsi:nil="true"/>
+      <p:UnitModifier>0</p:UnitModifier>
+      <p:UpperThresholdCritical>80</p:UpperThresholdCritical>
+      <p:UpperThresholdFatal>90</p:UpperThresholdFatal>
+      <p:UpperThresholdNonCritical>66</p:UpperThresholdNonCritical>
+    </p:CIM_NumericSensor>            
+            </NewValue>
+        </Input>
+    </Scenario>
+    <Scenario Description="9.2 Fragment Put" Supported="true">
+        <Input xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">
+            <ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_NumericSensor</ResourceURI>
+		<wsman:SelectorSet xmlns:ns8="http://test.foo">
+		  <wsman:Selector Name="CreationClassName">NumericSensor</wsman:Selector>
+		  <wsman:Selector Name="DeviceID">81.0.32</wsman:Selector>
+		  <wsman:Selector Name="SystemName">IPMI Controller 32</wsman:Selector>
+		  <wsman:Selector Name="SystemCreationClassName">ComputerSystem</wsman:Selector>
+		</wsman:SelectorSet>
+            <Dialect>http://www.w3.org/TR/1999/REC-xpath-19991116</Dialect>
+            <Expression>//p:LowerThresholdNonCritical</Expression>
+            <InputMsg/>
+        </Input>
+    </Scenario>
+    <Scenario Description="10 Eventing" Supported="true">
+        <Input xmlns:wse="http://schemas.xmlsoap.org/ws/2004/08/eventing">
+            <ResourceURI>wsman:test/pull_source</ResourceURI>
+            <Dialect>http://www.w3.org/TR/1999/REC-xpath-19991116</Dialect>
+	    <wse:Subscribe xmlns:ns8="http://test.foo">
+	      <wse:Delivery Mode="http://schemas.dmtf.org/wbem/wsman/1/wsman/Pull"/>
+	    </wse:Subscribe>
+        </Input>
+      <HowToPullEvents>        
+        <env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope"
+	  xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing"
+	  xmlns:wse="http://schemas.xmlsoap.org/ws/2004/08/eventing"
+	  xmlns:wsen="http://schemas.xmlsoap.org/ws/2004/09/enumeration"
+	  xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd"
+	  xmlns:wxf="http://schemas.xmlsoap.org/ws/2004/09/transfer" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	  <env:Header>
+	    <wsa:Action xmlns:ns8="http://test.foo">http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</wsa:Action>
+	    <wsa:ReplyTo xmlns:ns8="http://test.foo">
+	      <wsa:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:Address>
+	    </wsa:ReplyTo>
+	    <wsa:MessageID xmlns:ns8="http://test.foo">uuid:a34da83f-326a-441d-9a92-c30f063112ca</wsa:MessageID>
+	    <wsa:To xmlns:ns8="http://test.foo">http://localhost:8080/wsman/</wsa:To>
+	    <wsman:ResourceURI xmlns:ns8="http://test.foo">wsman:test/pull_source</wsman:ResourceURI>
+	    <wsman:OperationTimeout xmlns:ns8="http://test.foo">PT1M0.000S</wsman:OperationTimeout>
+	    <wsman:MaxEnvelopeSize env:mustUnderstand="true" xmlns:ns8="http://test.foo">153600</wsman:MaxEnvelopeSize>
+	    <wsman:Locale env:mustUnderstand="false" xml:lang="en-US" xmlns:ns8="http://test.foo"/>
+	  </env:Header>
+	  <env:Body>
+	    <wsen:Pull xmlns:ns8="http://test.foo">
+	      <wsen:EnumerationContext>5cfb05ca-9eb1-42e6-b5d0-79fd0a76b5a2</wsen:EnumerationContext>
+	      <wsen:MaxElements>1</wsen:MaxElements>
+	    </wsen:Pull>
+	  </env:Body>
+	</env:Envelope>
+	
+	
+	<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope"
+	  xmlns:log="https://wiseman.dev.java.net/test/events/pull"
+	  xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing"
+	  xmlns:wse="http://schemas.xmlsoap.org/ws/2004/08/eventing"
+	  xmlns:wsen="http://schemas.xmlsoap.org/ws/2004/09/enumeration"
+	  xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd"
+	  xmlns:wxf="http://schemas.xmlsoap.org/ws/2004/09/transfer" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	  <env:Header>
+	    <wsa:Action xmlns:ns8="http://test.foo">http://schemas.xmlsoap.org/ws/2004/09/enumeration/PullResponse</wsa:Action>
+	    <wsa:MessageID xmlns:ns9="http://test.foo">uuid:6f101b82-65e3-4d2a-b15e-97c1e04d6f10</wsa:MessageID>
+	    <wsa:RelatesTo xmlns:ns9="http://test.foo">uuid:a34da83f-326a-441d-9a92-c30f063112ca</wsa:RelatesTo>
+	    <wsa:To xmlns:ns9="http://test.foo">http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:To>
+	  </env:Header>
+	  <env:Body>
+	    <wsen:PullResponse xmlns:ns9="http://test.foo">
+	      <wsen:EnumerationContext>5cfb05ca-9eb1-42e6-b5d0-79fd0a76b5a2</wsen:EnumerationContext>
+	      <wsen:Items>
+	        <log:event1>critical</log:event1>
+	      </wsen:Items>
+	    </wsen:PullResponse>
+	  </env:Body>
+	</env:Envelope>      
+      </HowToPullEvents>
+        <Response>
+            <Event/>
+            <Event/>
+        </Response>
+    </Scenario>
+</WSManInteropScenarios>

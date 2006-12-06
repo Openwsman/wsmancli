@@ -1,0 +1,750 @@
+6.1 Identify (0)
+
+<?xml version="1.0"?>
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:wsmid="http://schemas.dmtf.org/wbem/wsman/identity/1/wsmanidentity.xsd">
+  <s:Header/>
+  <s:Body>
+    <wsmid:Identify/>
+  </s:Body>
+</s:Envelope>
+<?xml version="1.0"?>
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope" xmlns:id="http://schemas.dmtf.org/wbem/wsman/identity/1/wsmanidentity.xsd" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wse="http://schemas.xmlsoap.org/ws/2004/08/eventing" xmlns:wsen="http://schemas.xmlsoap.org/ws/2004/09/enumeration" xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns:wxf="http://schemas.xmlsoap.org/ws/2004/09/transfer" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <env:Header/>
+  <env:Body>
+    <id:IdentifyResponse>
+      <id:ProductVendor>The Wiseman Project - https://wiseman.dev.java.net</id:ProductVendor>
+      <id:ProductVersion>0.5</id:ProductVersion>
+      <id:ProtocolVersion>http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd</id:ProtocolVersion>
+      <id:SpecVersion>1.0.0a</id:SpecVersion>
+      <id:BuildId>200612040909</id:BuildId>
+    </id:IdentifyResponse>
+  </env:Body>
+</env:Envelope>
+6.1.1 Anonymous Identify: Not Supported (1)
+
+6.2 Get (2)
+
+<?xml version="1.0"?>
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">
+  <s:Header>
+    <wsa:Action s:mustUnderstand="true">http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</wsa:Action>
+    <wsa:To s:mustUnderstand="true">http://192.168.0.17:8080/wsman/</wsa:To>
+    <wsman:ResourceURI s:mustUnderstand="true">http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem</wsman:ResourceURI>
+    <wsa:MessageID s:mustUnderstand="true">uuid:3bf019b7-23e2-13e2-8002-be0448251100</wsa:MessageID>
+    <wsa:ReplyTo>
+      <wsa:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:Address>
+    </wsa:ReplyTo>
+    <wsman:SelectorSet>
+      <wsman:Selector Name="Name">IPMI Controller 32</wsman:Selector>
+      <wsman:Selector Name="CreationClassName">ComputerSystem</wsman:Selector>
+    </wsman:SelectorSet>
+  </s:Header>
+  <s:Body/>
+</s:Envelope>
+<?xml version="1.0"?>
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wse="http://schemas.xmlsoap.org/ws/2004/08/eventing" xmlns:wsen="http://schemas.xmlsoap.org/ws/2004/09/enumeration" xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns:wxf="http://schemas.xmlsoap.org/ws/2004/09/transfer" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <env:Header>
+    <wsa:Action xmlns:ns8="http://test.foo">http://schemas.xmlsoap.org/ws/2004/09/transfer/GetResponse</wsa:Action>
+    <wsa:MessageID xmlns:ns8="http://test.foo">uuid:1cf13918-cbf8-4025-9837-fcb4b28e7018</wsa:MessageID>
+    <wsa:RelatesTo xmlns:ns8="http://test.foo">uuid:3bf019b7-23e2-13e2-8002-be0448251100</wsa:RelatesTo>
+    <wsa:To xmlns:ns8="http://test.foo">http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:To>
+  </env:Header>
+  <env:Body>
+    <p:CIM_ComputerSystem xmlns:cim="http://schemas.dmtf.org/wbem/wsman/1/base" xmlns:p="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <p:Caption>BMC 32</p:Caption>
+    <p:CreationClassName>ComputerSystem</p:CreationClassName>
+    <p:Dedicated>14</p:Dedicated>
+    <p:Description>BMC 32 - IPMI v1.5 - fw v0.30.0.0.0.0</p:Description>
+    <p:ElementName>IPMI Controller 32</p:ElementName>
+    <p:EnabledDefault>2</p:EnabledDefault>
+    <p:EnabledState>5</p:EnabledState>
+    <p:HealthState xsi:nil="true"/>
+    <p:IdentifyingDescriptions>Wiseman-https://wiseman.dev.java.net</p:IdentifyingDescriptions>
+    <p:InstallDate xsi:nil="true"/>
+    <p:Name>IPMI Controller 32</p:Name>
+    <p:NameFormat>Other</p:NameFormat>
+    <p:OtherEnabledState xsi:nil="true"/>
+    <p:OtherIdentifyingInfo>0-0</p:OtherIdentifyingInfo>
+    <p:PrimaryOwnerContact xsi:nil="true"/>
+    <p:PrimaryOwnerName xsi:nil="true"/>
+    <p:RequestedState>12</p:RequestedState>
+    <p:ResetCapability xsi:nil="true"/>
+    <p:Roles>Hardware Management Controller</p:Roles>
+    <p:Status xsi:nil="true"/>
+    <p:TimeOfLastStateChange xsi:nil="true"/>
+</p:CIM_ComputerSystem>
+  </env:Body>
+</env:Envelope>
+6.3 Get failure - invalid resoure URI (3)
+
+<?xml version="1.0"?>
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">
+  <s:Header>
+    <wsa:Action s:mustUnderstand="true">http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</wsa:Action>
+    <wsa:To s:mustUnderstand="true">http://192.168.0.17:8080/wsman/</wsa:To>
+    <wsman:ResourceURI s:mustUnderstand="true">http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSyste</wsman:ResourceURI>
+    <wsa:MessageID s:mustUnderstand="true">uuid:3bf41645-23e2-13e2-8003-be0448251100</wsa:MessageID>
+    <wsa:ReplyTo>
+      <wsa:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:Address>
+    </wsa:ReplyTo>
+    <wsman:SelectorSet>
+      <wsman:Selector Name="Name">IPMI Controller 32</wsman:Selector>
+      <wsman:Selector Name="CreationClassName">ComputerSystem</wsman:Selector>
+    </wsman:SelectorSet>
+  </s:Header>
+  <s:Body/>
+</s:Envelope>
+<?xml version="1.0"?>
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wse="http://schemas.xmlsoap.org/ws/2004/08/eventing" xmlns:wsen="http://schemas.xmlsoap.org/ws/2004/09/enumeration" xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns:wxf="http://schemas.xmlsoap.org/ws/2004/09/transfer" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <env:Header>
+    <wsa:Action xmlns:ns8="http://test.foo">http://schemas.xmlsoap.org/ws/2004/08/addressing/fault</wsa:Action>
+    <wsa:MessageID xmlns:ns8="http://test.foo">uuid:2fc912e4-d19a-4073-8dc4-3507a650c734</wsa:MessageID>
+    <wsa:RelatesTo xmlns:ns8="http://test.foo">uuid:3bf41645-23e2-13e2-8003-be0448251100</wsa:RelatesTo>
+    <wsa:To xmlns:ns8="http://test.foo">http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:To>
+  </env:Header>
+  <env:Body>
+    <env:Fault xmlns:ns8="http://test.foo">
+      <env:Code>
+        <env:Value>env:Sender</env:Value>
+        <env:Subcode>
+          <env:Value>wsa:DestinationUnreachable</env:Value>
+        </env:Subcode>
+      </env:Code>
+      <env:Reason>
+        <env:Text xml:lang="en-US">No route can be determined to reach the destination role defined by the WS-Addressing To.</env:Text>
+      </env:Reason>
+      <env:Detail>
+        <env:Text xml:lang="en-US">Handler not found for resource http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSyste</env:Text>
+        <wsman:FaultDetail>http://schemas.dmtf.org/wbem/wsman/1/wsman/faultDetail/InvalidResourceURI</wsman:FaultDetail>
+      </env:Detail>
+    </env:Fault>
+  </env:Body>
+</env:Envelope>
+6.4 Get failure (MaxEnvelop exceeded) (4)
+
+<?xml version="1.0"?>
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">
+  <s:Header>
+    <wsa:Action s:mustUnderstand="true">http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</wsa:Action>
+    <wsa:To s:mustUnderstand="true">http://192.168.0.17:8080/wsman/</wsa:To>
+    <wsman:ResourceURI s:mustUnderstand="true">http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem</wsman:ResourceURI>
+    <wsa:MessageID s:mustUnderstand="true">uuid:3bf72507-23e2-13e2-8004-be0448251100</wsa:MessageID>
+    <wsa:ReplyTo>
+      <wsa:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:Address>
+    </wsa:ReplyTo>
+    <wsman:SelectorSet>
+      <wsman:Selector Name="Name">IPMI Controller 32</wsman:Selector>
+      <wsman:Selector Name="CreationClassName">ComputerSystem</wsman:Selector>
+    </wsman:SelectorSet>
+  </s:Header>
+  <s:Body/>
+</s:Envelope>
+<?xml version="1.0"?>
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wse="http://schemas.xmlsoap.org/ws/2004/08/eventing" xmlns:wsen="http://schemas.xmlsoap.org/ws/2004/09/enumeration" xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns:wxf="http://schemas.xmlsoap.org/ws/2004/09/transfer" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <env:Header>
+    <wsa:Action xmlns:ns8="http://test.foo">http://schemas.xmlsoap.org/ws/2004/09/transfer/GetResponse</wsa:Action>
+    <wsa:MessageID xmlns:ns8="http://test.foo">uuid:af038704-3eab-4714-b3e1-f48986aead89</wsa:MessageID>
+    <wsa:RelatesTo xmlns:ns8="http://test.foo">uuid:3bf72507-23e2-13e2-8004-be0448251100</wsa:RelatesTo>
+    <wsa:To xmlns:ns8="http://test.foo">http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:To>
+  </env:Header>
+  <env:Body>
+    <p:CIM_ComputerSystem xmlns:cim="http://schemas.dmtf.org/wbem/wsman/1/base" xmlns:p="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <p:Caption>BMC 32</p:Caption>
+    <p:CreationClassName>ComputerSystem</p:CreationClassName>
+    <p:Dedicated>14</p:Dedicated>
+    <p:Description>BMC 32 - IPMI v1.5 - fw v0.30.0.0.0.0</p:Description>
+    <p:ElementName>IPMI Controller 32</p:ElementName>
+    <p:EnabledDefault>2</p:EnabledDefault>
+    <p:EnabledState>5</p:EnabledState>
+    <p:HealthState xsi:nil="true"/>
+    <p:IdentifyingDescriptions>Wiseman-https://wiseman.dev.java.net</p:IdentifyingDescriptions>
+    <p:InstallDate xsi:nil="true"/>
+    <p:Name>IPMI Controller 32</p:Name>
+    <p:NameFormat>Other</p:NameFormat>
+    <p:OtherEnabledState xsi:nil="true"/>
+    <p:OtherIdentifyingInfo>0-0</p:OtherIdentifyingInfo>
+    <p:PrimaryOwnerContact xsi:nil="true"/>
+    <p:PrimaryOwnerName xsi:nil="true"/>
+    <p:RequestedState>12</p:RequestedState>
+    <p:ResetCapability xsi:nil="true"/>
+    <p:Roles>Hardware Management Controller</p:Roles>
+    <p:Status xsi:nil="true"/>
+    <p:TimeOfLastStateChange xsi:nil="true"/>
+</p:CIM_ComputerSystem>
+  </env:Body>
+</env:Envelope>
+6.5 Get failure - invalid selectors (5)
+
+<?xml version="1.0"?>
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">
+  <s:Header>
+    <wsa:Action s:mustUnderstand="true">http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</wsa:Action>
+    <wsa:To s:mustUnderstand="true">http://192.168.0.17:8080/wsman/</wsa:To>
+    <wsman:ResourceURI s:mustUnderstand="true">http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_NumericSensor</wsman:ResourceURI>
+    <wsa:MessageID s:mustUnderstand="true">uuid:3bf9f1f8-23e2-13e2-8005-be0448251100</wsa:MessageID>
+    <wsa:ReplyTo>
+      <wsa:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:Address>
+    </wsa:ReplyTo>
+    <wsman:SelectorSet>
+      <wsman:Selector Name="CreationClassName">NumericSensor</wsman:Selector>
+    </wsman:SelectorSet>
+  </s:Header>
+  <s:Body/>
+</s:Envelope>
+<?xml version="1.0"?>
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wse="http://schemas.xmlsoap.org/ws/2004/08/eventing" xmlns:wsen="http://schemas.xmlsoap.org/ws/2004/09/enumeration" xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns:wxf="http://schemas.xmlsoap.org/ws/2004/09/transfer" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <env:Header>
+    <wsa:Action xmlns:ns8="http://test.foo">http://schemas.dmtf.org/wbem/wsman/1/wsman/fault</wsa:Action>
+    <wsa:MessageID xmlns:ns8="http://test.foo">uuid:04ed17b8-9fba-4fd0-a244-0570c46ce290</wsa:MessageID>
+    <wsa:RelatesTo xmlns:ns8="http://test.foo">uuid:3bf9f1f8-23e2-13e2-8005-be0448251100</wsa:RelatesTo>
+    <wsa:To xmlns:ns8="http://test.foo">http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:To>
+  </env:Header>
+  <env:Body>
+    <env:Fault xmlns:ns8="http://test.foo">
+      <env:Code>
+        <env:Value>env:Sender</env:Value>
+        <env:Subcode>
+          <env:Value>wsman:InvalidSelectors</env:Value>
+        </env:Subcode>
+      </env:Code>
+      <env:Reason>
+        <env:Text xml:lang="en-US">The Selectors for the resource were not valid.</env:Text>
+      </env:Reason>
+      <env:Detail>
+        <wsman:FaultDetail>http://schemas.dmtf.org/wbem/wsman/1/wsman/faultDetail/InsufficientSelectors</wsman:FaultDetail>
+      </env:Detail>
+    </env:Fault>
+  </env:Body>
+</env:Envelope>
+6.6 Get failure - operation timeout (6)
+
+6.7 Fragment Get (7)
+
+7.1 Enumerate (8)
+
+<?xml version="1.0"?>
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns:wsen="http://schemas.xmlsoap.org/ws/2004/09/enumeration">
+  <s:Header>
+    <wsa:Action s:mustUnderstand="true">http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</wsa:Action>
+    <wsa:To s:mustUnderstand="true">http://192.168.0.17:8080/wsman/</wsa:To>
+    <wsman:ResourceURI s:mustUnderstand="true">http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_NumericSensor</wsman:ResourceURI>
+    <wsa:MessageID s:mustUnderstand="true">uuid:3bfc992c-23e2-13e2-8006-be0448251100</wsa:MessageID>
+    <wsa:ReplyTo>
+      <wsa:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:Address>
+    </wsa:ReplyTo>
+  </s:Header>
+  <s:Body>
+    <wsen:Enumerate/>
+  </s:Body>
+</s:Envelope>
+<?xml version="1.0"?>
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wse="http://schemas.xmlsoap.org/ws/2004/08/eventing" xmlns:wsen="http://schemas.xmlsoap.org/ws/2004/09/enumeration" xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns:wxf="http://schemas.xmlsoap.org/ws/2004/09/transfer" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <env:Header>
+    <wsa:Action xmlns:ns8="http://test.foo">http://schemas.xmlsoap.org/ws/2004/09/enumeration/EnumerateResponse</wsa:Action>
+    <wsa:MessageID xmlns:ns8="http://test.foo">uuid:e427e797-3a09-480b-b022-b52e79a2178f</wsa:MessageID>
+    <wsa:RelatesTo xmlns:ns8="http://test.foo">uuid:3bfc992c-23e2-13e2-8006-be0448251100</wsa:RelatesTo>
+    <wsa:To xmlns:ns8="http://test.foo">http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:To>
+  </env:Header>
+  <env:Body>
+    <wsen:EnumerateResponse xmlns:ns8="http://test.foo">
+      <wsen:Expires>2147483647-12-31T23:59:59.999-14:00</wsen:Expires>
+      <wsen:EnumerationContext>8191fd9d-24c6-477f-9192-e27c59358ee3</wsen:EnumerationContext>
+    </wsen:EnumerateResponse>
+  </env:Body>
+</env:Envelope>
+<?xml version="1.0"?>
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns:wsen="http://schemas.xmlsoap.org/ws/2004/09/enumeration">
+  <s:Header>
+    <wsa:Action s:mustUnderstand="true">http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</wsa:Action>
+    <wsa:To s:mustUnderstand="true">http://192.168.0.17:8080/wsman/</wsa:To>
+    <wsman:ResourceURI s:mustUnderstand="true">http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_NumericSensor</wsman:ResourceURI>
+    <wsa:MessageID s:mustUnderstand="true">uuid:3bff5769-23e2-13e2-8007-be0448251100</wsa:MessageID>
+    <wsa:ReplyTo>
+      <wsa:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:Address>
+    </wsa:ReplyTo>
+  </s:Header>
+  <s:Body>
+    <wsen:Pull>
+      <wsen:EnumerationContext>8191fd9d-24c6-477f-9192-e27c59358ee3</wsen:EnumerationContext>
+    </wsen:Pull>
+  </s:Body>
+</s:Envelope>
+<?xml version="1.0"?>
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope" xmlns:p="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_NumericSensor" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wse="http://schemas.xmlsoap.org/ws/2004/08/eventing" xmlns:wsen="http://schemas.xmlsoap.org/ws/2004/09/enumeration" xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns:wxf="http://schemas.xmlsoap.org/ws/2004/09/transfer" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <env:Header>
+    <wsa:Action xmlns:ns8="http://test.foo">http://schemas.xmlsoap.org/ws/2004/09/enumeration/PullResponse</wsa:Action>
+    <wsa:MessageID xmlns:ns9="http://test.foo">uuid:9212ad20-d20a-4950-a258-a3eba0162acc</wsa:MessageID>
+    <wsa:RelatesTo xmlns:ns9="http://test.foo">uuid:3bff5769-23e2-13e2-8007-be0448251100</wsa:RelatesTo>
+    <wsa:To xmlns:ns9="http://test.foo">http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:To>
+  </env:Header>
+  <env:Body>
+    <wsen:PullResponse xmlns:ns9="http://test.foo">
+      <wsen:EnumerationContext>8191fd9d-24c6-477f-9192-e27c59358ee3</wsen:EnumerationContext>
+      <wsen:Items>
+        <p:CIM_NumericSensor xmlns:cim="http://schemas.dmtf.org/wbem/wsman/1/base" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <p:Accuracy>0</p:Accuracy>
+    <p:Availability xsi:nil="true"/>
+    <p:BaseUnits>2</p:BaseUnits>
+    <p:Caption>Temperature(10.0.32)</p:Caption>
+    <p:CreationClassName>NumericSensor</p:CreationClassName>
+    <p:CurrentReading>190</p:CurrentReading>
+    <p:CurrentState>OK</p:CurrentState>
+    <p:Description>PCI-X Slot Temp(10.0.32):Temperature for Other 1</p:Description>
+    <p:DeviceID>10.0.32</p:DeviceID>
+    <p:ElementName>PCI-X Slot Temp(10.0.32)</p:ElementName>
+    <p:EnabledDefault>2</p:EnabledDefault>
+    <p:EnabledState>5</p:EnabledState>
+    <p:ErrorCleared xsi:nil="true"/>
+    <p:ErrorDescription xsi:nil="true"/>
+    <p:HealthState xsi:nil="true"/>
+    <p:Hysteresis>0</p:Hysteresis>
+    <p:InstallDate xsi:nil="true"/>
+    <p:IsLinear>true</p:IsLinear>
+    <p:LastErrorCode xsi:nil="true"/>
+    <p:LowerThresholdCritical>-550</p:LowerThresholdCritical>
+    <p:LowerThresholdFatal>-550</p:LowerThresholdFatal>
+    <p:LowerThresholdNonCritical>40</p:LowerThresholdNonCritical>
+    <p:MaxQuiesceTime xsi:nil="true"/>
+    <p:MaxReadable>2000</p:MaxReadable>
+    <p:MinReadable>-550</p:MinReadable>
+    <p:Name>PCI-X Slot Temp(10.0.32)</p:Name>
+    <p:NominalReading>300</p:NominalReading>
+    <p:NormalMax>350</p:NormalMax>
+    <p:NormalMin>250</p:NormalMin>
+    <p:OtherEnabledState xsi:nil="true"/>
+    <p:OtherSensorTypeDescription xsi:nil="true"/>
+    <p:PollingInterval xsi:nil="true"/>
+    <p:PossibleStates>OK</p:PossibleStates>
+    <p:PossibleStates>N/A</p:PossibleStates>
+    <p:PossibleStates>at or below lower non-critical threshold</p:PossibleStates>
+    <p:PossibleStates>at or below lower critical threshold</p:PossibleStates>
+    <p:PossibleStates>at or below lower non-recoverable threshold</p:PossibleStates>
+    <p:PossibleStates>at or above upper non-critical threshold</p:PossibleStates>
+    <p:PossibleStates>at or above upper critical threshold</p:PossibleStates>
+    <p:PossibleStates>at or above upper non-recoverable threshold</p:PossibleStates>
+    <p:PowerManagementSupported xsi:nil="true"/>
+    <p:PowerOnHours xsi:nil="true"/>
+    <p:RateUnits>0</p:RateUnits>
+    <p:RequestedState>12</p:RequestedState>
+    <p:Resolution>0</p:Resolution>
+    <p:SensorType>2</p:SensorType>
+    <p:Status xsi:nil="true"/>
+    <p:StatusInfo xsi:nil="true"/>
+    <p:SystemCreationClassName>ComputerSystem</p:SystemCreationClassName>
+    <p:SystemName>IPMI Controller 32</p:SystemName>
+    <p:TimeOfLastStateChange xsi:nil="true"/>
+    <p:Tolerance xsi:nil="true"/>
+    <p:TotalPowerOnHours xsi:nil="true"/>
+    <p:UnitModifier>-1</p:UnitModifier>
+    <p:UpperThresholdCritical>550</p:UpperThresholdCritical>
+    <p:UpperThresholdFatal>-550</p:UpperThresholdFatal>
+    <p:UpperThresholdNonCritical>450</p:UpperThresholdNonCritical>
+</p:CIM_NumericSensor>
+      </wsen:Items>
+    </wsen:PullResponse>
+  </env:Body>
+</env:Envelope>
+<?xml version="1.0"?>
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns:wsen="http://schemas.xmlsoap.org/ws/2004/09/enumeration">
+  <s:Header>
+    <wsa:Action s:mustUnderstand="true">http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</wsa:Action>
+    <wsa:To s:mustUnderstand="true">http://192.168.0.17:8080/wsman/</wsa:To>
+    <wsman:ResourceURI s:mustUnderstand="true">http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_NumericSensor</wsman:ResourceURI>
+    <wsa:MessageID s:mustUnderstand="true">uuid:3c0220de-23e2-13e2-8008-be0448251100</wsa:MessageID>
+    <wsa:ReplyTo>
+      <wsa:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:Address>
+    </wsa:ReplyTo>
+  </s:Header>
+  <s:Body>
+    <wsen:Pull>
+      <wsen:EnumerationContext>8191fd9d-24c6-477f-9192-e27c59358ee3</wsen:EnumerationContext>
+    </wsen:Pull>
+  </s:Body>
+</s:Envelope>
+<?xml version="1.0"?>
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope" xmlns:p="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_NumericSensor" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wse="http://schemas.xmlsoap.org/ws/2004/08/eventing" xmlns:wsen="http://schemas.xmlsoap.org/ws/2004/09/enumeration" xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns:wxf="http://schemas.xmlsoap.org/ws/2004/09/transfer" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <env:Header>
+    <wsa:Action xmlns:ns8="http://test.foo">http://schemas.xmlsoap.org/ws/2004/09/enumeration/PullResponse</wsa:Action>
+    <wsa:MessageID xmlns:ns9="http://test.foo">uuid:0f78735c-b096-4b50-bff9-e573002a5a0c</wsa:MessageID>
+    <wsa:RelatesTo xmlns:ns9="http://test.foo">uuid:3c0220de-23e2-13e2-8008-be0448251100</wsa:RelatesTo>
+    <wsa:To xmlns:ns9="http://test.foo">http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:To>
+  </env:Header>
+  <env:Body>
+    <wsen:PullResponse xmlns:ns9="http://test.foo">
+      <wsen:Items>
+        <p:CIM_NumericSensor xmlns:cim="http://schemas.dmtf.org/wbem/wsman/1/base" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <p:Accuracy>0</p:Accuracy>
+    <p:Availability xsi:nil="true"/>
+    <p:BaseUnits>2</p:BaseUnits>
+    <p:Caption>Temperature(11.0.32)</p:Caption>
+    <p:CreationClassName>NumericSensor</p:CreationClassName>
+    <p:CurrentReading>210</p:CurrentReading>
+    <p:CurrentState>OK</p:CurrentState>
+    <p:Description>SCSI-Gbit Temp(11.0.32):Temperature for Other 2</p:Description>
+    <p:DeviceID>11.0.32</p:DeviceID>
+    <p:ElementName>SCSI-Gbit Temp(11.0.32)</p:ElementName>
+    <p:EnabledDefault>2</p:EnabledDefault>
+    <p:EnabledState>5</p:EnabledState>
+    <p:ErrorCleared xsi:nil="true"/>
+    <p:ErrorDescription xsi:nil="true"/>
+    <p:HealthState xsi:nil="true"/>
+    <p:Hysteresis>0</p:Hysteresis>
+    <p:InstallDate xsi:nil="true"/>
+    <p:IsLinear>true</p:IsLinear>
+    <p:LastErrorCode xsi:nil="true"/>
+    <p:LowerThresholdCritical>-550</p:LowerThresholdCritical>
+    <p:LowerThresholdFatal>-550</p:LowerThresholdFatal>
+    <p:LowerThresholdNonCritical>40</p:LowerThresholdNonCritical>
+    <p:MaxQuiesceTime xsi:nil="true"/>
+    <p:MaxReadable>2000</p:MaxReadable>
+    <p:MinReadable>-550</p:MinReadable>
+    <p:Name>SCSI-Gbit Temp(11.0.32)</p:Name>
+    <p:NominalReading>300</p:NominalReading>
+    <p:NormalMax>350</p:NormalMax>
+    <p:NormalMin>250</p:NormalMin>
+    <p:OtherEnabledState xsi:nil="true"/>
+    <p:OtherSensorTypeDescription xsi:nil="true"/>
+    <p:PollingInterval xsi:nil="true"/>
+    <p:PossibleStates>OK</p:PossibleStates>
+    <p:PossibleStates>N/A</p:PossibleStates>
+    <p:PossibleStates>at or below lower non-critical threshold</p:PossibleStates>
+    <p:PossibleStates>at or below lower critical threshold</p:PossibleStates>
+    <p:PossibleStates>at or below lower non-recoverable threshold</p:PossibleStates>
+    <p:PossibleStates>at or above upper non-critical threshold</p:PossibleStates>
+    <p:PossibleStates>at or above upper critical threshold</p:PossibleStates>
+    <p:PossibleStates>at or above upper non-recoverable threshold</p:PossibleStates>
+    <p:PowerManagementSupported xsi:nil="true"/>
+    <p:PowerOnHours xsi:nil="true"/>
+    <p:RateUnits>0</p:RateUnits>
+    <p:RequestedState>12</p:RequestedState>
+    <p:Resolution>0</p:Resolution>
+    <p:SensorType>2</p:SensorType>
+    <p:Status xsi:nil="true"/>
+    <p:StatusInfo xsi:nil="true"/>
+    <p:SystemCreationClassName>ComputerSystem</p:SystemCreationClassName>
+    <p:SystemName>IPMI Controller 32</p:SystemName>
+    <p:TimeOfLastStateChange xsi:nil="true"/>
+    <p:Tolerance xsi:nil="true"/>
+    <p:TotalPowerOnHours xsi:nil="true"/>
+    <p:UnitModifier>-1</p:UnitModifier>
+    <p:UpperThresholdCritical>550</p:UpperThresholdCritical>
+    <p:UpperThresholdFatal>-550</p:UpperThresholdFatal>
+    <p:UpperThresholdNonCritical>450</p:UpperThresholdNonCritical>
+</p:CIM_NumericSensor>
+      </wsen:Items>
+      <wsen:EndOfSequence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string"/>
+    </wsen:PullResponse>
+  </env:Body>
+</env:Envelope>
+7.2 Optimized Enumerate (9)
+
+<?xml version="1.0"?>
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns:wsen="http://schemas.xmlsoap.org/ws/2004/09/enumeration">
+  <s:Header>
+    <wsa:Action s:mustUnderstand="true">http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</wsa:Action>
+    <wsa:To s:mustUnderstand="true">http://192.168.0.17:8080/wsman/</wsa:To>
+    <wsman:ResourceURI s:mustUnderstand="true">http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_NumericSensor</wsman:ResourceURI>
+    <wsa:MessageID s:mustUnderstand="true">uuid:3c088bb3-23e2-13e2-8009-be0448251100</wsa:MessageID>
+    <wsa:ReplyTo>
+      <wsa:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:Address>
+    </wsa:ReplyTo>
+  </s:Header>
+  <s:Body>
+    <wsen:Enumerate>
+      <wsman:OptimizeEnumeration/>
+    </wsen:Enumerate>
+  </s:Body>
+</s:Envelope>
+<?xml version="1.0"?>
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope" xmlns:p="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_NumericSensor" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wse="http://schemas.xmlsoap.org/ws/2004/08/eventing" xmlns:wsen="http://schemas.xmlsoap.org/ws/2004/09/enumeration" xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns:wxf="http://schemas.xmlsoap.org/ws/2004/09/transfer" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <env:Header>
+    <wsa:Action xmlns:ns8="http://test.foo">http://schemas.xmlsoap.org/ws/2004/09/enumeration/EnumerateResponse</wsa:Action>
+    <wsa:MessageID xmlns:ns9="http://test.foo">uuid:de26eba6-fad2-4ef1-85cf-0cd4f366b581</wsa:MessageID>
+    <wsa:RelatesTo xmlns:ns9="http://test.foo">uuid:3c088bb3-23e2-13e2-8009-be0448251100</wsa:RelatesTo>
+    <wsa:To xmlns:ns9="http://test.foo">http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:To>
+  </env:Header>
+  <env:Body>
+    <wsen:EnumerateResponse xmlns:ns9="http://test.foo">
+      <wsen:EnumerationContext>c0081c39-b43e-451f-9967-810608f94780</wsen:EnumerationContext>
+      <wsman:Items>
+        <p:CIM_NumericSensor xmlns:cim="http://schemas.dmtf.org/wbem/wsman/1/base" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <p:Accuracy>0</p:Accuracy>
+    <p:Availability xsi:nil="true"/>
+    <p:BaseUnits>2</p:BaseUnits>
+    <p:Caption>Temperature(10.0.32)</p:Caption>
+    <p:CreationClassName>NumericSensor</p:CreationClassName>
+    <p:CurrentReading>190</p:CurrentReading>
+    <p:CurrentState>OK</p:CurrentState>
+    <p:Description>PCI-X Slot Temp(10.0.32):Temperature for Other 1</p:Description>
+    <p:DeviceID>10.0.32</p:DeviceID>
+    <p:ElementName>PCI-X Slot Temp(10.0.32)</p:ElementName>
+    <p:EnabledDefault>2</p:EnabledDefault>
+    <p:EnabledState>5</p:EnabledState>
+    <p:ErrorCleared xsi:nil="true"/>
+    <p:ErrorDescription xsi:nil="true"/>
+    <p:HealthState xsi:nil="true"/>
+    <p:Hysteresis>0</p:Hysteresis>
+    <p:InstallDate xsi:nil="true"/>
+    <p:IsLinear>true</p:IsLinear>
+    <p:LastErrorCode xsi:nil="true"/>
+    <p:LowerThresholdCritical>-550</p:LowerThresholdCritical>
+    <p:LowerThresholdFatal>-550</p:LowerThresholdFatal>
+    <p:LowerThresholdNonCritical>40</p:LowerThresholdNonCritical>
+    <p:MaxQuiesceTime xsi:nil="true"/>
+    <p:MaxReadable>2000</p:MaxReadable>
+    <p:MinReadable>-550</p:MinReadable>
+    <p:Name>PCI-X Slot Temp(10.0.32)</p:Name>
+    <p:NominalReading>300</p:NominalReading>
+    <p:NormalMax>350</p:NormalMax>
+    <p:NormalMin>250</p:NormalMin>
+    <p:OtherEnabledState xsi:nil="true"/>
+    <p:OtherSensorTypeDescription xsi:nil="true"/>
+    <p:PollingInterval xsi:nil="true"/>
+    <p:PossibleStates>OK</p:PossibleStates>
+    <p:PossibleStates>N/A</p:PossibleStates>
+    <p:PossibleStates>at or below lower non-critical threshold</p:PossibleStates>
+    <p:PossibleStates>at or below lower critical threshold</p:PossibleStates>
+    <p:PossibleStates>at or below lower non-recoverable threshold</p:PossibleStates>
+    <p:PossibleStates>at or above upper non-critical threshold</p:PossibleStates>
+    <p:PossibleStates>at or above upper critical threshold</p:PossibleStates>
+    <p:PossibleStates>at or above upper non-recoverable threshold</p:PossibleStates>
+    <p:PowerManagementSupported xsi:nil="true"/>
+    <p:PowerOnHours xsi:nil="true"/>
+    <p:RateUnits>0</p:RateUnits>
+    <p:RequestedState>12</p:RequestedState>
+    <p:Resolution>0</p:Resolution>
+    <p:SensorType>2</p:SensorType>
+    <p:Status xsi:nil="true"/>
+    <p:StatusInfo xsi:nil="true"/>
+    <p:SystemCreationClassName>ComputerSystem</p:SystemCreationClassName>
+    <p:SystemName>IPMI Controller 32</p:SystemName>
+    <p:TimeOfLastStateChange xsi:nil="true"/>
+    <p:Tolerance xsi:nil="true"/>
+    <p:TotalPowerOnHours xsi:nil="true"/>
+    <p:UnitModifier>-1</p:UnitModifier>
+    <p:UpperThresholdCritical>550</p:UpperThresholdCritical>
+    <p:UpperThresholdFatal>-550</p:UpperThresholdFatal>
+    <p:UpperThresholdNonCritical>450</p:UpperThresholdNonCritical>
+</p:CIM_NumericSensor>
+      </wsman:Items>
+    </wsen:EnumerateResponse>
+  </env:Body>
+</env:Envelope>
+<?xml version="1.0"?>
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns:wsen="http://schemas.xmlsoap.org/ws/2004/09/enumeration">
+  <s:Header>
+    <wsa:Action s:mustUnderstand="true">http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</wsa:Action>
+    <wsa:To s:mustUnderstand="true">http://192.168.0.17:8080/wsman/</wsa:To>
+    <wsman:ResourceURI s:mustUnderstand="true">http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_NumericSensor</wsman:ResourceURI>
+    <wsa:MessageID s:mustUnderstand="true">uuid:3c0b559f-23e2-13e2-800a-be0448251100</wsa:MessageID>
+    <wsa:ReplyTo>
+      <wsa:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:Address>
+    </wsa:ReplyTo>
+  </s:Header>
+  <s:Body>
+    <wsen:Pull>
+      <wsen:EnumerationContext>c0081c39-b43e-451f-9967-810608f94780</wsen:EnumerationContext>
+    </wsen:Pull>
+  </s:Body>
+</s:Envelope>
+<?xml version="1.0"?>
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope" xmlns:p="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_NumericSensor" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wse="http://schemas.xmlsoap.org/ws/2004/08/eventing" xmlns:wsen="http://schemas.xmlsoap.org/ws/2004/09/enumeration" xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns:wxf="http://schemas.xmlsoap.org/ws/2004/09/transfer" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <env:Header>
+    <wsa:Action xmlns:ns8="http://test.foo">http://schemas.xmlsoap.org/ws/2004/09/enumeration/PullResponse</wsa:Action>
+    <wsa:MessageID xmlns:ns9="http://test.foo">uuid:eb031411-bce6-46cc-a7e4-4adc9ac725cb</wsa:MessageID>
+    <wsa:RelatesTo xmlns:ns9="http://test.foo">uuid:3c0b559f-23e2-13e2-800a-be0448251100</wsa:RelatesTo>
+    <wsa:To xmlns:ns9="http://test.foo">http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:To>
+  </env:Header>
+  <env:Body>
+    <wsen:PullResponse xmlns:ns9="http://test.foo">
+      <wsen:Items>
+        <p:CIM_NumericSensor xmlns:cim="http://schemas.dmtf.org/wbem/wsman/1/base" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <p:Accuracy>0</p:Accuracy>
+    <p:Availability xsi:nil="true"/>
+    <p:BaseUnits>2</p:BaseUnits>
+    <p:Caption>Temperature(11.0.32)</p:Caption>
+    <p:CreationClassName>NumericSensor</p:CreationClassName>
+    <p:CurrentReading>210</p:CurrentReading>
+    <p:CurrentState>OK</p:CurrentState>
+    <p:Description>SCSI-Gbit Temp(11.0.32):Temperature for Other 2</p:Description>
+    <p:DeviceID>11.0.32</p:DeviceID>
+    <p:ElementName>SCSI-Gbit Temp(11.0.32)</p:ElementName>
+    <p:EnabledDefault>2</p:EnabledDefault>
+    <p:EnabledState>5</p:EnabledState>
+    <p:ErrorCleared xsi:nil="true"/>
+    <p:ErrorDescription xsi:nil="true"/>
+    <p:HealthState xsi:nil="true"/>
+    <p:Hysteresis>0</p:Hysteresis>
+    <p:InstallDate xsi:nil="true"/>
+    <p:IsLinear>true</p:IsLinear>
+    <p:LastErrorCode xsi:nil="true"/>
+    <p:LowerThresholdCritical>-550</p:LowerThresholdCritical>
+    <p:LowerThresholdFatal>-550</p:LowerThresholdFatal>
+    <p:LowerThresholdNonCritical>40</p:LowerThresholdNonCritical>
+    <p:MaxQuiesceTime xsi:nil="true"/>
+    <p:MaxReadable>2000</p:MaxReadable>
+    <p:MinReadable>-550</p:MinReadable>
+    <p:Name>SCSI-Gbit Temp(11.0.32)</p:Name>
+    <p:NominalReading>300</p:NominalReading>
+    <p:NormalMax>350</p:NormalMax>
+    <p:NormalMin>250</p:NormalMin>
+    <p:OtherEnabledState xsi:nil="true"/>
+    <p:OtherSensorTypeDescription xsi:nil="true"/>
+    <p:PollingInterval xsi:nil="true"/>
+    <p:PossibleStates>OK</p:PossibleStates>
+    <p:PossibleStates>N/A</p:PossibleStates>
+    <p:PossibleStates>at or below lower non-critical threshold</p:PossibleStates>
+    <p:PossibleStates>at or below lower critical threshold</p:PossibleStates>
+    <p:PossibleStates>at or below lower non-recoverable threshold</p:PossibleStates>
+    <p:PossibleStates>at or above upper non-critical threshold</p:PossibleStates>
+    <p:PossibleStates>at or above upper critical threshold</p:PossibleStates>
+    <p:PossibleStates>at or above upper non-recoverable threshold</p:PossibleStates>
+    <p:PowerManagementSupported xsi:nil="true"/>
+    <p:PowerOnHours xsi:nil="true"/>
+    <p:RateUnits>0</p:RateUnits>
+    <p:RequestedState>12</p:RequestedState>
+    <p:Resolution>0</p:Resolution>
+    <p:SensorType>2</p:SensorType>
+    <p:Status xsi:nil="true"/>
+    <p:StatusInfo xsi:nil="true"/>
+    <p:SystemCreationClassName>ComputerSystem</p:SystemCreationClassName>
+    <p:SystemName>IPMI Controller 32</p:SystemName>
+    <p:TimeOfLastStateChange xsi:nil="true"/>
+    <p:Tolerance xsi:nil="true"/>
+    <p:TotalPowerOnHours xsi:nil="true"/>
+    <p:UnitModifier>-1</p:UnitModifier>
+    <p:UpperThresholdCritical>550</p:UpperThresholdCritical>
+    <p:UpperThresholdFatal>-550</p:UpperThresholdFatal>
+    <p:UpperThresholdNonCritical>450</p:UpperThresholdNonCritical>
+</p:CIM_NumericSensor>
+      </wsen:Items>
+      <wsen:EndOfSequence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string"/>
+    </wsen:PullResponse>
+  </env:Body>
+</env:Envelope>
+7.3 Enumerate failure (10)
+
+<?xml version="1.0"?>
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns:wsen="http://schemas.xmlsoap.org/ws/2004/09/enumeration">
+  <s:Header>
+    <wsa:Action s:mustUnderstand="true">http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</wsa:Action>
+    <wsa:To s:mustUnderstand="true">http://192.168.0.17:8080/wsman/</wsa:To>
+    <wsman:ResourceURI s:mustUnderstand="true">http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_NumericSensor</wsman:ResourceURI>
+    <wsa:MessageID s:mustUnderstand="true">uuid:3c0e392d-23e2-13e2-800b-be0448251100</wsa:MessageID>
+    <wsa:ReplyTo>
+      <wsa:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:Address>
+    </wsa:ReplyTo>
+  </s:Header>
+  <s:Body>
+    <wsen:Enumerate/>
+  </s:Body>
+</s:Envelope>
+<?xml version="1.0"?>
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns:wsen="http://schemas.xmlsoap.org/ws/2004/09/enumeration">
+  <s:Header>
+    <wsa:Action s:mustUnderstand="true">http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</wsa:Action>
+    <wsa:To s:mustUnderstand="true">http://192.168.0.17:8080/wsman/</wsa:To>
+    <wsman:ResourceURI s:mustUnderstand="true">http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_NumericSensor</wsman:ResourceURI>
+    <wsa:MessageID s:mustUnderstand="true">uuid:3c10d2ef-23e2-13e2-800c-be0448251100</wsa:MessageID>
+    <wsa:ReplyTo>
+      <wsa:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:Address>
+    </wsa:ReplyTo>
+  </s:Header>
+  <s:Body>
+    <wsen:Pull>
+      <wsen:EnumerationContext>1fb7f89f-1bed-4b7e-b385-43ae75217f40</wsen:EnumerationContext>
+    </wsen:Pull>
+  </s:Body>
+</s:Envelope>
+<?xml version="1.0"?>
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope" xmlns:p="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_NumericSensor" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wse="http://schemas.xmlsoap.org/ws/2004/08/eventing" xmlns:wsen="http://schemas.xmlsoap.org/ws/2004/09/enumeration" xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns:wxf="http://schemas.xmlsoap.org/ws/2004/09/transfer" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <env:Header>
+    <wsa:Action xmlns:ns8="http://test.foo">http://schemas.xmlsoap.org/ws/2004/09/enumeration/PullResponse</wsa:Action>
+    <wsa:MessageID xmlns:ns9="http://test.foo">uuid:4f6662c9-7152-4f80-8a99-9168d03d0a03</wsa:MessageID>
+    <wsa:RelatesTo xmlns:ns9="http://test.foo">uuid:3c10d2ef-23e2-13e2-800c-be0448251100</wsa:RelatesTo>
+    <wsa:To xmlns:ns9="http://test.foo">http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:To>
+  </env:Header>
+  <env:Body>
+    <wsen:PullResponse xmlns:ns9="http://test.foo">
+      <wsen:EnumerationContext>1fb7f89f-1bed-4b7e-b385-43ae75217f40</wsen:EnumerationContext>
+      <wsen:Items>
+        <p:CIM_NumericSensor xmlns:cim="http://schemas.dmtf.org/wbem/wsman/1/base" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <p:Accuracy>0</p:Accuracy>
+    <p:Availability xsi:nil="true"/>
+    <p:BaseUnits>2</p:BaseUnits>
+    <p:Caption>Temperature(10.0.32)</p:Caption>
+    <p:CreationClassName>NumericSensor</p:CreationClassName>
+    <p:CurrentReading>190</p:CurrentReading>
+    <p:CurrentState>OK</p:CurrentState>
+    <p:Description>PCI-X Slot Temp(10.0.32):Temperature for Other 1</p:Description>
+    <p:DeviceID>10.0.32</p:DeviceID>
+    <p:ElementName>PCI-X Slot Temp(10.0.32)</p:ElementName>
+    <p:EnabledDefault>2</p:EnabledDefault>
+    <p:EnabledState>5</p:EnabledState>
+    <p:ErrorCleared xsi:nil="true"/>
+    <p:ErrorDescription xsi:nil="true"/>
+    <p:HealthState xsi:nil="true"/>
+    <p:Hysteresis>0</p:Hysteresis>
+    <p:InstallDate xsi:nil="true"/>
+    <p:IsLinear>true</p:IsLinear>
+    <p:LastErrorCode xsi:nil="true"/>
+    <p:LowerThresholdCritical>-550</p:LowerThresholdCritical>
+    <p:LowerThresholdFatal>-550</p:LowerThresholdFatal>
+    <p:LowerThresholdNonCritical>40</p:LowerThresholdNonCritical>
+    <p:MaxQuiesceTime xsi:nil="true"/>
+    <p:MaxReadable>2000</p:MaxReadable>
+    <p:MinReadable>-550</p:MinReadable>
+    <p:Name>PCI-X Slot Temp(10.0.32)</p:Name>
+    <p:NominalReading>300</p:NominalReading>
+    <p:NormalMax>350</p:NormalMax>
+    <p:NormalMin>250</p:NormalMin>
+    <p:OtherEnabledState xsi:nil="true"/>
+    <p:OtherSensorTypeDescription xsi:nil="true"/>
+    <p:PollingInterval xsi:nil="true"/>
+    <p:PossibleStates>OK</p:PossibleStates>
+    <p:PossibleStates>N/A</p:PossibleStates>
+    <p:PossibleStates>at or below lower non-critical threshold</p:PossibleStates>
+    <p:PossibleStates>at or below lower critical threshold</p:PossibleStates>
+    <p:PossibleStates>at or below lower non-recoverable threshold</p:PossibleStates>
+    <p:PossibleStates>at or above upper non-critical threshold</p:PossibleStates>
+    <p:PossibleStates>at or above upper critical threshold</p:PossibleStates>
+    <p:PossibleStates>at or above upper non-recoverable threshold</p:PossibleStates>
+    <p:PowerManagementSupported xsi:nil="true"/>
+    <p:PowerOnHours xsi:nil="true"/>
+    <p:RateUnits>0</p:RateUnits>
+    <p:RequestedState>12</p:RequestedState>
+    <p:Resolution>0</p:Resolution>
+    <p:SensorType>2</p:SensorType>
+    <p:Status xsi:nil="true"/>
+    <p:StatusInfo xsi:nil="true"/>
+    <p:SystemCreationClassName>ComputerSystem</p:SystemCreationClassName>
+    <p:SystemName>IPMI Controller 32</p:SystemName>
+    <p:TimeOfLastStateChange xsi:nil="true"/>
+    <p:Tolerance xsi:nil="true"/>
+    <p:TotalPowerOnHours xsi:nil="true"/>
+    <p:UnitModifier>-1</p:UnitModifier>
+    <p:UpperThresholdCritical>550</p:UpperThresholdCritical>
+    <p:UpperThresholdFatal>-550</p:UpperThresholdFatal>
+    <p:UpperThresholdNonCritical>450</p:UpperThresholdNonCritical>
+</p:CIM_NumericSensor>
+      </wsen:Items>
+    </wsen:PullResponse>
+  </env:Body>
+</env:Envelope>
+<?xml version="1.0"?>
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns:wsen="http://schemas.xmlsoap.org/ws/2004/09/enumeration">
+  <s:Header>
+    <wsa:Action s:mustUnderstand="true">http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</wsa:Action>
+    <wsa:To s:mustUnderstand="true">http://192.168.0.17:8080/wsman/</wsa:To>
+    <wsman:ResourceURI s:mustUnderstand="true">http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_NumericSensor</wsman:ResourceURI>
+    <wsa:MessageID s:mustUnderstand="true">uuid:3c13e965-23e2-13e2-800d-be0448251100</wsa:MessageID>
+    <wsa:ReplyTo>
+      <wsa:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:Address>
+    </wsa:ReplyTo>
+  </s:Header>
+  <s:Body>
+    <wsen:Pull>
+      <wsen:EnumerationContext>xxxx</wsen:EnumerationContext>
+    </wsen:Pull>
+  </s:Body>
+</s:Envelope>

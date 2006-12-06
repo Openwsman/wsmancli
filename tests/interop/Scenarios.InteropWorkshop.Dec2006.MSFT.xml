@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2006 sp2 U (http://www.altova.com) by Brian Reistad (Microsoft) -->
+<WSManInteropScenarios>
+	<URLs>
+		<HTTP>http://192.168.0.13:80/wsman</HTTP>
+	</URLs>
+	<Credentials SecurityProfile="Basic|Digest">
+        <Username>wsman</Username>
+        <Password>secret</Password>
+    </Credentials>
+    <Scenario Description="6.1 Identify" Supported="true">
+        <Response>
+			<wsmid:IdentifyResponse xmlns:wsmid="http://schemas.dmtf.org/wbem/wsman/identity/1/wsmanidentity.xsd">
+				<wsmid:ProtocolVersion>http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd</wsmid:ProtocolVersion>
+				<wsmid:ProductVendor>Microsoft Corporation</wsmid:ProductVendor>
+				<wsmid:ProductVersion>OS: 6.0.5734 SP: 0.0 Stack: 1.0</wsmid:ProductVersion>
+			</wsmid:IdentifyResponse>
+		</Response>
+    </Scenario>
+    <Scenario Description="6.1.1 Anonymous Identify" Supported="true">
+		<Input>
+			<HTTPHeader>WSMANIDENTIFY: unauthenticated</HTTPHeader>
+		</Input>
+        <Response>
+			<wsmid:IdentifyResponse xmlns:wsmid="http://schemas.dmtf.org/wbem/wsman/identity/1/wsmanidentity.xsd">
+				<wsmid:ProtocolVersion>http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd</wsmid:ProtocolVersion>
+				<wsmid:ProductVendor>Microsoft Corporation</wsmid:ProductVendor>
+				<wsmid:ProductVersion>OS: 0.0.0 SP: 0.0 Stack: 1.0</wsmid:ProductVersion>
+			</wsmid:IdentifyResponse>
+		</Response>
+    </Scenario>
+    <Scenario Description="6.2 Get" Supported="true">
+        <Input>
+            <ResourceURI>http://schemas.microsoft.com/wbem/wsman/1/wmi/root/Plugfest/ContactInfo</ResourceURI>
+            <SelectorSet>
+                <Selector Name="Key">1</Selector>                
+            </SelectorSet>
+        </Input>
+        <Response>
+            <p:ContactInfo xsi:type="p:ContactInfo_Type" xml:lang="en-US" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://schemas.microsoft.com/wbem/wsman/1/wmi/root/plugfest/ContactInfo" xmlns:cim="http://schemas.dmtf.org/wbem/wscim/1/common">
+                <p:Address>123 4th Ave. Redmond WA 98052</p:Address>
+                <p:key>1</p:key>
+                <p:Name>Mary Jones</p:Name>
+                <p:Telephone>425-123-4567</p:Telephone>
+            </p:ContactInfo>
+        </Response>
+    </Scenario>
+    <Scenario Description="6.3 Get failure - invalid resoure URI" Supported="true">
+        <Input>
+            <ResourceURI>http://schemas.microsoft.com/wbem/wsman/1/wmi/root/cimv2/Win32_InvalidClass</ResourceURI>
+        </Input>
+		<Response>
+			<f:WSManFault Code="2150858752" Machine="" xml:lang="en-US" xmlns:f="http://schemas.microsoft.com/wbem/wsman/1/wsmanfault">
+				<f:Message>
+					<f:ProviderFault provider="WMIv1 plugin for Windows Remote Management " path="WsmWmiPl.dll">
+						<f:WSManFault Code="2150858752" Machine="" xml:lang="en-US">
+							<f:Message>
+								The WS-Management service cannot process the request. The service cannot find the resource identified by the reso
+								urce URI and selectors.
+							</f:Message>
+						</f:WSManFault>
+					</f:ProviderFault>
+				</f:Message>
+			</f:WSManFault>
+		</Response>
+    </Scenario>
+    <Scenario Description="6.4 Get failure (MaxEnvelop exceeded)" Supported="true">
+        <Input>
+            <ResourceURI>http://schemas.microsoft.com/wbem/wsman/1/wmi/root/cimv2/Win32_OperatingSystem</ResourceURI>
+            <SelectorSet/>
+            <MaxEnvelope>150</MaxEnvelope>
+        </Input>
+    </Scenario>
+    <Scenario Description="6.5 Get failure - invalid selectors" Supported="true">
+        <Input>
+            <ResourceURI>http://schemas.microsoft.com/wbem/wsman/1/wmi/root/cimv2/Win32_Process</ResourceURI>
+            <SelectorSet>
+                <Selector Name="InvalidKey">0</Selector>
+            </SelectorSet>
+        </Input>
+		<Response>
+			<f:WSManFault Code="2150858813" Machine="" xml:lang="en-US" xmlns:f="http://schemas.microsoft.com/wbem/wsman/1/wsmanfault">
+				<f:Message>
+					<f:ProviderFault provider="WMIv1 plugin for Windows Remote Management " path="WsmWmiPl.dll">
+						<f:WSManFault Code="2150858813" Machine="" xml:lang="en-US">
+							<f:Message>
+								The WS-Management service cannot process the request because the selectors for the resource are not valid. </f:Message>
+							</f:WSManFault>
+					</f:ProviderFault>
+				</f:Message>
+			</f:WSManFault>
+		</Response>
+    </Scenario>
+    <Scenario Description="6.6 Get failure - operation timeout" Supported="true">
+        <Input>
+            <ResourceURI>wsman:microsoft.test/testresource/get/timeout</ResourceURI>
+            <SelectorSet/>
+            <Timeout>20000</Timeout>
+        </Input>
+    </Scenario>
+    <Scenario Description="6.7 Fragment Get" Supported="true">
+        <Input>
+			<ResourceURI>http://schemas.microsoft.com/wbem/wsman/1/wmi/root/cimv2/Win32_OperatingSystem</ResourceURI>
+			<SelectorSet/>
+            <Dialect>http://www.w3.org/TR/1999/REC-xpath-19991116</Dialect>
+            <Expression>Caption/text()</Expression>
+        </Input>
+        <Response>
+            <w:XmlFragment xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">Microsoftr Windows VistaT Ultimate </w:XmlFragment>
+        </Response>
+    </Scenario>
+    <Scenario Description="7.1 Enumerate" Supported="true">
+        <Input>
+            <ResourceURI>http://schemas.microsoft.com/wbem/wsman/1/wmi/root/Plugfest/ContactInfo</ResourceURI>
+        </Input>
+        <Response>
+			<Item>
+				<p:ContactInfo xsi:type="p:ContactInfo_Type" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://schemas.microsoft.com/wbem/wsman/1/wmi/root/plugfest/ContactInfo" xmlns:cim="http://schemas.dmtf.org/wbem/wscim/1/common">
+					<p:Address>7 156st Ave. N.E. Apt#10 Redmond WA 98052</p:Address>
+					<p:key>2</p:key>
+					<p:Name>Peter Parker</p:Name>
+					<p:Telephone>425-765-4321</p:Telephone>
+				</p:ContactInfo>
+			</Item>
+			<Item>
+				<p:ContactInfo xsi:type="p:ContactInfo_Type" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://schemas.microsoft.com/wbem/wsman/1/wmi/root/plugfest/ContactInfo" xmlns:cim="http://schemas.dmtf.org/wbem/wscim/1/common">
+					<p:Address>123 4th Ave. Redmond WA 98052</p:Address>
+					<p:key>1</p:key>
+					<p:Name>Mary Jones</p:Name>
+					<p:Telephone>425-123-4567</p:Telephone>
+				</p:ContactInfo>
+			</Item>
+			<Item>
+				<p:EmailContactInfo xsi:type="p:EmailContactInfo_Type" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://schemas.microsoft.com/wbem/wsman/1/wmi/root/plugfest/EmailContactInfo" xmlns:cim="http://schemas.dmtf.org/wbem/wscim/1/common">
+					<p:Address xsi:nil="true"></p:Address>
+					<p:Email>hporter@porter.com</p:Email>
+					<p:key>4</p:key>
+					<p:Name>Harry Porter</p:Name>
+					<p:Telephone>408-654-3214</p:Telephone>
+				</p:EmailContactInfo>
+			</Item>
+			<Item>
+				<p:EmailContactInfo xsi:type="p:EmailContactInfo_Type" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://schemas.microsoft.com/wbem/wsman/1/wmi/root/plugfest/EmailContactInfo" xmlns:cim="http://schemas.dmtf.org/wbem/wscim/1/common">
+					<p:Address>1 Simpson Road, Richmond Canada V71 4LC</p:Address>
+					<p:Email>barts@simpson.com</p:Email>
+					<p:key>3</p:key>
+					<p:Name>Bart Simpson</p:Name>
+					<p:Telephone xsi:nil="true"></p:Telephone>
+				</p:EmailContactInfo>
+			</Item>
+        </Response>
+    </Scenario>
+    <Scenario Description="7.2 Optimized Enumerate" Supported="true">
+        <Input>
+            <ResourceURI>http://schemas.microsoft.com/wbem/wsman/1/wmi/root/Plugfest/ContactInfo</ResourceURI>
+        </Input>
+        <Response>
+            <Item>
+                <p:ContactInfo xsi:type="p:ContactInfo_Type" xml:lang="en-US" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://schemas.microsoft.com/wbem/wsman/1/wmi/root/plugfest/ContactInfo" xmlns:cim="http://schemas.dmtf.org/wbem/wscim/1/common">
+                    <p:Address>7 156st Ave. N.E. Apt#10 Redmond WA 98052</p:Address>
+                    <p:key>2</p:key>
+                    <p:Name>Peter Parker</p:Name>
+                    <p:Telephone>425-765-4321</p:Telephone>
+                </p:ContactInfo>
+            </Item>
+            <Item>
+                <p:ContactInfo xsi:type="p:ContactInfo_Type" xml:lang="en-US" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://schemas.microsoft.com/wbem/wsman/1/wmi/root/plugfest/ContactInfo" xmlns:cim="http://schemas.dmtf.org/wbem/wscim/1/common">
+                    <p:Address>123 4th Ave. Redmond WA 98052</p:Address>
+                    <p:key>1</p:key>
+                    <p:Name>Mary Jones</p:Name>
+                    <p:Telephone>425-123-4567</p:Telephone>
+                </p:ContactInfo>
+            </Item>
+        </Response>
+    </Scenario>
+    <Scenario Description="7.3 Enumerate failure" Supported="true">
+        <Input>
+            <ResourceURI>http://schemas.microsoft.com/wbem/wsman/1/wmi/root/cimv2/Win32_Service</ResourceURI>
+        </Input>
+    </Scenario>
+    <Scenario Description="7.4 Enumerate ObjectAndEPR" Supported="true">
+        <Input>
+            <ResourceURI>http://schemas.microsoft.com/wbem/wsman/1/wmi/root/Plugfest/ContactInfo</ResourceURI>
+        </Input>
+        <Response>
+            <Item>
+                <Obj>
+                    <p:ContactInfo xsi:type="p:ContactInfo_Type" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://schemas.microsoft.com
+/wbem/wsman/1/wmi/root/plugfest/ContactInfo" xmlns:cim="http://schemas.dmtf.org/wbem/wscim/1/common">
+                        <p:Address>7 156st Ave. N.E. Apt#10 Redmond WA 98052</p:Address>
+                        <p:key>2</p:key>
+                        <p:Name>Peter Parker</p:Name>
+                        <p:Telephone>425-765-4321</p:Telephone>
+                    </p:ContactInfo>                  
+                </Obj>
+                <EPR>
+                    <a:EndpointReference xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xml:lang="en-US" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">
+                        <a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address>
+                        <a:ReferenceParameters>
+                            <w:ResourceURI>http://schemas.microsoft.com/wbem/wsman/1/wmi/root/plugfest/ContactInfo</w:ResourceURI>
+                            <w:SelectorSet>
+                                <w:Selector Name="key">2</w:Selector>
+                            </w:SelectorSet>
+                        </a:ReferenceParameters>
+                    </a:EndpointReference>
+                </EPR>
+            </Item>
+            <Item>
+                <Obj>
+                    <p:ContactInfo xsi:type="p:ContactInfo_Type" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://schemas.microsoft.com
+/wbem/wsman/1/wmi/root/plugfest/ContactInfo" xmlns:cim="http://schemas.dmtf.org/wbem/wscim/1/common">
+                        <p:Address>123 4th Ave. Redmond WA 98052</p:Address>
+                        <p:key>1</p:key>
+                        <p:Name>Mary Jones</p:Name>
+                        <p:Telephone>425-123-4567</p:Telephone>
+                    </p:ContactInfo>
+                </Obj>
+                <EPR>
+                    <a:EndpointReference xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xml:lang="en-US" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">
+                        <a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address>
+                        <a:ReferenceParameters>
+                            <w:ResourceURI>http://schemas.microsoft.com/wbem/wsman/1/wmi/root/plugfest/ContactInfo</w:ResourceURI>
+                            <w:SelectorSet>
+                                <w:Selector Name="key">1</w:Selector>
+                            </w:SelectorSet>
+                        </a:ReferenceParameters>
+                    </a:EndpointReference>
+                </EPR>
+            </Item>
+        </Response>
+    </Scenario>
+    <Scenario Description="7.5 Enumerate w/ XPath" Supported="false">
+        <Input>
+            <ResourceURI></ResourceURI>
+            <Expression></Expression>
+        </Input>
+        <Response>
+            <Item/>
+            <Item/>
+        </Response>
+    </Scenario>
+    <Scenario Description="7.6 Enumerate w/ SelectorFilter" Supported="false">
+        <Input>
+            <ResourceURI/>
+            <Expression/>
+        </Input>
+        <Response>
+            <Item/>
+            <Item/>
+        </Response>
+    </Scenario>
+    <Scenario Description="7.7 Enumerate w/ Other Dialect" Supported="true">
+        <Input>
+            <ResourceURI>http://schemas.microsoft.com/wbem/wsman/1/wmi/root/Plugfest/*</ResourceURI>
+            <Dialect>http://schemas.microsoft.com/wbem/wsman/1/WQL</Dialect>
+            <Expression>SELECT * FROM ContactInfo WHERE Name='Mary Jones'</Expression>
+        </Input>
+        <Response>
+            <Item>
+                <p:ContactInfo xsi:type="p:ContactInfo_Type" xml:lang="en-US" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://schemas.
+microsoft.com/wbem/wsman/1/wmi/root/plugfest/ContactInfo" xmlns:cim="http://schemas.dmtf.org/wbem/wscim/1/common">
+                    <p:Address>123 4th Ave. Redmond WA 98052</p:Address>
+                    <p:key>1</p:key>
+                    <p:Name>Mary Jones</p:Name>
+                    <p:Telephone>425-123-4567</p:Telephone>
+                </p:ContactInfo>
+            </Item>
+        </Response>
+    </Scenario>
+    <Scenario Description="7.8 Enumerate w/ transform and EPR" Supported="false">
+        <Input>
+            <ResourceURI/>
+            <Dialect/>
+            <Expression/>
+        </Input>
+        <Response>
+            <Item>
+                <Obj/>
+                <EPR/>
+            </Item>
+            <Item>
+                <Obj/>
+                <EPR/>
+            </Item>
+        </Response>
+    </Scenario>
+    <Scenario Description="7.9 Enumerate Polymorphism" Supported="true">
+        <Input>
+            <ResourceURI>http://schemas.microsoft.com/wbem/wsman/1/wmi/root/Plugfest/ContactInfo</ResourceURI>
+        </Input>
+        <Response>
+            <Item/>
+            <!--    class ContactInfo
+                    {  
+                        int key;
+                        string Name;
+                        string Address;
+                        string Telephone;
+                    };
+                    
+                    class EmailContactInfo : ContactInfo
+                    {
+                        string Email;
+                    };
+            -->
+            <p:ContactInfo xsi:type="p:ContactInfo_Type" xml:lang="en-US" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://schemas.
+microsoft.com/wbem/wsman/1/wmi/root/plugfest/ContactInfo" xmlns:cim="http://schemas.dmtf.org/wbem/wscim/1/common">
+                <p:Address>7 156st Ave. N.E. Apt#10 Redmond WA 98052</p:Address>
+                <p:key>2</p:key>
+                <p:Name>Peter Parker</p:Name>
+                <p:Telephone>425-765-4321</p:Telephone>
+            </p:ContactInfo>
+            <p:ContactInfo xsi:type="p:ContactInfo_Type" xml:lang="en-US" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://schemas.
+microsoft.com/wbem/wsman/1/wmi/root/plugfest/ContactInfo" xmlns:cim="http://schemas.dmtf.org/wbem/wscim/1/common">
+                <p:Address>123 4th Ave. Redmond WA 98052</p:Address>
+                <p:key>1</p:key>
+                <p:Name>Mary Jones</p:Name>
+                <p:Telephone>425-123-4567</p:Telephone>
+            </p:ContactInfo>
+            <p:EmailContactInfo xsi:type="p:EmailContactInfo_Type" xml:lang="en-US" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http:
+//schemas.microsoft.com/wbem/wsman/1/wmi/root/plugfest/EmailContactInfo" xmlns:cim="http://schemas.dmtf.org/wbem/wscim/1/common">
+                <p:Address xsi:nil="true"></p:Address>
+                <p:Email>hporter@porter.com</p:Email>
+                <p:key>4</p:key>
+                <p:Name>Harry Porter</p:Name>
+                <p:Telephone>408-654-3214</p:Telephone>
+            </p:EmailContactInfo>
+            <p:EmailContactInfo xsi:type="p:EmailContactInfo_Type" xml:lang="en-US" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http:
+//schemas.microsoft.com/wbem/wsman/1/wmi/root/plugfest/EmailContactInfo" xmlns:cim="http://schemas.dmtf.org/wbem/wscim/1/common">
+                <p:Address>1 Simpson Road, Richmond Canada V71 4LC</p:Address>
+                <p:Email>barts@simpson.com</p:Email>
+                <p:key>3</p:key>
+                <p:Name>Bart Simpson</p:Name>
+                <p:Telephone xsi:nil="true"></p:Telephone>
+            </p:EmailContactInfo>
+            <Item/>
+        </Response>
+    </Scenario>
+    <Scenario Description="8.1 Invoke" Supported="true">
+        <Input>
+            <ResourceURI>http://schemas.microsoft.com/wbem/wsman/1/wmi/root/cimv2/Win32_Service</ResourceURI>
+            <SelectorSet>
+                <Selector Name="Name">Spooler</Selector>
+            </SelectorSet>
+			<ActionURI>http://schemas.microsoft.com/wbem/wsman/1/wmi/root/cimv2/Win32_Service/StartService</ActionURI>
+            <MethodName>StartService</MethodName>
+			<InputMsg>
+				<p:StartService_INPUT xmlns:p="http:=//schemas.microsoft.com/wbem/wsman/1/wmi/root/cimv2/Win32_Service"/>
+			</InputMsg>
+        </Input>
+        <Response>
+            <OutputMsg>
+                <p:StopService_OUTPUT xml:lang="en-US" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://schemas.microsoft.com/wbem/wsma
+n/1/wmi/root/cimv2/Win32_Service" xmlns:cim="http://schemas.dmtf.org/wbem/wscim/1/common">
+                    <p:ReturnValue>10</p:ReturnValue>
+                </p:StopService_OUTPUT>
+            </OutputMsg>
+        </Response>
+    </Scenario>
+    <Scenario Description="9.1 Put " Supported="true">
+        <Input>
+            <ResourceURI>http://schemas.microsoft.com/wbem/wsman/1/wmi/root/Plugfest/EmployeeRecord</ResourceURI>
+            <SelectorSet>
+                <Selector Name="Id">1</Selector>
+            </SelectorSet>
+            <PropertyName>Alias</PropertyName>
+            <NewValue>bsimpson</NewValue>
+        </Input>
+		<Response>
+			<p:EmployeeRecord xsi:type="p:EmployeeRecord_Type" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://schemas.microsoft.com/wbem/wsman/1/wmi/root/plugfest/EmployeeRecord" xmlns:cim="http://schemas.dmtf.org/wbem/wscim/1/common">
+				<p:Alias>bsimpson</p:Alias>
+				<p:Id>1</p:Id>
+				<p:Name>Bart Simpson</p:Name>
+			</p:EmployeeRecord>
+		</Response>
+    </Scenario>
+    <Scenario Description="9.2 Fragment Put" Supported="true">
+        <Input>
+            <ResourceURI>http://schemas.microsoft.com/wbem/wsman/1/wmi/root/Plugfest/EmployeeRecord</ResourceURI>
+            <SelectorSet>
+                <Selector Name="Id">2</Selector>
+            </SelectorSet>
+            <Dialect>http://www.w3.org/TR/1999/REC-xpath-19991116</Dialect>
+            <Expression>Alias</Expression>
+            <InputMsg>pparker</InputMsg>
+        </Input>
+		<Response>
+			<w:XmlFragment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">
+				<Alias>pparker</Alias>
+			</w:XmlFragment>
+		</Response>
+    </Scenario>
+    <Scenario Description="10 Eventing" Supported="true">
+        <Input>
+            <ResourceURI>http://schemas.microsoft.com/wbem/wsman/1/windows/EventLog</ResourceURI>
+            <Dialect/>
+            <Expression/>
+			<SubscribeRequest>
+				<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:e="http://schemas.xmlsoap.org/ws/2004/08/eventing" xmlns:n="http://schemas.xmlsoap.org/ws/2004/09/enumeration" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">
+					<s:Header>
+						<a:To>http://192.168.0.13:80/wsman</a:To>
+						<w:ResourceURI s:mustUnderstand="true">http://schemas.microsoft.com/wbem/wsman/1/windows/EventLog</w:ResourceURI>
+						<a:ReplyTo>
+							<a:Address s:mustUnderstand="true">http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address>
+						</a:ReplyTo>
+						<a:Action s:mustUnderstand="true">http://schemas.xmlsoap.org/ws/2004/08/eventing/Subscribe</a:Action>
+						<w:MaxEnvelopeSize s:mustUnderstand="true">153600</w:MaxEnvelopeSize>
+						<a:MessageID>uuid:757A363C-C086-49CD-B42F-666AAB930D43</a:MessageID>
+						<w:Locale xml:lang="en-US" s:mustUnderstand="false" />
+						<w:OptionSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+							<w:Option Name="ContentFormat">RenderedText</w:Option>
+							<w:Option Name="ReadExistingEvents" xsi:nil="true"/>
+							<w:Option Name="IgnoreChannelError" xsi:nil="true"/>
+						</w:OptionSet>
+					</s:Header>
+					<s:Body>
+						<e:Subscribe>
+							<e:Delivery Mode="http://schemas.dmtf.org/wbem/wsman/1/wsman/Pull">
+								<w:Heartbeats>PT900.000S</w:Heartbeats>
+								<w:Locale xml:lang="en-US"/>
+								<w:ContentEncoding>UTF-8</w:ContentEncoding>
+							</e:Delivery>
+							<e:Expires>PT3961315881.184S</e:Expires>
+							<w:Filter>
+								&lt;QueryList&gt;
+								&lt;Query Path=&quot;System&quot;&gt;
+								&lt;Select&gt;*&lt;/Select&gt;
+								&lt;/Query&gt;
+								&lt;/QueryList&gt;
+							</w:Filter>
+							<w:Bookmark>
+								<BookmarkList>
+									<Bookmark Channel="System" RecordId="4740" IsCurrent="true"/>
+								</BookmarkList>
+							</w:Bookmark>
+							<w:SendBookmarks/>
+						</e:Subscribe>
+					</s:Body>
+				</s:Envelope>
+			</SubscribeRequest>
+			<PullRequest>
+				<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:e="http://schemas.xmlsoap.org/ws/2004/08/eventing" xmlns:n="http://schemas.xmlsoap.org/ws/2004/09/enumeration" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">
+					<s:Header>
+						<a:To>http://192.168.0.13:80/wsman</a:To>
+						<w:ResourceURI s:mustUnderstand="true">http://schemas.microsoft.com/wbem/wsman/1/windows/EventLog</w:ResourceURI>
+						<a:ReplyTo>
+							<a:Address s:mustUnderstand="true">http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address>
+						</a:ReplyTo>
+						<a:Action s:mustUnderstand="true">http://schemas.xmlsoap.org/ws/2004/08/eventing/Subscribe</a:Action>
+						<w:MaxEnvelopeSize s:mustUnderstand="true">153600</w:MaxEnvelopeSize>
+						<a:MessageID>uuid:757A363C-C086-49CD-B42F-666AAB930D43</a:MessageID>
+						<w:Locale xml:lang="en-US" s:mustUnderstand="false" />
+						<w:OptionSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+							<w:Option Name="ContentFormat">RenderedText</w:Option>
+							<w:Option Name="ReadExistingEvents" xsi:nil="true"/>
+							<w:Option Name="IgnoreChannelError" xsi:nil="true"/>
+						</w:OptionSet>
+					</s:Header>
+					<s:Body>
+						<e:Subscribe>
+							<e:Delivery Mode="http://schemas.dmtf.org/wbem/wsman/1/wsman/Pull">
+								<w:Heartbeats>PT900.000S</w:Heartbeats>
+								<w:Locale xml:lang="en-US"/>
+								<w:ContentEncoding>UTF-8</w:ContentEncoding>
+							</e:Delivery>
+							<e:Expires>PT3961315881.184S</e:Expires>
+							<w:Filter>
+								&lt;QueryList&gt;
+								&lt;Query Path=&quot;System&quot;&gt;
+								&lt;Select&gt;*&lt;/Select&gt;
+								&lt;/Query&gt;
+								&lt;/QueryList&gt;
+							</w:Filter>
+							<w:Bookmark>
+								<BookmarkList>
+									<Bookmark Channel="System" RecordId="4740" IsCurrent="true"/>
+								</BookmarkList>
+							</w:Bookmark>
+							<w:SendBookmarks/>
+						</e:Subscribe>
+					</s:Body>
+				</s:Envelope>
+			</PullRequest>
+        </Input>
+        <Response>
+            <Event/>
+            <Event/>
+        </Response>
+    </Scenario>
+</WSManInteropScenarios>

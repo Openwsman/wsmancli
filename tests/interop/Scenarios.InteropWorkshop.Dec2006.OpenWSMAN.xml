@@ -160,9 +160,13 @@
     </Scenario>
     <Scenario Description="8.1 Invoke" Supported="true">
         <Input>
-            <ResourceURI/>
-            <SelectorSet/>
-            <MethodName/>
+            <ResourceURI>http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_InitdService</ResourceURI>
+            <SelectorSet>
+                <Selector Name="SystemCreationClassName">OMC_UnitaryComputerSystem</Selector>
+                <Selector Name="SystemName">anashif-mobl.ims.intel.com</Selector>
+                <Selector Name="Name">nfsserver</Selector>
+            </SelectorSet>
+            <MethodName>ServiceStatus</MethodName>
             <InputMsg/>
         </Input>
         <Response>
@@ -171,11 +175,24 @@
     </Scenario>
     <Scenario Description="9.1 Put " Supported="true">
         <Input>
-            <ResourceURI/>
-            <SelectorSet/>
-            <PropertyName/>
-            <NewValue/>
+            <ResourceURI>http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_TimeZoneSettingData</ResourceURI>
+            <SelectorSet>
+                <Selector Name="InstanceID">omc:timezone</Selector>
+            </SelectorSet>
+            <PropertyName>TimeZone</PropertyName>
+            <NewValue>US/Pacific</NewValue>
         </Input>
+        <Response>
+            <p:OMC_TimeZoneSettingData xmlns:p="http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_TimeZoneSettingData" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                <p:InstanceID>omc:timezone</p:InstanceID>
+                <p:TimeZone>US/Eastern</p:TimeZone>
+                <p:UTCHardwareClock>false</p:UTCHardwareClock>
+                <p:ElementName xsi:nil="true"/>
+                <p:Caption xsi:nil="true"/>
+                <p:Description xsi:nil="true"/>
+            </p:OMC_TimeZoneSettingData>
+
+        </Response>
     </Scenario>
     <Scenario Description="9.2 Fragment Put" Supported="false">
         <Input>
