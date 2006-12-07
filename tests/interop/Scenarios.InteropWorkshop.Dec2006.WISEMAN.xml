@@ -181,77 +181,16 @@
         </Response>
     </Scenario>
     <Scenario Description="9.1 Put " Supported="true">
-        <Input xmlns:wsman="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">
+        <Input>
             <ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_NumericSensor</ResourceURI>
-	<wsman:SelectorSet>
-	  <wsman:Selector Name="CreationClassName">NumericSensor</wsman:Selector>
-	  <wsman:Selector Name="DeviceID">10.0.32</wsman:Selector>
-	  <wsman:Selector Name="SystemName">IPMI Controller 32</wsman:Selector>
-	  <wsman:Selector Name="SystemCreationClassName">ComputerSystem</wsman:Selector>
-	</wsman:SelectorSet>
-            <NewValue>
-    <p:CIM_NumericSensor xml:lang="en-US"
-      xmlns:cim="http://schemas.dmtf.org/wbem/wsman/1/base"
-      xmlns:p="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_NumericSensor" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-      <p:Accuracy>0</p:Accuracy>
-      <p:Availability xsi:nil="true"/>
-      <p:BaseUnits>0</p:BaseUnits>
-      <p:Caption>OEM RESERVED(81.0.32)</p:Caption>
-      <p:CreationClassName>NumericSensor</p:CreationClassName>
-      <p:CurrentReading>0</p:CurrentReading>
-      <p:CurrentState>OK</p:CurrentState>
-      <p:Description>SEL Fullness(81.0.32):OEM RESERVED for OEM System Integrator defined entity 0</p:Description>
-      <p:DeviceID>81.0.32</p:DeviceID>
-      <p:ElementName>SEL Fullness(81.0.32)</p:ElementName>
-      <p:EnabledDefault>2</p:EnabledDefault>
-      <p:EnabledState>5</p:EnabledState>
-      <p:ErrorCleared xsi:nil="true"/>
-      <p:ErrorDescription xsi:nil="true"/>
-      <p:HealthState xsi:nil="true"/>
-      <p:Hysteresis>0</p:Hysteresis>
-      <p:InstallDate xsi:nil="true"/>
-      <p:IsLinear>true</p:IsLinear>
-      <p:LastErrorCode xsi:nil="true"/>
-      <p:LowerThresholdCritical>26</p:LowerThresholdCritical>
-      <p:LowerThresholdFatal>10</p:LowerThresholdFatal>
-      <p:LowerThresholdNonCritical>100</p:LowerThresholdNonCritical>
-      <p:MaxQuiesceTime xsi:nil="true"/>
-      <p:MaxReadable>255</p:MaxReadable>
-      <p:MinReadable>0</p:MinReadable>
-      <p:Name>SEL Fullness(81.0.32)</p:Name>
-      <p:NominalReading>48</p:NominalReading>
-      <p:NormalMax>63</p:NormalMax>
-      <p:NormalMin>47</p:NormalMin>
-      <p:OtherEnabledState xsi:nil="true"/>
-      <p:OtherSensorTypeDescription>OEM RESERVED</p:OtherSensorTypeDescription>
-      <p:PollingInterval xsi:nil="true"/>
-      <p:PossibleStates>OK</p:PossibleStates>
-      <p:PossibleStates>N/A</p:PossibleStates>
-      <p:PossibleStates>at or below lower non-critical threshold</p:PossibleStates>
-      <p:PossibleStates>at or below lower critical threshold</p:PossibleStates>
-      <p:PossibleStates>at or below lower non-recoverable threshold</p:PossibleStates>
-      <p:PossibleStates>at or above upper non-critical threshold</p:PossibleStates>
-      <p:PossibleStates>at or above upper critical threshold</p:PossibleStates>
-      <p:PossibleStates>at or above upper non-recoverable threshold</p:PossibleStates>
-      <p:PowerManagementSupported xsi:nil="true"/>
-      <p:PowerOnHours xsi:nil="true"/>
-      <p:RateUnits>0</p:RateUnits>
-      <p:RequestedState>12</p:RequestedState>
-      <p:Resolution>0</p:Resolution>
-      <p:SensorType>1</p:SensorType>
-      <p:Status xsi:nil="true"/>
-      <p:StatusInfo xsi:nil="true"/>
-      <p:SystemCreationClassName>ComputerSystem</p:SystemCreationClassName>
-      <p:SystemName>IPMI Controller 32</p:SystemName>
-      <p:TimeOfLastStateChange xsi:nil="true"/>
-      <p:Tolerance xsi:nil="true"/>
-      <p:TotalPowerOnHours xsi:nil="true"/>
-      <p:UnitModifier>0</p:UnitModifier>
-      <p:UpperThresholdCritical>80</p:UpperThresholdCritical>
-      <p:UpperThresholdFatal>90</p:UpperThresholdFatal>
-      <p:UpperThresholdNonCritical>66</p:UpperThresholdNonCritical>
-    </p:CIM_NumericSensor>            
-            </NewValue>
+            <wsman:SelectorSet>
+                <wsman:Selector Name="CreationClassName">NumericSensor</wsman:Selector>
+                <wsman:Selector Name="DeviceID">10.0.32</wsman:Selector>
+                <wsman:Selector Name="SystemName">PUT_UPDATE</wsman:Selector>
+                <wsman:Selector Name="SystemCreationClassName">ComputerSystem</wsman:Selector>
+            </wsman:SelectorSet>
+            <PropertyName>LowerThresholdNonCritical</PropertyName>
+            <NewValue>100</NewValue>
         </Input>
     </Scenario>
     <Scenario Description="9.2 Fragment Put" Supported="true">

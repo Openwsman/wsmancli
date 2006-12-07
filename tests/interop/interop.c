@@ -29,12 +29,12 @@ typedef enum {
 
 static set_props(actionOptions *op, char *k, char *v) 
 {
-    hash_t *h = hash_create(HASHCOUNT_T_MAX, 0, 0);
+    op->properties = hash_create(HASHCOUNT_T_MAX, 0, 0);
 
-    if ( !hash_alloc_insert(h, k, v)) {
+    if ( !hash_alloc_insert(op->properties, k, v)) {
         fprintf(stderr, "hash_alloc_insert failed");
     }
-    op->properties = h;
+    //op->properties = h;
 }
 
 static void
@@ -134,6 +134,7 @@ static int run_interop_test (WsManClient *cl, WsXmlNodeH scenario, InteropTest i
         wsenum_enumerate_and_pull(cl, resource_uri , options, pull_items, NULL );
     }else if (id == 10) {  // 7.3 Enumerate failure
 
+        /*
         WsXmlNodeH input  = ws_xml_get_child(scenario, 0, NULL, "Input");
         WsXmlNodeH r  = ws_xml_get_child(input, 0, NULL, "ResourceURI");
         char *resource_uri = ws_xml_get_node_text(r);
@@ -146,6 +147,7 @@ static int run_interop_test (WsManClient *cl, WsXmlNodeH scenario, InteropTest i
             if (response2)
                 xml_parser_doc_dump(stdout, response2);
         }
+        */
 
     }else if (id == 11) { // 7.4 Enumerate ObjectAndEPR
 
@@ -177,6 +179,7 @@ static int run_interop_test (WsManClient *cl, WsXmlNodeH scenario, InteropTest i
         WsXmlNodeH r  = ws_xml_get_child(input, 0, NULL, "ResourceURI");
         WsXmlNodeH k  = ws_xml_get_child(input, 0, NULL, "PropertyName");
         WsXmlNodeH v  = ws_xml_get_child(input, 0, NULL, "NewValue");
+        printf("%s=%s\n", ws_xml_get_node_text(k), ws_xml_get_node_text(v) );
         char *resource_uri = ws_xml_get_node_text(r);
         wsman_add_selectors_list_from_node(input, &options);
         set_props(&options, ws_xml_get_node_text(k), ws_xml_get_node_text(v) );
@@ -264,7 +267,7 @@ int main(int argc, char** argv)
         WsXmlAttrH desc = ws_xml_get_node_attr(scenario, 0);
         char *attr_val = ws_xml_get_attr_value(desc);
         WsXmlAttrH supported = ws_xml_get_node_attr(scenario, 1);
-        if (strcmp(ws_xml_get_attr_value(supported), "true") == 0   ) {
+        if (strcmp(ws_xml_get_attr_value(supported), "true") == 0  && test_id == 18 ) {
             if (desc) {
                 if (attr_val)
                     printf("%s (%d)\n\n", attr_val, test_id );
