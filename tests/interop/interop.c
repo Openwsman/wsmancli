@@ -16,10 +16,12 @@
 #include "u/libu.h"
 #include "wsman-client-api.h"
 #include "wsman-client-transport.h"
+#include "wsman-debug.h"
 
 #define DESC "Description"
 static char *file = NULL;
 static char *endpoint = NULL;
+static int  debug_level = -1;
 
 typedef enum {
       INTEROP_IDENTIFY = 0
@@ -204,6 +206,8 @@ int main(int argc, char** argv)
 		"Interop file",	"<file>"  },
     { "endpoint",	'u',	U_OPTION_ARG_STRING,	&endpoint,
 		"Endpoint in form of a URL", "<uri>" },
+    { "debug",   'd',    U_OPTION_ARG_INT,    &debug_level,
+        "Set the verbosity of debugging output.",   "1-6" },
     { NULL }
     };
 
@@ -232,7 +236,7 @@ int main(int argc, char** argv)
       fprintf(stderr, "endpoint option required\n");
       return 1;
     }
-
+    wsman_debug_set_level(debug_level);
 
     wsman_client_transport_init(NULL);
     cl = wsman_create_client( uri->host,
