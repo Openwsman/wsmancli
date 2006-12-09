@@ -5,7 +5,9 @@ CFLAGS = \
        $(OPENWSMAN_CFLAGS)
        
 LDADD = \
-       $(OPENWSMAN_LIBS)
+       $(OPENWSMAN_LIBS) \
+       -lwsman_curl_client_transport
+
 
 interop_SOURCES = interop.c
 

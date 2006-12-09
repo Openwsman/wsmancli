@@ -109,6 +109,8 @@ WsActions action_data[] =
   { 
     { "get", WSMAN_ACTION_TRANSFER_GET},
     { "put", WSMAN_ACTION_TRANSFER_PUT},
+    { "create", WSMAN_ACTION_TRANSFER_CREATE},
+    { "delete", WSMAN_ACTION_TRANSFER_DELETE},
     { "enumerate", WSMAN_ACTION_ENUMERATION},
     { "pull", WSMAN_ACTION_PULL},
     { "release", WSMAN_ACTION_RELEASE},

@@ -4,7 +4,8 @@ CFLAGS = \
        $(OPENWSMAN_CFLAGS)
        
 LDADD = \
-       $(OPENWSMAN_LIBS)
+       $(OPENWSMAN_LIBS) \
+       -lwsman_curl_client_transport
 
 wsmid_identify_SOURCES = \
 		wsmid_identify.c
