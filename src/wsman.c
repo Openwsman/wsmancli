@@ -224,7 +224,7 @@ main(int argc, char **argv)
 		}
 		break;		
 	case WSMAN_ACTION_TRANSFER_CREATE:
-		doc = ws_transfer_create(cl, resource_uri, options);
+		doc = ws_transfer_create(cl, resource_uri, NULL, NULL, options);
 		if (doc) {
 			wsman_output(doc);
 			ws_xml_destroy_doc(doc);

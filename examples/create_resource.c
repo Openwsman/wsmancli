@@ -1,3 +1,5 @@
+
+
 /*******************************************************************************
  * Copyright (C) 2004-2006 Intel Corp. All rights reserved.
  *
@@ -40,29 +42,49 @@
 
 #include "u/libu.h"
 
+#include "wsman-xml-serializer.h"
 #include "wsman-client-api.h"
 #include "wsman-client-transport.h"
-#include "wsman-xml-serializer.h"
 
-struct __wsmid_identify
+
+#define RESOURCE_URI "http://example.com/wbem/wscim/1/schema/1/EXL_ExamplePolicy"
+#define CLASSNAME "EXL_ExamplePolicy"
+
+struct __XmlSerializerInfo Handles_TypeInfo[] =
 {
-	char* ProtocolVersion;
-	char* ProductVendor;
-	char* ProductVersion;
+      SER_UINT32("Handles", 1, 1)
 };
-typedef struct __wsmid_identify wsmid_identify;
 
-SER_START_ITEMS("IdentifyResponse", wsmid_identify)
-SER_STR("ProtocolVersion", 1, 1), 
-SER_STR("ProductVendor", 1, 1),
-SER_STR("ProductVersion", 1, 1),
-SER_END_ITEMS("IdentifyResponse", wsmid_identify);
+struct __EXL_ExamplePolicy
+{
+	char *ElementName;
+	char *Description;
+	char *Caption;
+	char *InstanceID;
+	char *PolicyName;
+	int   PolicyPrecedence;
+	
+	XmlSerialiseDynamicSizeData* Handles;
+	//int  *FilterCreationHandles;
+	int   DefaultTest;
+
+};
+typedef struct __EXL_ExamplePolicy EXL_ExamplePolicy;
+
+SER_START_ITEMS("EXL_ExamplePolicy", EXL_ExamplePolicy)
+SER_STR("ElementName",0,1),
+SER_STR("Description",0,1),
+SER_STR("Caption",0,1),
+SER_STR("InstanceID",0,1),
+SER_STR("PolicyName",0,1),
+SER_UINT32("PolicyPrecedence", 1 ,1 ),
+SER_DYN_ARRAY_PTR(Handles),
+SER_BOOL("DefaultTest",0,1),
+SER_END_ITEMS("EXL_ExamplePolicy", EXL_ExamplePolicy);
 
 
-static char  vendor = 0;
-static char version = 0;
-static char protocol = 0;
 static char *endpoint = NULL;
+static char dump;
 
 int main(int argc, char** argv)
 {
@@ -73,22 +95,19 @@ int main(int argc, char** argv)
     char retval = 0;
     u_error_t *error = NULL;
 
+
     u_option_entry_t opt[] = {
-    { "product",	'p',	U_OPTION_ARG_NONE,	&vendor,
-		"Print Product Vendor",	NULL },
-    { "version",	'v',	U_OPTION_ARG_NONE,	&version,
-		"Print Product Version",	NULL  },
-    { "protocol",	'P',	U_OPTION_ARG_NONE,	&protocol,
-		"Print Protocol Version",	NULL  },
     { "endpoint",	'u',	U_OPTION_ARG_STRING,	&endpoint,
 		"Endpoint in form of a URL", "<uri>" },
+    { "dump", 'd',	U_OPTION_ARG_NONE,	&dump,
+		"Dump request", NULL },
     { NULL }
     };
 
     u_option_context_t *opt_ctx;	
     opt_ctx = u_option_context_new("");
     u_option_context_set_ignore_unknown_options(opt_ctx, FALSE);
-    u_option_context_add_main_entries(opt_ctx, opt, "wsmid_identify");
+    u_option_context_add_main_entries(opt_ctx, opt, "Create Resource");
     retval = u_option_context_parse(opt_ctx, &argc, &argv, &error);
 
     u_option_context_free(opt_ctx);
@@ -104,7 +123,8 @@ int main(int argc, char** argv)
 
     u_uri_t *uri;
     if (endpoint) {
-      u_uri_parse((const char *)endpoint, &uri);
+      if (u_uri_parse((const char *)endpoint, &uri)!=0 )
+      	return;
     }
     if (!endpoint || !uri) {
       fprintf(stderr, "endpoint option required\n");
@@ -120,44 +140,39 @@ int main(int argc, char** argv)
         uri->user,
         uri->pwd);		
     initialize_action_options(&options);
-
-
-    doc = wsman_identify(cl, options);
-
-    WsXmlNodeH soapBody = ws_xml_get_soap_body(doc);
-    if (ws_xml_get_child(soapBody, 0, XML_NS_WSMAN_ID, "IdentifyResponse")) {
-         wsmid_identify *id = ws_deserialize(wsman_client_get_context(cl),
-                                     soapBody,
-                                     wsmid_identify_TypeInfo, "IdentifyResponse",
-                                     XML_NS_WSMAN_ID, XML_NS_WSMAN_ID,
-                                     0, 0);
-
-         if (vendor)
-           printf("%s\n", id->ProductVendor);
-         if (version)
-           printf("%s\n", id->ProductVersion);
-         if (protocol)
-           printf("%s\n", id->ProtocolVersion);
-
-         if (!protocol && !vendor && !version ) {
-             printf("\n");
-           printf("%s %s supporting protocol %s\n", id->ProductVendor, id->ProductVersion,id->ProtocolVersion);
-         }
-           
-    }
+    
+    if (dump) wsman_set_action_option(&options,FLAG_DUMP_REQUEST );
+    options.max_envelope_size = 51200;
+    options.timeout = 60000;
+    
+    EXL_ExamplePolicy *d = u_malloc(sizeof(EXL_ExamplePolicy));
+    d->ElementName = u_strdup("name");
+    d->DefaultTest = 1;
+    
+  	int *array = NULL;
+  	int count = 4;
+  	array = (int *) malloc (sizeof (int) * count);
+    //memset (array, 0, sizeof (int) * count);
+    array[0] = 1;
+	array[1] = 0;
+	array[2] = 3;
+	array[3] = 5;
+	
+	d->Handles = (XmlSerialiseDynamicSizeData*)u_malloc(sizeof(XmlSerialiseDynamicSizeData));    
+	d->Handles->count = count;
+    d->Handles->data = array;
+   	
+   	doc = ws_transfer_create(cl, RESOURCE_URI,  d, EXL_ExamplePolicy_TypeInfo, options);
+    ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
+    
+    
     if (uri) {
       u_uri_free(uri);
     }
     
-    if (doc) {			
-        ws_xml_destroy_doc(doc);
-    }
-
     destroy_action_options(&options);
     wsman_release_client(cl);
-
-	
-	return 0;
+    return 0;
 }
 
 

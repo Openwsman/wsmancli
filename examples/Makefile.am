@@ -14,11 +14,14 @@ win32_service_SOURCES = \
 		win32_service.c
 enum_epr_SOURCES = \
 		enum_epr.c
+create_resource_SOURCES = \
+		create_resource.c
 		
-bin_PROGRAMS = \
+noinst_PROGRAMS = \
 	wsmid_identify \
 	win32_service \
-	enum_epr
+	enum_epr \
+	create_resource
    
 
 
