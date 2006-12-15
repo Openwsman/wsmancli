@@ -50,10 +50,13 @@
 #define RESOURCE_URI "http://example.com/wbem/wscim/1/schema/1/EXL_ExamplePolicy"
 #define CLASSNAME "EXL_ExamplePolicy"
 
+/*
 struct __XmlSerializerInfo Handles_TypeInfo[] =
 {
       SER_UINT32("Handles", 1, 1)
 };
+*/
+SER_TYPEINFO_UINT32;
 
 struct __EXL_ExamplePolicy
 {
@@ -78,7 +81,7 @@ SER_STR("Caption",0,1),
 SER_STR("InstanceID",0,1),
 SER_STR("PolicyName",0,1),
 SER_UINT32("PolicyPrecedence", 1 ,1 ),
-SER_DYN_ARRAY_PTR(Handles),
+SER_DYN_ARRAY_PTR("Handles", uint32),
 SER_BOOL("DefaultTest",0,1),
 SER_END_ITEMS("EXL_ExamplePolicy", EXL_ExamplePolicy);
 

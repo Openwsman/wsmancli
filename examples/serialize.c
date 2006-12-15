@@ -200,9 +200,7 @@ struct __XmlSerializerInfo strings_TypeInfo[] =
 
 typedef struct {
   int AcceptPause;
-//  int AcceptStop;
   char* Caption;
-//  unsigned long CheckPoint;
   char **strings;
   unsigned long CheckPoint;
   int AcceptStop;
@@ -211,9 +209,7 @@ typedef struct {
 
 Sample sample = {
         0,
-//        1,
         "Caption",
-//        30,
         strings,
         30,
         1,
@@ -223,9 +219,7 @@ Sample sample = {
 
 SER_START_ITEMS("Sample", Sample)
 SER_BOOL("AcceptPause",0,1),
-//SER_BOOL("AcceptStop",0,1),
 SER_STR("Caption",0,1),
-//SER_UINT32("CheckPoint", 1 ,1 ),
 SER_STR_PTR("strings", 1, 1),
 SER_UINT32("CheckPoint", 1 ,1 ),
 SER_BOOL("AcceptStop",0,1),
@@ -279,8 +273,8 @@ typedef struct {
   unsigned char a;
   unsigned char b;
   unsigned char c;
+  unsigned char pad;
   char* string;
-//  unsigned char c;
 } Sample;
 
 
@@ -289,11 +283,11 @@ SER_START_ITEMS("Sample", Sample)
 SER_UINT8("a",0,1),
 SER_UINT8("b",0,1),
 SER_UINT8("c", 0 ,1 ),
+SER_INOUT_UINT8("pad"),
 SER_STR("string",0,1),
-//SER_UINT8("c", 0 ,1 ),
 SER_END_ITEMS("Sample", Sample);
 
-Sample sample = {'a', 'b', 'c', "simple string"};
+Sample sample = {'a', 'b', 'c', 'x', "simple string"};
 Sample *p = NULL;
 
 
@@ -316,6 +310,9 @@ int retval;
                CLASSNAME, NULL, NULL, 0);
     printf("ws_serialize: %d\n", retval);
     ws_xml_dump_node_tree(stdout, node);
+
+    printf("\n\nws_deserialize (prints original : result):\n");
+
     node = ws_xml_get_doc_root(doc);
     Sample *cs = (Sample *)ws_deserialize(cntx,
                                      node,
@@ -326,16 +323,12 @@ int retval;
         printf("Errror ws_serialize\n");
         return;
     }
-    retval = memcmp(cs, &sample, sizeof (&sample));
-    if (retval) {
-            printf("Not compared (%d)   -    FAILED\n", retval);
-            printf("a = %c   :  %c\n", sample.a, cs->a);
-            printf("b = %c   :  %c\n", sample.b, cs->b);
-            printf("c = %c   :  %c\n", sample.c, cs->c);
-            printf("string = %s   :  %s\n", sample.string, cs->string);
-   } else {
-        printf("           PASS\n");
-    }
+
+    printf("a   = %c   :  %c\n", sample.a, cs->a);
+    printf("b   = %c   :  %c\n", sample.b, cs->b);
+    printf("c   = %c   :  %c\n", sample.c, cs->c);
+    printf("pad = %c   :  %c\n", sample.pad, cs->pad);
+    printf("string = <%s>   :  <%s>\n", sample.string, cs->string);
 }
 
 
@@ -394,6 +387,135 @@ int retval;
     ws_xml_dump_node_tree(stdout, node);
 }
 
+
+
+
+
+static void
+example5()
+{
+
+char *strings1[] = {
+    "string 11", "string 12", "string 13", NULL,
+};
+char *strings2[] = {
+    "string 21", "string 22", "string 23", NULL,
+};
+
+
+typedef struct {
+  int AcceptPause;
+  char* Caption;
+  char **strings;
+} Foo;
+
+Foo foos[] = {
+        {1, "Caption 1", strings1},
+        {0, "Caption 2", strings2},
+        {1, "Caption 1",},
+        {0, "Caption 2",},};
+
+
+SER_START_ITEMS("Foo", Foo)
+SER_BOOL("AcceptPause",0,1),
+SER_STR("Caption",0,1),
+SER_STR_PTR("strings", 1, 1),
+SER_END_ITEMS("Foo", Foo);
+
+unsigned short shorts[] = {5, 11, 14,19, 27, 36};
+SER_TYPEINFO_UINT16;
+
+typedef struct {
+        char *city;
+        XmlSerialiseDynamicSizeData shorts;
+        XmlSerialiseDynamicSizeData foos;
+        short tag;
+} Sample;
+
+Sample sample = { "Moscow", {6, shorts}, {2, foos}, 99};
+
+
+
+
+SER_START_ITEMS("Sample", Sample)
+SER_STR("city", 0, 1),
+SER_DYN_ARRAY("shorts", uint16),
+SER_DYN_ARRAY("foos", Foo),
+SER_UINT16("tag", 0, 1),
+SER_END_ITEMS("Sample", Sample);
+
+WsContextH cntx;
+WsXmlDocH doc;
+WsXmlNodeH node;
+int retval;
+
+    printf("\n\n   ********   example5()  ********\n");
+
+    cntx = wsman_create_runtime();
+    if (cntx == NULL) {
+        printf("Error ws_create_runtime\n");
+        return;
+    }
+    doc = wsman_create_doc(cntx, "example");
+    node = ws_xml_get_doc_root(doc);
+
+    retval = ws_serialize(cntx, node, &sample, Sample_TypeInfo,
+               CLASSNAME, NULL, NULL, 0);
+    printf("\n\nws_serialize: %d\n", retval);
+    ws_xml_dump_node_tree(stdout, node);
+
+    node = ws_xml_get_doc_root(doc);
+
+    printf("\n\nws_deserialize:\n");
+    Sample *cs = (Sample *)ws_deserialize(cntx,
+                                     node,
+                                     Sample_TypeInfo,
+                                     CLASSNAME, NULL, NULL,
+                                     0, 0);
+    if (cs == NULL) {
+        printf("Errror ws_deserialize\n");
+        return;
+    }
+    int i;
+    printf("shorts count = %d\n", cs->shorts.count);
+    printf("foos count   = %d\n", cs->foos.count);
+    printf("\n");
+    printf("    city = <%s>\n", cs->city);
+    if (cs->shorts.data == NULL) {
+        printf("No uint16 objects\n");
+        goto AFTER_SHORTS;
+    }
+    unsigned short *newuints = (unsigned short *)cs->shorts.data;
+    printf("    shorts = {");
+    for (i = 0; i < cs->shorts.count; i++) {
+        printf("%u, ", *newuints);
+        newuints++;
+    }
+    printf("}\n");
+AFTER_SHORTS:
+    if (cs->foos.data == NULL) {
+        printf("No foo objects\n");
+        goto AFTER_FOOS;
+    }
+    Foo *newfoos = cs->foos.data;
+    for (i = 0; i < cs->foos.count; i++) {
+        printf("   ====   Foo %d =====\n", i);
+        printf("    AcceptPause  =   %d\n",  newfoos->AcceptPause);
+        printf("    Caption       =   <%s>\n", newfoos->Caption);
+
+        char **p = newfoos->strings;
+        printf("    strings :\n");
+        while (*p) {
+            printf("         <%s>\n", *p);
+            p++;
+        }
+        printf("   ====   End of Foo %d =====\n", i);
+        newfoos++;
+    }
+AFTER_FOOS:
+    printf("    tag = %d\n", cs->tag);
+}
+
 int
 main(int argc, char **argv)
 {
@@ -404,8 +526,9 @@ main(int argc, char **argv)
         // execute all
         example1();
         example2();
- //       example3();
+        example3();
         example4();
+        example5();
         return 0;
     }
 
@@ -414,10 +537,11 @@ main(int argc, char **argv)
         switch (num) {
         case 1: example1(); break;
         case 2: example2(); break;
-//        case 3: example3(); break;
+        case 3: example3(); break;
         case 4: example4(); break;
+        case 5: example5(); break;
         default:
-            printf("\n    No example%d()\n");
+            printf("\n    No example%d()\n", num);
             break;
         }
     }
