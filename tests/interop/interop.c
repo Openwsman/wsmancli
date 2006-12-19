@@ -184,7 +184,7 @@ static int run_interop_test (WsManClient *cl, WsXmlNodeH scenario, InteropTest i
         wsman_add_selectors_list_from_node(input, &options);
         set_props(&options, ws_xml_get_node_text(k), ws_xml_get_node_text(v) );
 
-        response = ws_transfer_put(cl, resource_uri, options);
+        response = ws_transfer_put1(cl, resource_uri, options);
         xml_parser_doc_dump(stdout, response);
     }
 
