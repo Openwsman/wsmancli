@@ -58,31 +58,31 @@ example1()
 {
 struct __Sample_Servie
 {
-  int AcceptPause;
-  int AcceptStop;
-  char* Caption;
-  unsigned long CheckPoint;
-  char* CreationClassName;
-  char* Description;
-  int DesktopInteract;
-  char*  DisplayName;
-  char* ErrorControl;
-  unsigned long ExitCode;
-  char* InstallDate;
-  char* Name;
-  char* PathName;
-  unsigned long ProcessId;
-  unsigned long ServiceSpecificExitCode;
-  char* ServiceType;
-  int Started;
-  char* StartMode;
-  char* StartName;
-  char* State;
-  char* Status;
-  char* SystemCreationClassName;
-  char* SystemName;
-  unsigned long TagId;
-  unsigned long WaitHint;
+  XML_TYPE_BOOL AcceptPause;
+  XML_TYPE_BOOL AcceptStop;
+  XML_TYPE_STR Caption;
+  XML_TYPE_UINT32 CheckPoint;
+  XML_TYPE_STR CreationClassName;
+  XML_TYPE_STR Description;
+  XML_TYPE_BOOL DesktopInteract;
+  XML_TYPE_STR  DisplayName;
+  XML_TYPE_STR ErrorControl;
+  XML_TYPE_UINT32 ExitCode;
+  XML_TYPE_STR InstallDate;
+  XML_TYPE_STR Name;
+  XML_TYPE_STR PathName;
+  XML_TYPE_UINT32 ProcessId;
+  XML_TYPE_UINT32 ServiceSpecificExitCode;
+  XML_TYPE_STR ServiceType;
+  XML_TYPE_BOOL Started;
+  XML_TYPE_STR StartMode;
+  XML_TYPE_STR StartName;
+  XML_TYPE_STR State;
+  XML_TYPE_STR Status;
+  XML_TYPE_STR SystemCreationClassName;
+  XML_TYPE_STR SystemName;
+  XML_TYPE_UINT32 TagId;
+  XML_TYPE_UINT32 WaitHint;
 };
 typedef struct __Sample_Servie Sample_Servie;
 
@@ -115,31 +115,31 @@ Sample_Servie servie = {
 };
 
 SER_START_ITEMS("Sample_Servie", Sample_Servie)
-SER_BOOL("AcceptPause",0,1),
-SER_BOOL("AcceptStop",0,1),
-SER_STR("Caption",0,1),
-SER_UINT32("CheckPoint", 1 ,1 ),
-SER_STR("CreationClassName",0,1),
-SER_STR("Description",0,1),
-SER_BOOL("DesktopInteract",0,1),
-SER_STR("DisplayName",0,1),
-SER_STR("ErrorControl",0,1),
-SER_UINT32("ExitCode",0,1),
-SER_STR("InstallDate",0,1),
-SER_STR("Name",0,1),
-SER_STR("PathName",0,1),
-SER_UINT32("ProcessId",0,1),
-SER_UINT32("ServiceSpecificExitCode",0,1),
-SER_STR("ServiceType",0,1),
-SER_BOOL("Started",0,1),
-SER_STR("StartMode",0,1),
-SER_STR("StartName",0,1),
-SER_STR("State",0,1),
-SER_STR("Status",0,1),
-SER_STR("SystemCreationClassName",0,1),
-SER_STR("SystemName",0,1),
-SER_UINT32("TagId",0,1),
-SER_UINT32("WaitHint",0,1),
+SER_BOOL("AcceptPause", 1),
+SER_BOOL("AcceptStop", 1),
+SER_STR("Caption", 1),
+SER_UINT32("CheckPoint", 1),
+SER_STR("CreationClassName", 1),
+SER_STR("Description", 1),
+SER_BOOL("DesktopInteract", 1),
+SER_STR("DisplayName", 1),
+SER_STR("ErrorControl", 1),
+SER_UINT32("ExitCode", 1),
+SER_STR("InstallDate", 1),
+SER_STR("Name", 1),
+SER_STR("PathName", 1),
+SER_UINT32("ProcessId", 1),
+SER_UINT32("ServiceSpecificExitCode", 1),
+SER_STR("ServiceType", 1),
+SER_BOOL("Started", 1),
+SER_STR("StartMode", 1),
+SER_STR("StartName", 1),
+SER_STR("State", 1),
+SER_STR("Status", 1),
+SER_STR("SystemCreationClassName", 1),
+SER_STR("SystemName", 1),
+SER_UINT32("TagId", 1),
+SER_UINT32("WaitHint", 1),
 SER_END_ITEMS("Sample_Servie", Sample_Servie);
 
 WsContextH cntx;
@@ -147,7 +147,7 @@ WsXmlDocH doc;
 WsXmlNodeH node;
 int retval;
 
-    printf("\n\n   ********   example1()  ********\n");
+    printf("\n\n   ********   example1. Basic types  ********\n");
 
     cntx = wsman_create_runtime();
     if (cntx == NULL) {
@@ -177,8 +177,6 @@ int retval;
             printf("%d   :  %d\n", servie.AcceptPause, cs->AcceptPause);
             printf("%d   :  %d\n", servie.AcceptStop, cs->AcceptStop);
             printf("%s   :  %s\n", servie.Caption, cs->Caption);
-   } else {
-        printf("           PASS\n");
    }
 }
 
@@ -189,40 +187,36 @@ static void
 example2()
 {
 
-char *strings[] = {
-    "string 1", "string 2", "string 3", NULL,
-};
-
-struct __XmlSerializerInfo strings_TypeInfo[] =
-{
-      SER_STR("string", 1, 1)
-};
+typedef struct {
+    XML_TYPE_UINT8 byte1;
+    XML_TYPE_UINT32 int1;
+    XML_TYPE_UINT8 byte2;
+} Foo;
 
 typedef struct {
-  int AcceptPause;
-  char* Caption;
-  char **strings;
-  unsigned long CheckPoint;
-  int AcceptStop;
+  XML_TYPE_UINT8 byte1;
+  XML_TYPE_UINT16 short1;
+  XML_TYPE_UINT32 int1;
+  char *string1;
+  Foo  foo;
 } Sample;
 
 
-Sample sample = {
-        0,
-        "Caption",
-        strings,
-        30,
-        1,
+Sample sample = { 1, 2, 4, "string", {5, 196, 8} };
 
-};
+SER_START_ITEMS("Foo", Foo)
+  SER_UINT8("FOOBYTE1", 1),
+  SER_UINT32("FOOINT32", 1),
+  SER_UINT8("FOOBYTE2", 1),
+SER_END_ITEMS("Foo", Foo);
 
 
 SER_START_ITEMS("Sample", Sample)
-SER_BOOL("AcceptPause",0,1),
-SER_STR("Caption",0,1),
-SER_STR_PTR("strings", 1, 1),
-SER_UINT32("CheckPoint", 1 ,1 ),
-SER_BOOL("AcceptStop",0,1),
+  SER_UINT8("BYTE", 1),
+  SER_UINT16("SHORT", 1),
+  SER_UINT32("INT32", 1),
+  SER_STR("STRING", 1),
+  SER_STRUCT("FOO", 1, Foo),
 SER_END_ITEMS("Sample", Sample);
 
 WsContextH cntx;
@@ -230,7 +224,7 @@ WsXmlDocH doc;
 WsXmlNodeH node;
 int retval;
 
-    printf("\n\n   ********   example2()  ********\n");
+    printf("\n\n   ********   example2. Structure with pads.  ********\n");
 
     cntx = wsman_create_runtime();
     if (cntx == NULL) {
@@ -255,13 +249,16 @@ int retval;
         printf("Errror ws_deserialize\n");
         return;
     }
-    if (cs->strings == NULL) {
-        printf("No strings\n");
-        return;
-    }
-    printf("\n       deserialized strings:\n");
-    char **p = cs->strings;
-    while (*p != NULL) { printf("%s\n", *p); p++; }
+
+    printf("\n      initial and deserialized structures\n");
+    printf("     byte1    =    %d : %d\n", sample.byte1, cs->byte1);
+    printf("     short1   =    %d : %d\n", sample.short1, cs->short1);
+    printf("     int1     =    %d : %d\n", sample.int1, cs->int1);
+    printf("     string1  =    <%s> : <%s>\n", sample.string1, cs->string1);
+    printf("     foo :\n");
+    printf("        byte1    =    %d : %d\n", sample.foo.byte1, cs->foo.byte1);
+    printf("        int1     =    %d : %d\n", sample.foo.int1, cs->foo.int1);
+    printf("        byte2    =    %d : %d\n", sample.foo.byte2, cs->foo.byte2);
 }
 
 
@@ -270,21 +267,21 @@ static void
 example3()
 {
 typedef struct {
-  unsigned char a;
-  unsigned char b;
-  unsigned char c;
-  unsigned char pad;
-  char* string;
+  XML_TYPE_UINT8 a;
+  XML_TYPE_UINT8 b;
+  XML_TYPE_UINT8 c;
+  XML_TYPE_UINT8 pad;
+  XML_TYPE_STR string;
 } Sample;
 
 
 
 SER_START_ITEMS("Sample", Sample)
-SER_UINT8("a",0,1),
-SER_UINT8("b",0,1),
-SER_UINT8("c", 0 ,1 ),
-SER_INOUT_UINT8("pad"),
-SER_STR("string",0,1),
+SER_UINT8("a", 1),
+SER_UINT8("b", 1),
+SER_UINT8("c", 1),
+SER_INOUT_UINT8("pad", 1),
+SER_STR("string", 1),
 SER_END_ITEMS("Sample", Sample);
 
 Sample sample = {'a', 'b', 'c', 'x', "simple string"};
@@ -296,7 +293,7 @@ WsXmlDocH doc;
 WsXmlNodeH node;
 int retval;
 
-    printf("\n\n   ********   example3()  ********\n");
+    printf("\n\n   ********   example3. Skip elements.  ********\n");
 
     cntx = wsman_create_runtime();
     if (cntx == NULL) {
@@ -337,34 +334,34 @@ example4()
 {
 
 typedef struct {
-  int a;
-  char* string;
-  int b;
+  XML_TYPE_BOOL a;
+  XML_TYPE_STR string;
+  XML_TYPE_BOOL b;
 } Embed;
 
 typedef struct {
-    int A;
+    XML_TYPE_UINT32 A;
     Embed EMBED[2];
-    char *STRING;
+    XML_TYPE_STR STRING;
 } Sample;
 
 
 Sample sample = {
         10,
-        {{1, "string 1", 2}, {3, "string 2", 4},},
+        {{1, "string 1", 0}, {0, "string 2", 1},},
         "STRING",
 };
 
 SER_START_ITEMS("Embed", Embed)
-SER_BOOL("a",0,1),
-SER_STR("string",0,1),
-SER_BOOL("b",0,1),
+SER_BOOL("a", 1),
+SER_STR("string", 1),
+SER_BOOL("b", 1),
 SER_END_ITEMS("Embed", Embed);
 
 SER_START_ITEMS("Sample", Sample)
-SER_BOOL("A",0,1),
-SER_STRUCT("EMBED", 0, 2, Embed),
-SER_STR("STRING",0,1),
+SER_UINT32("A", 1),
+SER_STRUCT("EMBED", 2, Embed),
+SER_STR("STRING", 1),
 SER_END_ITEMS("Sample", Sample);
 
 WsContextH cntx;
@@ -372,7 +369,7 @@ WsXmlDocH doc;
 WsXmlNodeH node;
 int retval;
 
-    printf("\n\n   ********   example4()  ********\n");
+    printf("\n\n   ********   example4. Static structure array  ********\n");
     cntx = wsman_create_runtime();
     if (cntx == NULL) {
         printf("Error ws_create_runtime\n");
@@ -395,53 +392,44 @@ static void
 example5()
 {
 
-char *strings1[] = {
-    "string 11", "string 12", "string 13", NULL,
-};
-char *strings2[] = {
-    "string 21", "string 22", "string 23", NULL,
-};
-
 
 typedef struct {
-  int AcceptPause;
-  char* Caption;
-  char **strings;
+    XML_TYPE_BOOL AcceptPause;
+    XML_TYPE_STR Caption;
 } Foo;
 
 Foo foos[] = {
-        {1, "Caption 1", strings1},
-        {0, "Caption 2", strings2},
+        {1, "Caption 1"},
+        {0, "Caption 2"},
         {1, "Caption 1",},
         {0, "Caption 2",},};
 
 
 SER_START_ITEMS("Foo", Foo)
-SER_BOOL("AcceptPause",0,1),
-SER_STR("Caption",0,1),
-SER_STR_PTR("strings", 1, 1),
+SER_BOOL("AcceptPause", 1),
+SER_STR("Caption", 1),
 SER_END_ITEMS("Foo", Foo);
 
-unsigned short shorts[] = {5, 11, 14,19, 27, 36};
+XML_TYPE_UINT16 myshorts[] = {5, 11, 14,19, 27, 36};
 SER_TYPEINFO_UINT16;
 
 typedef struct {
-        char *city;
-        XmlSerialiseDynamicSizeData shorts;
-        XmlSerialiseDynamicSizeData foos;
-        short tag;
+        XML_TYPE_STR city;
+        XML_TYPE_DYN_ARRAY shorts;
+        XML_TYPE_DYN_ARRAY foos;
+        XML_TYPE_UINT16 tag;
 } Sample;
 
-Sample sample = { "Moscow", {6, shorts}, {2, foos}, 99};
+Sample sample = { "Moscow", {6, myshorts}, {2, foos}, 99};
 
 
 
 
 SER_START_ITEMS("Sample", Sample)
-SER_STR("city", 0, 1),
+SER_STR("city", 1),
 SER_DYN_ARRAY("shorts", uint16),
 SER_DYN_ARRAY("foos", Foo),
-SER_UINT16("tag", 0, 1),
+SER_UINT16("tag", 1),
 SER_END_ITEMS("Sample", Sample);
 
 WsContextH cntx;
@@ -449,7 +437,7 @@ WsXmlDocH doc;
 WsXmlNodeH node;
 int retval;
 
-    printf("\n\n   ********   example5()  ********\n");
+    printf("\n\n   ********   example5. Dynamic arrays  ********\n");
 
     cntx = wsman_create_runtime();
     if (cntx == NULL) {
@@ -502,13 +490,6 @@ AFTER_SHORTS:
         printf("   ====   Foo %d =====\n", i);
         printf("    AcceptPause  =   %d\n",  newfoos->AcceptPause);
         printf("    Caption       =   <%s>\n", newfoos->Caption);
-
-        char **p = newfoos->strings;
-        printf("    strings :\n");
-        while (*p) {
-            printf("         <%s>\n", *p);
-            p++;
-        }
         printf("   ====   End of Foo %d =====\n", i);
         newfoos++;
     }
@@ -516,11 +497,61 @@ AFTER_FOOS:
     printf("    tag = %d\n", cs->tag);
 }
 
+
+static void
+debug_message_handler(const char *str, debug_level_e level, void *user_data)
+{
+    if (wsman_debug_level_debugged(level)) {
+        struct tm      *tm;
+        time_t          now;
+        char            timestr[128];
+
+        time(&now);
+        tm = localtime(&now);
+        strftime(timestr, 128, "%b %e %T", tm);
+        fprintf(stderr, "%s  %s\n", timestr, str);
+    }
+}
+
+static void
+initialize_logging(void)
+{
+    debug_add_handler(debug_message_handler, DEBUG_LEVEL_ALWAYS, NULL);
+}
+
+int debug_level = 0;
 int
 main(int argc, char **argv)
 {
     int num;
     int i;
+    actionOptions options;
+    char retval = 0;
+    u_error_t *error = NULL;
+    u_option_entry_t opt[] = {
+        { "debug",  'd',    U_OPTION_ARG_INT,   &debug_level,
+               "Set the verbosity of debugging output.",   "1-6" }
+    };
+    u_option_context_t *opt_ctx; 
+    opt_ctx = u_option_context_new("");
+    u_option_context_set_ignore_unknown_options(opt_ctx, FALSE);
+    u_option_context_add_main_entries(opt_ctx, opt, "wsmid_identify");
+    retval = u_option_context_parse(opt_ctx, &argc, &argv, &error);
+
+    u_option_context_free(opt_ctx);
+
+    if (error) {
+      if (error->message)
+        printf ("%s\n", error->message);
+      u_error_free(error);
+      return 1;
+    }
+    u_error_free(error);
+
+    if (debug_level) {
+        initialize_logging();
+        wsman_debug_set_level(debug_level);
+    }
 
     if (argc == 1) {
         // execute all

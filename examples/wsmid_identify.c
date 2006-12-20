@@ -46,16 +46,16 @@
 
 struct __wsmid_identify
 {
-	char* ProtocolVersion;
-	char* ProductVendor;
-	char* ProductVersion;
+	XML_TYPE_STR ProtocolVersion;
+	XML_TYPE_STR ProductVendor;
+	XML_TYPE_STR ProductVersion;
 };
 typedef struct __wsmid_identify wsmid_identify;
 
 SER_START_ITEMS("IdentifyResponse", wsmid_identify)
-SER_STR("ProtocolVersion", 1, 1), 
-SER_STR("ProductVendor", 1, 1),
-SER_STR("ProductVersion", 1, 1),
+SER_STR("ProtocolVersion", 1), 
+SER_STR("ProductVendor", 1),
+SER_STR("ProductVersion", 1),
 SER_END_ITEMS("IdentifyResponse", wsmid_identify);
 
 

@@ -60,29 +60,27 @@ SER_TYPEINFO_UINT32;
 
 struct __EXL_ExamplePolicy
 {
-	char *ElementName;
-	char *Description;
-	char *Caption;
-	char *InstanceID;
-	char *PolicyName;
-	int   PolicyPrecedence;
-	
-	XmlSerialiseDynamicSizeData* Handles;
-	//int  *FilterCreationHandles;
-	int   DefaultTest;
+    XML_TYPE_STR ElementName;
+    XML_TYPE_STR Description;
+    XML_TYPE_STR Caption;
+    XML_TYPE_STR InstanceID;
+    XML_TYPE_STR PolicyName;
+    XML_TYPE_UINT32   PolicyPrecedence;
+    XML_TYPE_DYN_ARRAY Handles;
+    XML_TYPE_BOOL   DefaultTest;
 
 };
 typedef struct __EXL_ExamplePolicy EXL_ExamplePolicy;
 
 SER_START_ITEMS("EXL_ExamplePolicy", EXL_ExamplePolicy)
-SER_STR("ElementName",0,1),
-SER_STR("Description",0,1),
-SER_STR("Caption",0,1),
-SER_STR("InstanceID",0,1),
-SER_STR("PolicyName",0,1),
-SER_UINT32("PolicyPrecedence", 1 ,1 ),
-SER_DYN_ARRAY_PTR("Handles", uint32),
-SER_BOOL("DefaultTest",0,1),
+SER_STR("ElementName", 1),
+SER_STR("Description", 1),
+SER_STR("Caption", 1),
+SER_STR("InstanceID", 1),
+SER_STR("PolicyName", 1),
+SER_UINT32("PolicyPrecedence", 1 ),
+SER_DYN_ARRAY("Handles", uint32),
+SER_BOOL("DefaultTest", 1),
 SER_END_ITEMS("EXL_ExamplePolicy", EXL_ExamplePolicy);
 
 
@@ -91,7 +89,6 @@ static char dump;
 
 int main(int argc, char** argv)
 {
-	
     WsManClient *cl;
     WsXmlDocH doc;
     actionOptions options;
@@ -101,9 +98,9 @@ int main(int argc, char** argv)
 
     u_option_entry_t opt[] = {
     { "endpoint",	'u',	U_OPTION_ARG_STRING,	&endpoint,
-		"Endpoint in form of a URL", "<uri>" },
+        "Endpoint in form of a URL", "<uri>" },
     { "dump", 'd',	U_OPTION_ARG_NONE,	&dump,
-		"Dump request", NULL },
+        "Dump request", NULL },
     { NULL }
     };
 
@@ -143,36 +140,33 @@ int main(int argc, char** argv)
         uri->user,
         uri->pwd);		
     initialize_action_options(&options);
-    
+
     if (dump) wsman_set_action_option(&options,FLAG_DUMP_REQUEST );
     options.max_envelope_size = 51200;
     options.timeout = 60000;
-    
+
     EXL_ExamplePolicy *d = u_malloc(sizeof(EXL_ExamplePolicy));
     d->ElementName = u_strdup("name");
     d->DefaultTest = 1;
-    
-  	int *array = NULL;
-  	int count = 4;
-  	array = (int *) malloc (sizeof (int) * count);
-    //memset (array, 0, sizeof (int) * count);
+
+    int *array = NULL;
+    int count = 4;
+    array = (int *) malloc (sizeof (int) * count);
     array[0] = 1;
-	array[1] = 0;
-	array[2] = 3;
-	array[3] = 5;
-	
-	d->Handles = (XmlSerialiseDynamicSizeData*)u_malloc(sizeof(XmlSerialiseDynamicSizeData));    
-	d->Handles->count = count;
-    d->Handles->data = array;
-   	
-   	doc = ws_transfer_create(cl, RESOURCE_URI,  d, EXL_ExamplePolicy_TypeInfo, options);
+    array[1] = 0;
+    array[2] = 3;
+    array[3] = 5;
+    d->Handles.count = count;
+    d->Handles.data = array;
+
+    doc = ws_transfer_create(cl, RESOURCE_URI,  d,
+                              EXL_ExamplePolicy_TypeInfo, options);
     ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
-    
-    
+
     if (uri) {
       u_uri_free(uri);
     }
-    
+
     destroy_action_options(&options);
     wsman_release_client(cl);
     return 0;

@@ -79,60 +79,60 @@
 
 struct __CIM_Servie
 {
-  int AcceptPause;
-  int AcceptStop;
-  char* Caption;
-  unsigned long CheckPoint;
-  char* CreationClassName;
-  char* Description;
-  int DesktopInteract;
-  char*  DisplayName;
-  char* ErrorControl;
-  unsigned long ExitCode;
-  char* InstallDate;
-  char* Name;
-  char* PathName;
-  unsigned long ProcessId;
-  unsigned long ServiceSpecificExitCode;
-  char* ServiceType;
-  int Started;
-  char* StartMode;
-  char* StartName;
-  char* State;
-  char* Status;
-  char* SystemCreationClassName;
-  char* SystemName;
-  unsigned long TagId;
-  unsigned long WaitHint;
+  XML_TYPE_BOOL AcceptPause;
+  XML_TYPE_BOOL AcceptStop;
+  XML_TYPE_STR Caption;
+  XML_TYPE_UINT32 CheckPoint;
+  XML_TYPE_STR CreationClassName;
+  XML_TYPE_STR Description;
+  XML_TYPE_BOOL DesktopInteract;
+  XML_TYPE_STR  DisplayName;
+  XML_TYPE_STR ErrorControl;
+  XML_TYPE_UINT32 ExitCode;
+  XML_TYPE_STR InstallDate;
+  XML_TYPE_STR Name;
+  XML_TYPE_STR PathName;
+  XML_TYPE_UINT32 ProcessId;
+  XML_TYPE_UINT32 ServiceSpecificExitCode;
+  XML_TYPE_STR ServiceType;
+  XML_TYPE_BOOL Started;
+  XML_TYPE_STR StartMode;
+  XML_TYPE_STR StartName;
+  XML_TYPE_STR State;
+  XML_TYPE_STR Status;
+  XML_TYPE_STR SystemCreationClassName;
+  XML_TYPE_STR SystemName;
+  XML_TYPE_UINT32 TagId;
+  XML_TYPE_UINT32 WaitHint;
 };
 typedef struct __CIM_Servie CIM_Servie;
 
 SER_START_ITEMS("CIM_Servie", CIM_Servie)
-SER_BOOL("AcceptPause",0,1),
-SER_BOOL("AcceptStop",0,1),
-SER_STR("Caption",0,1),
-SER_UINT32("CheckPoint", 1 ,1 ),
-SER_STR("CreationClassName",0,1),
-SER_STR("Description",0,1),
-SER_BOOL("DesktopInteract",0,1),
-SER_STR("DisplayName",0,1),
-SER_STR("ErrorControl",0,1),
-SER_UINT32("ExitCode",0,1),
-SER_STR("InstallDate",0,1),
-SER_STR("Name",0,1),
-SER_STR("PathName",0,1),
-SER_UINT32("ProcessId",0,1),
-SER_UINT32("ServiceSpecificExitCode",0,1),
-SER_STR("ServiceType",0,1),
-SER_BOOL("Started",0,1),
-SER_STR("StartMode",0,1),
-SER_STR("StartName",0,1),
-SER_STR("State",0,1),
-SER_STR("Status",0,1),
-SER_STR("SystemCreationClassName",0,1),
-SER_STR("SystemName",0,1),
-SER_UINT32("TagId",0,1),
-SER_UINT32("WaitHint",0,1),
+SER_BOOL("AcceptPause", 1),
+SER_BOOL("AcceptStop", 1),
+SER_STR("Caption", 1),
+SER_UINT32("CheckPoint", 1),
+SER_STR("CreationClassName", 1),
+SER_STR("Description", 1),
+SER_BOOL("DesktopInteract", 1),
+SER_STR("DisplayName", 1),
+SER_STR("ErrorControl", 1),
+SER_UINT32("ExitCode", 1),
+SER_STR("InstallDate", 1),
+SER_STR("Name", 1),
+SER_STR("PathName", 1),
+SER_UINT32("ProcessId", 1),
+SER_UINT32("ServiceSpecificExitCode", 1),
+SER_STR("ServiceType", 1),
+SER_BOOL("Started", 1),
+SER_STR("StartMode", 1),
+SER_STR("StartName", 1),
+SER_STR("State", 1),
+SER_STR("Status", 1),
+SER_STR("SystemCreationClassName", 1),
+SER_STR("SystemName", 1),
+SER_UINT32("TagId", 1),
+SER_UINT32("WaitHint", 1),
 SER_END_ITEMS("CIM_Servie", CIM_Servie);
 
 static char *endpoint = NULL;
