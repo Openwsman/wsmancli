@@ -427,8 +427,8 @@ Sample sample = { "Moscow", {6, myshorts}, {2, foos}, 99};
 
 SER_START_ITEMS("Sample", Sample)
 SER_STR("city", 1),
-SER_DYN_ARRAY("shorts", uint16),
-SER_DYN_ARRAY("foos", Foo),
+SER_DYN_ARRAY("shorts", 0, 1000, uint16),
+SER_DYN_ARRAY("foos", 0, 1000, Foo),
 SER_UINT16("tag", 1),
 SER_END_ITEMS("Sample", Sample);
 

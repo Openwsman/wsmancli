@@ -79,7 +79,7 @@ SER_STR("Caption", 1),
 SER_STR("InstanceID", 1),
 SER_STR("PolicyName", 1),
 SER_UINT32("PolicyPrecedence", 1 ),
-SER_DYN_ARRAY("Handles", uint32),
+SER_DYN_ARRAY("Handles", 1, 10, uint32),
 SER_BOOL("DefaultTest", 1),
 SER_END_ITEMS("EXL_ExamplePolicy", EXL_ExamplePolicy);
 
