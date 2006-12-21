@@ -324,7 +324,8 @@ int retval;
     printf("a   = %c   :  %c\n", sample.a, cs->a);
     printf("b   = %c   :  %c\n", sample.b, cs->b);
     printf("c   = %c   :  %c\n", sample.c, cs->c);
-    printf("pad = %c   :  %c\n", sample.pad, cs->pad);
+    printf("pad = %c(%d)   :  %c(%d)\n", sample.pad, sample.pad,
+                                cs->pad, cs->pad);
     printf("string = <%s>   :  <%s>\n", sample.string, cs->string);
 }
 
