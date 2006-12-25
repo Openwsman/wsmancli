@@ -52,6 +52,7 @@
 #include "wsman-client-api.h"
 #include "wsman-client-transport.h"
 #include "wsman-client-options.h"
+#include "wsman-debug.h"
 
 
 static void 
@@ -75,7 +76,7 @@ wsman_output(WsXmlDocH doc)
 	return;
 }
 
-
+/*
 static void
 debug_message_handler(const char *str, debug_level_e level, void *user_data)
 {
@@ -90,11 +91,11 @@ debug_message_handler(const char *str, debug_level_e level, void *user_data)
 		fprintf(stderr, "%s  %s\n", timestr, str);
 	}
 }
-
+*/
 static void
 initialize_logging(void)
 {
-	debug_add_handler(debug_message_handler, DEBUG_LEVEL_ALWAYS, NULL);
+	debug_add_handler(wsman_debug_message_handler, DEBUG_LEVEL_ALWAYS, NULL);
 }
 
 
