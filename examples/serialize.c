@@ -170,6 +170,10 @@
 
    These objects can be used in ws_serialize() and ws_deserialize() API.
 
+   There are 2 sets of defines SER_IN_* and SER_OUT_*. These defines are used
+   if you want to skip the elements while deserialization(serialization). If
+   define SER_INOUT_* is used the element is skipped always.
+
   *****************************************************************/
 
 
@@ -402,7 +406,7 @@ SER_START_ITEMS("Sample", Sample)
 SER_UINT8("a", 1),
 SER_UINT8("b", 1),
 SER_UINT8("c", 1),
-SER_INOUT_UINT8("pad", 1),
+SER_IN_UINT8("pad", 1),
 SER_STR("string", 1),
 SER_END_ITEMS("Sample", Sample);
 
