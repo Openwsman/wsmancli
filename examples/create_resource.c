@@ -158,11 +158,12 @@ int main(int argc, char** argv)
     array[3] = 5;
     d->Handles.count = count;
     d->Handles.data = array;
-/*
-    doc = ws_transfer_create(cl, RESOURCE_URI,  d,
+
+    doc = ws_transfer_create_serialized(cl, RESOURCE_URI,  d,
                               EXL_ExamplePolicy_TypeInfo, options);
-                              */
-    ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
+     
+    if (doc)                         
+    	ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
 
     if (uri) {
       u_uri_free(uri);
