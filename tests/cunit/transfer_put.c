@@ -193,7 +193,7 @@ static void transfer_put_test() {
     options.flags = put_tests[i].flags;
 
 
-//    doc = ws_transfer_put(cl, (char *)put_tests[i].resource_uri, options);
+    doc = ws_transfer_get_and_put(cl, (char *)put_tests[i].resource_uri, options);
     //ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
     CU_ASSERT_TRUE(wsman_get_client_response_code(cl) ==
                                                put_tests[i].final_status);
