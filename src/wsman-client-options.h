@@ -24,6 +24,7 @@ extern char *wsman_options_get_cafile(void);
 
 extern int wsman_options_get_max_elements(void);
 extern char * wsman_options_get_test_file(void);
+extern char * wsman_options_get_input_file(void);
 extern int wsman_options_get_action(void);
 extern char *wsman_options_get_resource_uri(void);
 extern hash_t *wsman_options_get_properties (void);
@@ -37,7 +38,7 @@ extern char wsman_options_get_step_request (void);
 extern char wsman_options_get_estimate_enum (void);
 extern char * wsman_options_get_fragment (void);
 extern char * wsman_options_get_filter (void);
-extern char * wsman_options_get_selectors (void);
+
 extern char * wsman_options_get_dialect (void);
 extern const char * wsman_options_get_config_file (void);
 extern unsigned long wsman_options_get_max_envelope_size (void);

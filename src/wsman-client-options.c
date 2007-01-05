@@ -92,7 +92,7 @@ static char *cim_namespace = NULL;
 static char *fragment = NULL;
 static char *wsm_filter = NULL;
 static char *wsm_dialect = NULL;
-static char *selectors = NULL;
+static char *input = NULL;
 
 static unsigned long operation_timeout = 0;
 static unsigned long max_envelope_size = 0;
@@ -135,6 +135,8 @@ char wsman_parse_options(int argc, char **argv)
 		"User name",	"<username>" },
     { "path",	'g',	U_OPTION_ARG_STRING,	&url_path,
 		"Path",	"<path>" },
+   { "input",	'J',	U_OPTION_ARG_STRING,	&input,
+		"File with resource for Create and Put operations in XML, can be a SOAP envelope",	"<filename>" },		
     { "password",	'p',	U_OPTION_ARG_STRING,	&password,
 		"Password",	"<password>" },
     { "hostname",	'h',	U_OPTION_ARG_STRING,	&server,
@@ -174,8 +176,6 @@ char wsman_parse_options(int argc, char **argv)
 		"maximal envelope size" ,	"<size>" },
     { "fragment",	'F',	U_OPTION_ARG_STRING,	&fragment,
 		"Fragment (Supported Dialects: XPATH)" , "<fragment>" },
-    { "selectors", 's', U_OPTION_ARG_STRING, &selectors,
-        "Selectors for fetching", "<name1=val1&name2=val2...>"},
     { NULL }
   };
 
@@ -431,6 +431,12 @@ char * wsman_options_get_test_file (void)
 {	
   return test_case;
 }   
+
+char * wsman_options_get_input_file (void)
+{	
+  return input;
+}   
+
 char * wsman_options_get_enum_mode (void)
 {	
   return enum_mode;
@@ -453,10 +459,7 @@ char * wsman_options_get_filter (void)
 {	
   return wsm_filter;
 }   
-char * wsman_options_get_selectors(void)
-{   
-  return selectors;
-}   
+
 char * wsman_options_get_dialect (void)
 {	
   return wsm_dialect;

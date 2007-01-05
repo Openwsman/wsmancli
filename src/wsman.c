@@ -113,7 +113,7 @@ main(int argc, char **argv)
 	WsXmlDocH       rqstDoc;
 	actionOptions   options;
 	WsXmlDocH       enum_response;
-
+	WsXmlDocH		resource;
 	char           *enumeration_mode, *binding_enumeration_mode, *resource_uri_with_selectors;
 	char           *resource_uri = NULL;
 
@@ -155,8 +155,8 @@ main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 	/*
-         * Setup Resource URI and Selectors
-         */
+     * Setup Resource URI and Selectors
+     */
 	resource_uri_with_selectors = wsman_options_get_resource_uri();
 	if (resource_uri_with_selectors) {
 		wsman_set_options_from_uri(resource_uri_with_selectors, &options);
@@ -181,10 +181,6 @@ main(int argc, char **argv)
 	}
 	if (wsman_options_get_dialect()) {
 		options.dialect = wsman_options_get_dialect();
-	}
-	if (wsman_options_get_selectors()) {
-		wsman_add_selectors_from_query_string(&options,
-					     wsman_options_get_selectors());
 	}
 	options.properties = wsman_options_get_properties();
 	options.cim_ns = wsman_options_get_cim_namespace();
@@ -225,14 +221,29 @@ main(int argc, char **argv)
 		}
 		break;		
 	case WSMAN_ACTION_TRANSFER_CREATE:
-		doc = ws_transfer_create(cl, resource_uri, NULL, NULL, options);
-		if (doc) {
-			wsman_output(doc);
-			ws_xml_destroy_doc(doc);
+		if (wsman_options_get_input_file()) {
+			resource = wsman_client_read_file(cl,
+				 wsman_options_get_input_file(), "UTF-8", 0);
+			doc = ws_transfer_create(cl, resource_uri, resource, options);
+			ws_xml_destroy_doc(resource);
+			if (doc) {
+				wsman_output(doc);
+				ws_xml_destroy_doc(doc);
+			} 
+		} else {
+			fprintf(stderr, "Missing resource data\n");
 		}
 		break;
 	case WSMAN_ACTION_TRANSFER_PUT:
-		doc = ws_transfer_put1(cl, resource_uri, options);
+		if (wsman_options_get_input_file()) {
+			printf("input file provided\n");
+			resource = wsman_client_read_file(cl,
+				 wsman_options_get_input_file(), "UTF-8", 0);
+			doc = ws_transfer_put(cl, resource_uri, resource, options);
+			ws_xml_destroy_doc(resource);
+		} else {
+			doc = ws_transfer_get_and_put(cl, resource_uri, options);
+		}
 		if (doc) {
 			wsman_output(doc);
 			ws_xml_destroy_doc(doc);
