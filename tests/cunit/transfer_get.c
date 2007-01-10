@@ -47,18 +47,19 @@
 
 TestData get_tests[] = {
   {
-    "Transfer Get without any selectors.",
-    "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem", 
-    NULL,
-    NULL,
-    NULL,
-    "/s:Envelope/s:Body/s:Fault/s:Code/s:Subcode/s:Value",
-    "wsman:InvalidSelectors",	    
-    "/s:Envelope/s:Body/s:Fault/s:Detail/wsman:FaultDetail",
-    "http://schemas.dmtf.org/wbem/wsman/1/wsman/faultDetail/InsufficientSelectors",
-    400, 
-    0,
-    0
+    "Transfer Get without any selectors.",						// explanation
+    "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem", 		// resource_uri
+    NULL,										// method
+    NULL,										// selectors (as URI key=value&key=value ...)
+    NULL,										// properties (as URI key=value&key=value ...)
+    "/s:Envelope/s:Body/s:Fault/s:Code/s:Subcode/s:Value",				// expr1
+    "wsman:InvalidSelectors",	    							// value1
+    "/s:Envelope/s:Body/s:Fault/s:Detail/wsman:FaultDetail",				// expr2
+    "http://schemas.dmtf.org/wbem/wsman/1/wsman/faultDetail/InsufficientSelectors",	// value2
+    400, 										// final_status
+    0,											// flags
+    0											// max_elements
+											//   char **filters;  char **common_filters;
   },
 
   {
