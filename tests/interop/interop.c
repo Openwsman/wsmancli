@@ -250,6 +250,10 @@ int main(int argc, char** argv)
         uri->pwd);		
     initialize_action_options(&options);
 
+    if (file == NULL) {
+      fprintf(stderr, "Interop file required\n");
+      return 1;
+    }
     doc = wsman_client_read_file(cl, file, "UTF-8", 0);
     //xml_parser_doc_dump(stdout, doc);
 
@@ -258,7 +262,7 @@ int main(int argc, char** argv)
 
     WsXmlNodeH node;
     if (doc != NULL)
-        node = xml_parser_get_root(doc);
+        node = ws_xml_get_doc_root(doc);
 
     WsXmlNodeH scenario;
     int index = 0;
