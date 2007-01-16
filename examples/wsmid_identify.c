@@ -52,11 +52,11 @@ struct __wsmid_identify
 };
 typedef struct __wsmid_identify wsmid_identify;
 
-SER_START_ITEMS("IdentifyResponse", wsmid_identify)
+SER_START_ITEMS(wsmid_identify)
 SER_STR("ProtocolVersion", 1), 
 SER_STR("ProductVendor", 1),
 SER_STR("ProductVersion", 1),
-SER_END_ITEMS("IdentifyResponse", wsmid_identify);
+SER_END_ITEMS(wsmid_identify);
 
 
 static char  vendor = 0;

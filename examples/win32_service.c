@@ -107,7 +107,7 @@ struct __CIM_Servie
 };
 typedef struct __CIM_Servie CIM_Servie;
 
-SER_START_ITEMS("CIM_Servie", CIM_Servie)
+SER_START_ITEMS(CIM_Servie)
 SER_BOOL("AcceptPause", 1),
 SER_BOOL("AcceptStop", 1),
 SER_STR("Caption", 1),
@@ -133,7 +133,7 @@ SER_STR("SystemCreationClassName", 1),
 SER_STR("SystemName", 1),
 SER_UINT32("TagId", 1),
 SER_UINT32("WaitHint", 1),
-SER_END_ITEMS("CIM_Servie", CIM_Servie);
+SER_END_ITEMS(CIM_Servie);
 
 static char *endpoint = NULL;
 char listall = 0;

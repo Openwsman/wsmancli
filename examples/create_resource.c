@@ -72,7 +72,7 @@ struct __EXL_ExamplePolicy
 };
 typedef struct __EXL_ExamplePolicy EXL_ExamplePolicy;
 
-SER_START_ITEMS("EXL_ExamplePolicy", EXL_ExamplePolicy)
+SER_START_ITEMS(EXL_ExamplePolicy)
 SER_STR("ElementName", 1),
 SER_STR("Description", 1),
 SER_STR("Caption", 1),
@@ -81,7 +81,7 @@ SER_STR("PolicyName", 1),
 SER_UINT32("PolicyPrecedence", 1 ),
 SER_DYN_ARRAY("Handles", 1, 10, uint32),
 SER_BOOL("DefaultTest", 1),
-SER_END_ITEMS("EXL_ExamplePolicy", EXL_ExamplePolicy);
+SER_END_ITEMS(EXL_ExamplePolicy);
 
 
 static char *endpoint = NULL;

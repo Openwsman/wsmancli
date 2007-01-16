@@ -47,6 +47,7 @@
 #include "wsman-client-api.h"
 #include "wsman-client-transport.h"
 #include "wsman-xml-serializer.h"
+#include "wsman-names.h"
 #include "wsman-debug.h"
 
 #define CLASSNAME "Sample"
@@ -89,8 +90,9 @@
 
    Each complex element is represented in C programm by 2 objects - target
    structure (TS) definition and type description object (TDO) - the null
-   terminated array of type XmlSerializerInfo. There is the name convention -
-   TDO for Foo is named Foo_TypeInfo. For our example these structures looks:
+   terminated array of type XmlSerializerInfo elements. There is the name
+   convention - TDO for Foo is named Foo_TypeInfo.
+   For our example these structures looks:
 
     target structures:
 
@@ -117,7 +119,8 @@
   in document is variable.
 
    For each TS the TDO is defined. Each TDS is defined by the sequence of
-   defines described in wsman-xml-serializer.h.
+   defines described in wsman-xml-serializer.h. The order of defines in TDO
+   must be same as the order of fields in TS.
 
   SER_START_ITEMS("FOO", Foo)
             // This is the begining of description. The first argument is the
@@ -144,15 +147,15 @@
        SER_TYPEINFO_UINT32;
        SER_TYPEINFO_BOOL;
        SER_TYPEINFO_STR;
-   If you use dymanic arrays of basic types you must deefine the coorespondent
+   If you use dymanic arrays of basic types you must define the corespondent
    XmlSerializerInfo before defining TDO including this dynamic array. You will
    refer to these TDOs in SER_DYN_ARRAY define and use the forth argument for
    these types uint8, uint16, uint32, bool and string as the last argument (see
    below). 
 
-  Let's do the same for SAMPLE XML element and Sample type.
+  Let's do the same for Sample type.
 
-    SER_START_ITEMS("SAMPLE", sample)
+    SER_START_ITEMS(sample)
        SER_STR("STRING", 1),
        SER_BOOL("BOOL", 1),
        SER_UINT8("BYTE", 1),
@@ -165,7 +168,7 @@
        SER_DYN_ARRAY("FOOS", 1, 0, Foo),
             // Dynamic array of Foo type elements. maxOccures=0 means
             // "unbounded" in XML schema
-    SER_END_ITEMS("SAMPLE", sample);
+    SER_END_ITEMS(sample);
 
 
    These objects can be used in ws_serialize() and ws_deserialize() API.
@@ -173,6 +176,11 @@
    There are 2 sets of defines SER_IN_* and SER_OUT_*. These defines are used
    if you want to skip the elements while deserialization(serialization). If
    define SER_INOUT_* is used the element is skipped always.
+
+   If element name is a QName (with name space prefix) the
+       SER_NS_*(ns, name, ..) define set must be used.
+
+
 
   *****************************************************************/
 
@@ -182,6 +190,9 @@
 static void
 example1()
 {
+
+#define EX1_NS "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem"
+
 struct __Sample_Servie
 {
   XML_TYPE_BOOL AcceptPause;
@@ -240,7 +251,7 @@ Sample_Servie servie = {
         100
 };
 
-SER_START_ITEMS("Sample_Servie", Sample_Servie)
+SER_START_ITEMS(Sample_Servie)
 SER_BOOL("AcceptPause", 1),
 SER_BOOL("AcceptStop", 1),
 SER_STR("Caption", 1),
@@ -248,7 +259,7 @@ SER_UINT32("CheckPoint", 1),
 SER_STR("CreationClassName", 1),
 SER_STR("Description", 1),
 SER_BOOL("DesktopInteract", 1),
-SER_STR("DisplayName", 1),
+SER_NS_STR(EX1_NS, "DisplayName", 1),
 SER_STR("ErrorControl", 1),
 SER_UINT32("ExitCode", 1),
 SER_STR("InstallDate", 1),
@@ -266,7 +277,7 @@ SER_STR("SystemCreationClassName", 1),
 SER_STR("SystemName", 1),
 SER_UINT32("TagId", 1),
 SER_UINT32("WaitHint", 1),
-SER_END_ITEMS("Sample_Servie", Sample_Servie);
+SER_END_ITEMS(Sample_Servie);
 
 WsContextH cntx;
 WsXmlDocH doc;
@@ -284,14 +295,17 @@ int retval;
     node = ws_xml_get_doc_root(doc);
 
     retval = ws_serialize(cntx, node, &servie, Sample_Servie_TypeInfo,
-               CLASSNAME, NULL, NULL, 0);
+               CLASSNAME,
+               NULL, NULL,
+               0);
     printf("ws_serialize: %d\n", retval);
     ws_xml_dump_node_tree(stdout, node);
     node = ws_xml_get_doc_root(doc);
     Sample_Servie *cs = (Sample_Servie *)ws_deserialize(cntx,
                                      node,
                                      Sample_Servie_TypeInfo,
-                                     CLASSNAME, NULL, NULL,
+                                     CLASSNAME,
+                                     NULL, NULL,
                                      0, 0);
     if (cs == NULL) {
         printf("Errror ws_serialize\n");
@@ -330,20 +344,20 @@ typedef struct {
 
 Sample sample = { 1, 2, 4, "string", {5, 196, 8} };
 
-SER_START_ITEMS("Foo", Foo)
+SER_START_ITEMS(Foo)
   SER_UINT8("FOOBYTE1", 1),
   SER_UINT32("FOOINT32", 1),
   SER_UINT8("FOOBYTE2", 1),
-SER_END_ITEMS("Foo", Foo);
+SER_END_ITEMS(Foo);
 
 
-SER_START_ITEMS("Sample", Sample)
+SER_START_ITEMS(Sample)
   SER_UINT8("BYTE", 1),
   SER_UINT16("SHORT", 1),
   SER_UINT32("INT32", 1),
   SER_STR("STRING", 1),
   SER_STRUCT("FOO", 1, Foo),
-SER_END_ITEMS("Sample", Sample);
+SER_END_ITEMS(Sample);
 
 WsContextH cntx;
 WsXmlDocH doc;
@@ -402,13 +416,13 @@ typedef struct {
 
 
 
-SER_START_ITEMS("Sample", Sample)
+SER_START_ITEMS(Sample)
 SER_UINT8("a", 1),
 SER_UINT8("b", 1),
 SER_UINT8("c", 1),
 SER_IN_UINT8("pad", 1),
 SER_STR("string", 1),
-SER_END_ITEMS("Sample", Sample);
+SER_END_ITEMS(Sample);
 
 Sample sample = {'a', 'b', 'c', 'x', "simple string"};
 Sample *p = NULL;
@@ -479,17 +493,17 @@ Sample sample = {
         "STRING",
 };
 
-SER_START_ITEMS("Embed", Embed)
+SER_START_ITEMS(Embed)
 SER_BOOL("a", 1),
 SER_STR("string", 1),
 SER_BOOL("b", 1),
-SER_END_ITEMS("Embed", Embed);
+SER_END_ITEMS(Embed);
 
-SER_START_ITEMS("Sample", Sample)
+SER_START_ITEMS(Sample)
 SER_UINT32("A", 1),
 SER_STRUCT("EMBED", 2, Embed),
 SER_STR("STRING", 1),
-SER_END_ITEMS("Sample", Sample);
+SER_END_ITEMS(Sample);
 
 WsContextH cntx;
 WsXmlDocH doc;
@@ -532,10 +546,10 @@ Foo foos[] = {
         {0, "Caption 2",},};
 
 
-SER_START_ITEMS("Foo", Foo)
+SER_START_ITEMS(Foo)
 SER_BOOL("AcceptPause", 1),
 SER_STR("Caption", 1),
-SER_END_ITEMS("Foo", Foo);
+SER_END_ITEMS(Foo);
 
 XML_TYPE_UINT16 myshorts[] = {5, 11, 14,19, 27, 36};
 SER_TYPEINFO_UINT16;
@@ -552,12 +566,12 @@ Sample sample = { "Moscow", {6, myshorts}, {2, foos}, 99};
 
 
 
-SER_START_ITEMS("Sample", Sample)
+SER_START_ITEMS(Sample)
 SER_STR("city", 1),
 SER_DYN_ARRAY("shorts", 0, 1000, uint16),
 SER_DYN_ARRAY("foos", 0, 1000, Foo),
 SER_UINT16("tag", 1),
-SER_END_ITEMS("Sample", Sample);
+SER_END_ITEMS(Sample);
 
 WsContextH cntx;
 WsXmlDocH doc;
@@ -624,6 +638,171 @@ AFTER_FOOS:
     printf("    tag = %d\n", cs->tag);
 }
 
+static void
+example6()
+{
+    typedef struct {
+        struct {XML_TYPE_STR body; XML_NODE_ATTR *attrs;} node_with_attrs;
+    } Sample;
+
+    XML_NODE_ATTR attrs[3] = {
+        {NULL, NULL, "AttrName1", "AttrValue1"},
+        {NULL, NULL, "AttrName2", "AttrValue2"},
+        {NULL, XML_NS_ADDRESSING, "AttrQName", "AttrValue3"},
+    };
+    Sample sample = {{"this is the text of the node", &attrs[0]}};
+    attrs[0].next = &attrs[1];
+    attrs[1].next = &attrs[2];
+
+    SER_START_ITEMS(Sample)
+        SER_ATTR_NS_STR_FLAGS(XML_NS_WS_MAN, "Dummy", 1, 0),
+    SER_END_ITEMS(Sample);
+ 
+
+    WsContextH cntx;
+    WsXmlDocH doc;
+    WsXmlNodeH node;
+    int retval;
+
+    printf("\n\n   ********   example5. Node with attributes  ********\n");
+
+    cntx = wsman_create_runtime();
+    if (cntx == NULL) {
+        printf("Error ws_create_runtime\n");
+        return;
+    }
+    doc = wsman_create_doc(cntx, "example");
+    node = ws_xml_get_doc_root(doc);
+
+    retval = ws_serialize(cntx, node, &sample, Sample_TypeInfo,
+               CLASSNAME, NULL, NULL, 0);
+    printf("\n\nws_serialize: %d\n", retval);
+    ws_xml_dump_node_tree(stdout, node);
+}
+
+
+
+
+static void
+example7()
+{
+    typedef struct {
+        XML_TYPE_STR value;
+        XML_NODE_ATTR *attrs;
+    } Selector;
+
+    SER_TYPEINFO_STRING_ATTR;
+
+
+    typedef struct {
+        XML_TYPE_DYN_ARRAY selectors;
+    } SelectorSet;
+
+    SER_START_ITEMS(SelectorSet)
+        SER_NS_DYN_ARRAY(XML_NS_WS_MAN, WSM_SELECTOR, 0, 1000, string_attr),
+    SER_END_ITEMS(SelectorSet);
+ 
+
+    typedef struct {
+        XML_TYPE_STR uri;
+        SelectorSet selectorset;
+    } ReferenceParameters;
+
+    SER_START_ITEMS(ReferenceParameters)
+       SER_NS_STR(XML_NS_WS_MAN, "ResourceURI", 1),
+       SER_NS_STRUCT(XML_NS_WS_MAN, WSM_SELECTOR_SET, 1, SelectorSet),
+    SER_END_ITEMS(ReferenceParameters);
+
+    typedef struct {
+        XML_TYPE_STR address;
+        ReferenceParameters refparams;
+    } EPR;
+
+    SER_START_ITEMS(EPR)
+        SER_NS_STR(XML_NS_ADDRESSING, WSA_ADDRESS, 1),
+        SER_NS_STRUCT(XML_NS_ADDRESSING, "ReferenceParameters", 1, ReferenceParameters),
+    SER_END_ITEMS(EPR);
+
+   XML_NODE_ATTR attrs[3] = {
+        {NULL, NULL, "Name", "SelName1"},
+        {NULL, NULL, "Name", "SelName2"},
+        {NULL, NULL, "Name", "SelName3"},
+    };
+    Selector selectors[] = {
+         {"selector1", &attrs[0]},
+         {"selector2", &attrs[1]},
+         {"selector3", &attrs[2]}
+   };
+    EPR Epr = {
+       "http://localhost:8889/wsman",
+       {"http://acme.org/hardware/2005/02/storage/physDisk",
+        { {3, selectors}}
+       }
+    };
+
+WsContextH cntx;
+WsXmlDocH doc;
+WsXmlNodeH node;
+int retval;
+
+    printf("\n\n   ********   example7. Endpoint Reference  ********\n");
+
+    cntx = wsman_create_runtime();
+    if (cntx == NULL) {
+        printf("Error ws_create_runtime\n");
+        return;
+    }
+    doc = wsman_create_doc(cntx, "example");
+    node = ws_xml_get_doc_root(doc);
+
+    retval = ws_serialize(cntx, node, &Epr, EPR_TypeInfo,
+               "EndpointReference", XML_NS_ADDRESSING, XML_NS_ADDRESSING, 0);
+    printf("\n\nws_serialize: %d\n", retval);
+    ws_xml_dump_node_tree(stdout, node);
+
+    EPR *newEPR;
+    node = ws_xml_get_doc_root(doc);
+
+    printf("\n\nws_deserialize:\n");
+    newEPR = (EPR *)ws_deserialize(cntx,
+                                     node,
+                                     EPR_TypeInfo,
+                                     "EndpointReference",
+                                     XML_NS_ADDRESSING, XML_NS_ADDRESSING,
+                                     0, 0);
+    if (newEPR == NULL) {
+        printf("Errror ws_deserialize\n");
+        return;
+    }
+
+    printf("****     Deserialed document   *****\n");
+    printf("address             = %s\n", newEPR->address);
+    printf("refparams.uri       = %s\n", newEPR->refparams.uri);
+    int i;
+    Selector *ss = (Selector *)newEPR->refparams.selectorset.selectors.data;
+    if (ss == NULL) {
+        printf("    !!!!  newEPR->refparams.selectors.data == NULL\n");
+        return;
+    } 
+    for (i = 0; i < newEPR->refparams.selectorset.selectors.count; i++) {
+        Selector *s;
+        s = ss + i;
+        printf("    Selector(");
+        XML_NODE_ATTR *a = s->attrs;
+        while (a) {
+            printf("%s:%s=%s",
+             a->ns ? a->ns : "", a->name, a->value);
+            a = a->next;
+        }
+        printf(")  =  %s\n", s->value);
+    }
+}
+
+
+
+
+
+
 /*
 static void
 debug_message_handler(const char *str, debug_level_e level, void *user_data)
@@ -640,6 +819,72 @@ debug_message_handler(const char *str, debug_level_e level, void *user_data)
     }
 }
 */
+
+
+
+        // No serialization examples(shttpd_0)
+
+
+static void
+example106()
+{
+char *data = "<dummy><qq>This is qq body</qq><pp>This is pp</pp></dummy>";
+//      WsXmlDocH       response;
+      WsManClient *cl = wsman_create_client("mstevbakrov.ims.intel.com",
+        8889,
+        "/wsman",
+        "http",
+        "wsman",
+        "secret");
+
+      actionOptions   options;
+      initialize_action_options(&options);
+
+      WsXmlDocH   request = wsman_client_create_request(cl, WSMAN_ACTION_TRANSFER_CREATE,
+                    NULL,
+                    "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
+                     options, NULL);
+      WsXmlDocH d = wsman_client_read_memory(cl, data, strlen(data), NULL, 0);
+ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(d));
+//      WsXmlNodeH n = ws_xml_get_doc_root(d);
+
+      ws_xml_duplicate_tree(ws_xml_get_soap_body(request), ws_xml_get_doc_root(d));
+      ws_xml_destroy_doc(d);
+//      ws_xml_copy_node(ws_xml_get_doc_root(d), ws_xml_get_soap_body(request));
+      ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(request));
+      wsman_release_client(cl);
+      ws_xml_destroy_doc(request);
+}
+
+
+
+static void
+example107()
+{
+
+
+WsContextH cntx;
+WsXmlDocH doc;
+WsXmlNodeH node;
+int retval;
+
+    printf("\n\n   ********   example7. Endpoint Reference  ********\n");
+
+    cntx = wsman_create_runtime();
+    if (cntx == NULL) {
+        printf("Error ws_create_runtime\n");
+        return;
+    }
+    doc = wsman_create_doc(cntx, "example");
+    node = ws_xml_get_doc_root(doc);
+    WsXmlAttrH attr;
+    attr = ws_xml_add_node_attr(node, NULL, "Name", "Attribute");
+    attr = ws_xml_add_node_attr(node, NULL, "Name", "Attribute");
+}
+
+
+
+
 static void
 initialize_logging(void)
 {
@@ -686,7 +931,8 @@ main(int argc, char **argv)
         example2();
         example3();
         example4();
-        example5();
+        example6();
+        example7();
         return 0;
     }
 
@@ -697,7 +943,11 @@ main(int argc, char **argv)
         case 2: example2(); break;
         case 3: example3(); break;
         case 4: example4(); break;
-        case 5: example5(); break;
+//        case 5: example5(); break;
+        case 6: example6(); break;
+        case 7: example7(); break;
+        case 106: example106(); break;
+        case 107: example107(); break;
         default:
             printf("\n    No example%d()\n", num);
             break;
