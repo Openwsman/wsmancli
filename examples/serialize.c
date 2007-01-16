@@ -57,12 +57,12 @@
 
           HOW TO USE SERIALIZATION / DESERIALIZATION
 
-    Now serialization/deserialization of unsignedByte, unsignedShort,
- unsignedInt, boolean and string built-n XML Schema types implemented.
+    Serialization/deserialization of unsignedByte, unsignedShort,
+ unsignedInt, boolean and string built-n XML Schema types is now supported.
  It is possible to serialize/deserialize structures, static and dynamic
  size arrays constructed from these types.
 
-   Let's we have the following schema:
+   For example, let us have the following schema:
    <xsd:element name="SAMPLE">
       <xsd:complexType>
         <xsd:sequence>
@@ -88,11 +88,11 @@
    </xsd:element>
 
 
-   Each complex element is represented in C programm by 2 objects - target
+   Each complex element is represented in the C programm by 2 objects - target
    structure (TS) definition and type description object (TDO) - the null
-   terminated array of type XmlSerializerInfo elements. There is the name
-   convention - TDO for Foo is named Foo_TypeInfo.
-   For our example these structures looks:
+   terminated array of type XmlSerializerInfo elements. The following name
+   convention exists: TDO for Foo is named Foo_TypeInfo.
+   For our example these structures look the following:
 
     target structures:
 
@@ -113,34 +113,34 @@
         XML_TYPE_DYN_ARRAY  Foos;
    } Sample;
 
-   Note, that field Shorts in Sample is defined as built-in array because
-   the number of elements in schema is strictly determed. Elements Ints
+   Note, that the field 'Shorts' in Sample is defined as built-in array because
+   the number of elements in schema is strictly defined. Elements Ints
    and Foos are defined as dynamic arrays because the number of these elements
-  in document is variable.
+  in the document is variable.
 
-   For each TS the TDO is defined. Each TDS is defined by the sequence of
+   For each TS an TDO is defined. Each TDS is defined by the sequence of
    defines described in wsman-xml-serializer.h. The order of defines in TDO
    must be same as the order of fields in TS.
 
   SER_START_ITEMS("FOO", Foo)
-            // This is the begining of description. The first argument is the
-            // name of element in XML schema, the second one is the name
-            // of TS type.
+            // This is the beginning of the description. The first argument is the
+            // name of an element in the XML schema, the second one is the name
+            // of the TS type.
      SER_STR("FooSTRING", 1),
      SER_UINT32("FooINT", 1),
      SER_BOOL("FooBOOL", 1),
             // These 3 defines are for string, unsignedInt and boolean XML types
-            // accordingly. The first argument is the name of element in XML
+            // accordingly. The first argument is the name of an element in the XML
             // schema, the second one is the number of elements.
   SER_END_ITEMS("FOO", Foo);
-            // This define completes the definition. The arguments are same as
+            // This Define completes the definition. The arguments are same as
             // for SER_START_ITEMS.
 
-   So we define The TDO for Foo type. It looks like:
+   So if we define The TDO for Foo type. It looks like:
        XmlSerializerInfo Foo_TypeInfo[] = {
          ................
        };
-   There some defines to define XmlSerializerInfo's for basic types XML_TYPE_UINT8,
+   There are some Defines to add XmlSerializerInfo's for basic types XML_TYPE_UINT8,
    XML_TYPE_UINT16, XML_TYPE_UINT32, XML_TYPE_BOOL and XML_TYPE_STR:
        SER_TYPEINFO_UINT8;
        SER_TYPEINFO_UINT16;
@@ -149,11 +149,11 @@
        SER_TYPEINFO_STR;
    If you use dymanic arrays of basic types you must define the corespondent
    XmlSerializerInfo before defining TDO including this dynamic array. You will
-   refer to these TDOs in SER_DYN_ARRAY define and use the forth argument for
+   refer to these TDOs in SER_DYN_ARRAY define and use the fourth argument for
    these types uint8, uint16, uint32, bool and string as the last argument (see
    below). 
 
-  Let's do the same for Sample type.
+  Let's do the same for the Sample type.
 
     SER_START_ITEMS(sample)
        SER_STR("STRING", 1),
@@ -775,7 +775,7 @@ int retval;
         return;
     }
 
-    printf("****     Deserialed document   *****\n");
+    printf("****     Deserialized document   *****\n");
     printf("address             = %s\n", newEPR->address);
     printf("refparams.uri       = %s\n", newEPR->refparams.uri);
     int i;
