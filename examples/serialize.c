@@ -642,29 +642,62 @@ static void
 example6()
 {
     typedef struct {
-        struct {XML_TYPE_STR body; XML_NODE_ATTR *attrs;} node_with_attrs;
+        struct {XML_TYPE_UINT8 body; XML_NODE_ATTR *attrs;} uint8_with_attrs;
+        struct {XML_TYPE_UINT16 body; XML_NODE_ATTR *attrs;} uint16_with_attrs;
+        struct {XML_TYPE_UINT32 body; XML_NODE_ATTR *attrs;} uint32_with_attrs;
+        struct {XML_TYPE_BOOL body; XML_NODE_ATTR *attrs;} bool_with_attrs;
+        struct {XML_TYPE_STR body; XML_NODE_ATTR *attrs;} str_with_attrs;
+    } Dummy;
+
+    typedef struct {
+        struct {Dummy body; XML_NODE_ATTR *attrs;} struct_with_attrs;
     } Sample;
 
-    XML_NODE_ATTR attrs[3] = {
+    XML_NODE_ATTR attrs[] = {
+        {NULL, NULL, "Uint8AttrName1", "Uint8AttrValue1"},
+        {NULL, NULL, "Uint16AttrName1", "Uint16AttrValue1"},
+        {NULL, NULL, "Uint32AttrName1", "Uint32AttrValue1"},
+        {NULL, NULL, "BoolAttrName1", "BoolAttrValue1"},
+        {NULL, NULL, "StringAttrName1", "StringAttrValue1"},
+    };
+    XML_NODE_ATTR str_attrs[3] = {
         {NULL, NULL, "AttrName1", "AttrValue1"},
         {NULL, NULL, "AttrName2", "AttrValue2"},
         {NULL, XML_NS_ADDRESSING, "AttrQName", "AttrValue3"},
     };
-    Sample sample = {{"this is the text of the node", &attrs[0]}};
-    attrs[0].next = &attrs[1];
-    attrs[1].next = &attrs[2];
+    Sample sample = {
+       {
+         {
+          {8, &attrs[0]},
+          {16, &attrs[1]},
+          {32, &attrs[2]},
+          {0, &attrs[3]},
+          {"string", &attrs[4]},
+        },
+        &str_attrs[0]
+      }
+    };
+    str_attrs[0].next = &str_attrs[1];
+    str_attrs[1].next = &str_attrs[2];
+
+    SER_START_ITEMS(Dummy)
+        SER_ATTR_NS_UINT8_FLAGS(NULL, "UINT8", 1, 0),
+        SER_ATTR_NS_UINT16_FLAGS(NULL, "UINT16", 1, 0),
+        SER_ATTR_NS_UINT32_FLAGS(NULL, "UINT32", 1, 0),
+        SER_ATTR_NS_BOOL_FLAGS(NULL, "BOOL", 1, 0),
+        SER_ATTR_NS_STR_FLAGS(NULL, "STRING", 1, 0),
+    SER_END_ITEMS(Dummy);
 
     SER_START_ITEMS(Sample)
-        SER_ATTR_NS_STR_FLAGS(XML_NS_WS_MAN, "Dummy", 1, 0),
+        SER_ATTR_NS_STRUCT_FLAGS(XML_NS_WS_MAN, "STRUCT", 1, 0, Dummy),
     SER_END_ITEMS(Sample);
- 
 
     WsContextH cntx;
     WsXmlDocH doc;
     WsXmlNodeH node;
     int retval;
 
-    printf("\n\n   ********   example5. Node with attributes  ********\n");
+    printf("\n\n   ********   example5. Nodes with attributes  ********\n");
 
     cntx = wsman_create_runtime();
     if (cntx == NULL) {
