@@ -189,7 +189,7 @@ main(int argc, char **argv)
 	switch (op) {
 	case WSMAN_ACTION_TEST:
 		rqstDoc = wsman_client_read_file(cl,
-				 wsman_options_get_test_file(), "UTF-8", 0);
+				 wsman_options_get_input_file(), "UTF-8", 0);
 		wsman_send_request(cl, rqstDoc);
 		doc = wsman_build_envelope_from_response(cl);
 		if (doc) {
