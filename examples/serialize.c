@@ -708,10 +708,73 @@ example6()
     node = ws_xml_get_doc_root(doc);
 
     retval = ws_serialize(cntx, node, &sample, Sample_TypeInfo,
-               CLASSNAME, NULL, NULL, 0);
+               CLASSNAME, XML_NS_WS_MAN, XML_NS_ADDRESSING, 0);
     printf("\n\nws_serialize: %d\n", retval);
     ws_xml_dump_node_tree(stdout, node);
-}
+
+    Sample *news;
+    printf("\n\nws_deserialize:\n");
+    news = (Sample *)ws_deserialize(cntx,
+                                     node,
+                                     Sample_TypeInfo,
+                                     CLASSNAME,
+                                     XML_NS_ADDRESSING, XML_NS_ADDRESSING,
+                                     0, 0);
+    if (news == NULL) {
+        printf("Errror ws_deserialize\n");
+        return;
+    }
+
+    XML_NODE_ATTR *nattrs;
+    Dummy *dm = &(news->struct_with_attrs.body);
+    printf("****     Deserialized document  %p *****\n", news);
+    printf("struct_with_attrs.body (");
+    nattrs = news->struct_with_attrs.attrs;
+    while (nattrs) {
+        printf("%s:%s=\"%s\" ", nattrs->ns, nattrs->name, nattrs->value);
+        nattrs = nattrs->next;
+    }
+    printf(")\n");
+
+    printf("    uint8_with_attrs = %d (", dm->uint8_with_attrs.body);
+    nattrs = dm->uint8_with_attrs.attrs;
+    while (nattrs) {
+        printf("%s:%s=\"%s\" ", nattrs->ns, nattrs->name, nattrs->value);
+        nattrs = nattrs->next;
+    }
+    printf(")\n");
+
+    printf("    uint16_with_attrs = %d (", dm->uint16_with_attrs.body);
+    nattrs = dm->uint16_with_attrs.attrs;
+    while (nattrs) {
+        printf("%s:%s=\"%s\" ", nattrs->ns, nattrs->name, nattrs->value);
+        nattrs = nattrs->next;
+    }
+    printf(")\n");
+
+    printf("    uint32_with_attrs = %d (", dm->uint32_with_attrs.body);
+    nattrs = dm->uint32_with_attrs.attrs;
+    while (nattrs) {
+        printf("%s:%s=\"%s\" ", nattrs->ns, nattrs->name, nattrs->value);
+        nattrs = nattrs->next;
+    }
+    printf(")\n");
+
+    printf("    bool_with_attrs = %d (", dm->bool_with_attrs.body);
+    nattrs = dm->bool_with_attrs.attrs;
+    while (nattrs) {
+        printf("%s:%s=\"%s\" ", nattrs->ns, nattrs->name, nattrs->value);
+        nattrs = nattrs->next;
+    }
+    printf(")\n");
+
+    printf("    str_with_attrs = %s (", dm->str_with_attrs.body);
+    nattrs = dm->str_with_attrs.attrs;
+    while (nattrs) {
+        printf("%s:%s=\"%s\" ", nattrs->ns, nattrs->name, nattrs->value);
+        nattrs = nattrs->next;
+    }
+    printf(")\n");}
 
 
 
