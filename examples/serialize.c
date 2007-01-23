@@ -42,13 +42,7 @@
 #include <errno.h>
 #include <time.h>
 
-#include "u/libu.h"
-
-#include "wsman-client-api.h"
-#include "wsman-client-transport.h"
-#include "wsman-xml-serializer.h"
-#include "wsman-names.h"
-#include "wsman-debug.h"
+#include "wsman-api.h"
 
 #define CLASSNAME "Sample"
 
