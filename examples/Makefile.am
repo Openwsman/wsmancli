@@ -19,13 +19,17 @@ serialize_SOURCES = serialize.c
 	
 create_resource_SOURCES = \
 		create_resource.c
+
+new_api_example_SOURCES = \
+		new_api_example.c
 		
 noinst_PROGRAMS = \
 	wsmid_identify \
 	win32_service \
 	enum_epr \
 	create_resource \
-	serialize
+	serialize \
+	new_api_example
    
 
 
