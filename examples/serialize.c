@@ -702,7 +702,7 @@ example6()
     node = ws_xml_get_doc_root(doc);
 
     retval = ws_serialize(cntx, node, &sample, Sample_TypeInfo,
-               CLASSNAME, XML_NS_WS_MAN, XML_NS_ADDRESSING, 0);
+               CLASSNAME, XML_NS_WS_MAN, NULL, 0);
     printf("\n\nws_serialize: %d\n", retval);
     ws_xml_dump_node_tree(stdout, node);
 
@@ -712,8 +712,8 @@ example6()
                                      node,
                                      Sample_TypeInfo,
                                      CLASSNAME,
-                                     XML_NS_ADDRESSING, XML_NS_ADDRESSING,
-                                     0, 0);
+                                     XML_NS_ADDRESSING,
+                                     NULL, 0, 0);
     if (news == NULL) {
         printf("Errror ws_deserialize\n");
         return;
@@ -846,7 +846,7 @@ int retval;
     node = ws_xml_get_doc_root(doc);
 
     retval = ws_serialize(cntx, node, &Epr, EPR_TypeInfo,
-               "EndpointReference", XML_NS_ADDRESSING, XML_NS_ADDRESSING, 0);
+               "EndpointReference", XML_NS_ADDRESSING, NULL, 0);
     printf("\n\nws_serialize: %d\n", retval);
     ws_xml_dump_node_tree(stdout, node);
 
@@ -858,8 +858,8 @@ int retval;
                                      node,
                                      EPR_TypeInfo,
                                      "EndpointReference",
-                                     XML_NS_ADDRESSING, XML_NS_ADDRESSING,
-                                     0, 0);
+                                     XML_NS_ADDRESSING,
+                                     NULL, 0, 0);
     if (newEPR == NULL) {
         printf("Errror ws_deserialize\n");
         return;
