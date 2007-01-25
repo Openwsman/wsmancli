@@ -246,14 +246,14 @@ int main(int argc, char** argv)
         if (dump) wsman_set_action_option(&options,FLAG_DUMP_REQUEST );
         wsman_client_add_selector(&options, "Name", argv[1]);
         doc = wsman_invoke(cl, RESOURCE_URI,
-                                "StartService", options);
+                                "StartService", NULL, options);
         ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
         ws_xml_destroy_doc(doc);
     } else if (stop && argv[1]) {
         if (dump) wsman_set_action_option(&options,FLAG_DUMP_REQUEST );
         wsman_client_add_selector(&options, "Name", argv[1]);
         doc = wsman_invoke(cl, RESOURCE_URI,
-                                "StopService", options);
+                                "StopService", NULL, options);
         ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
         ws_xml_destroy_doc(doc);
     } else if ( argv[1] ) {

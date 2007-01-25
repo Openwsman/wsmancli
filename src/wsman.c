@@ -207,7 +207,7 @@ main(int argc, char **argv)
 	case WSMAN_ACTION_CUSTOM:
 
 		options.properties = wsman_options_get_properties();
-		doc = wsman_invoke(cl, resource_uri, wsman_options_get_invoke_method(), options);
+		doc = wsman_invoke(cl, resource_uri, wsman_options_get_invoke_method(), NULL, options);
 		if (doc) {
 			wsman_output(doc);
 			ws_xml_destroy_doc(doc);
