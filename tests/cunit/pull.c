@@ -170,13 +170,13 @@ static void pull_test() {
     options.max_elements = pull_tests[i].max_elements;
     WsXmlDocH enum_response = wsenum_enumerate(cl,
                                 (char *)pull_tests[i].resource_uri, options);
-    CU_ASSERT_TRUE(wsman_get_client_response_code(cl) ==
+    CU_ASSERT_TRUE(wsman_client_get_response_code(cl) ==
                                                 pull_tests[i].final_status);
-    if (wsman_get_client_response_code(cl) != pull_tests[i].final_status) {
+    if (wsman_client_get_response_code(cl) != pull_tests[i].final_status) {
         if (verbose) {
             printf("\nExpected = %ld\nReturned = %ld       ",
                    pull_tests[i].final_status,
-                   wsman_get_client_response_code(cl));
+                   wsman_client_get_response_code(cl));
         }
         goto RETURN;
     }
@@ -190,7 +190,7 @@ static void pull_test() {
 
     while (enumContext != NULL) {
         WsXmlDocH docp = wsenum_pull(cl, (char *)pull_tests[i].resource_uri,
-                                     enumContext, options);
+                                     options, enumContext);
         CU_ASSERT_PTR_NOT_NULL(docp);
         if (!docp) {
             goto RETURN;

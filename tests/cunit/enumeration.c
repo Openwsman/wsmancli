@@ -279,11 +279,11 @@ static void enumeration_test() {
     WsXmlDocH enum_response = wsenum_enumerate(cl,
                                 (char *)tests[i].resource_uri, options);
 
-    CU_ASSERT_TRUE(wsman_get_client_response_code(cl) == tests[i].final_status);
-    if (wsman_get_client_response_code(cl) != tests[i].final_status) {
+    CU_ASSERT_TRUE(wsman_client_get_response_code(cl) == tests[i].final_status);
+    if (wsman_client_get_response_code(cl) != tests[i].final_status) {
         if (verbose) {
             printf("\nExpected = %ld\nReturned = %ld         ",
-                   tests[i].final_status, wsman_get_client_response_code(cl));
+                   tests[i].final_status, wsman_client_get_response_code(cl));
         }
         goto RETURN;
     }
@@ -293,7 +293,7 @@ static void enumeration_test() {
     } else {
         goto RETURN;
     }
-    check_response_header(enum_response, wsman_get_client_response_code(cl),
+    check_response_header(enum_response, wsman_client_get_response_code(cl),
        ENUM_ACTION_ENUMERATERESPONSE);
 
 //if (i==11) ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(enum_response));
@@ -306,9 +306,9 @@ RETURN:
     u_free(selectors);
     if (enumContext) {
         wsenum_release(cl,
-                       (char *)tests[i].resource_uri, 
-                       enumContext,
-                       options);
+                       (char *)tests[i].resource_uri,
+                       options,
+                       enumContext);
     }
     if (enum_response) {
         ws_xml_destroy_doc(enum_response);

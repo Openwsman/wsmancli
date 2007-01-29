@@ -195,14 +195,14 @@ static void transfer_put_test() {
 
     doc = ws_transfer_get_and_put(cl, (char *)put_tests[i].resource_uri, options);
     //ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
-    CU_ASSERT_TRUE(wsman_get_client_response_code(cl) ==
+    CU_ASSERT_TRUE(wsman_client_get_response_code(cl) ==
                                                put_tests[i].final_status);
-    if (wsman_get_client_response_code(cl) !=
+    if (wsman_client_get_response_code(cl) !=
                             put_tests[i].final_status) {
         if (verbose) {
             printf("\nExpected = %ld, Returned = %ld        ",
                            put_tests[i].final_status,
-                           wsman_get_client_response_code(cl));
+                           wsman_client_get_response_code(cl));
          //   ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
         }
         goto RETURN;

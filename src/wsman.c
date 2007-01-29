@@ -207,7 +207,8 @@ main(int argc, char **argv)
 	case WSMAN_ACTION_CUSTOM:
 
 		options.properties = wsman_options_get_properties();
-		doc = wsman_invoke(cl, resource_uri, wsman_options_get_invoke_method(), NULL, options);
+		doc = wsman_invoke(cl, resource_uri, options,
+                              wsman_options_get_invoke_method(), NULL);
 		if (doc) {
 			wsman_output(doc);
 			ws_xml_destroy_doc(doc);
@@ -224,7 +225,7 @@ main(int argc, char **argv)
 		if (wsman_options_get_input_file()) {
 			resource = wsman_client_read_file(cl,
 				 wsman_options_get_input_file(), "UTF-8", 0);
-			doc = ws_transfer_create(cl, resource_uri, resource, options);
+			doc = ws_transfer_create(cl, resource_uri, options, resource);
 			ws_xml_destroy_doc(resource);
 			if (doc) {
 				wsman_output(doc);
@@ -239,7 +240,7 @@ main(int argc, char **argv)
 			printf("input file provided\n");
 			resource = wsman_client_read_file(cl,
 				 wsman_options_get_input_file(), "UTF-8", 0);
-			doc = ws_transfer_put(cl, resource_uri, resource, options);
+			doc = ws_transfer_put(cl, resource_uri, options, resource);
 			ws_xml_destroy_doc(resource);
 		} else {
 			doc = ws_transfer_get_and_put(cl, resource_uri, options);
@@ -257,14 +258,14 @@ main(int argc, char **argv)
 		}
 		break;
 	case WSMAN_ACTION_PULL:
-		doc = wsenum_pull(cl, resource_uri, wsman_options_get_enum_context(), options);
+		doc = wsenum_pull(cl, resource_uri, options, wsman_options_get_enum_context());
 		if (doc) {
 			wsman_output(doc);
 			ws_xml_destroy_doc(doc);
 		}
 		break;
 	case WSMAN_ACTION_RELEASE:
-		doc = wsenum_release(cl, resource_uri, wsman_options_get_enum_context(), options);
+		doc = wsenum_release(cl, resource_uri, options, wsman_options_get_enum_context());
 		if (doc) {
 			wsman_output(doc);
 			ws_xml_destroy_doc(doc);
@@ -300,9 +301,9 @@ main(int argc, char **argv)
 		enum_response = wsenum_enumerate(cl,
 						 resource_uri, options);
 		if (enum_response) {
-			if (wsman_get_client_response_code(cl) == 200 ||
-			    wsman_get_client_response_code(cl) == 400 ||
-			    wsman_get_client_response_code(cl) == 500) {
+			if (wsman_client_get_response_code(cl) == 200 ||
+			    wsman_client_get_response_code(cl) == 400 ||
+			    wsman_client_get_response_code(cl) == 500) {
 				wsman_output(enum_response);
 			} else {
 				break;
@@ -316,11 +317,11 @@ main(int argc, char **argv)
 		if (!wsman_options_get_step_request()) {
 			while (enumContext != NULL && enumContext[0] != 0) {
 
-				doc = wsenum_pull(cl, resource_uri, enumContext, options);
+				doc = wsenum_pull(cl, resource_uri, options, enumContext);
 
-				if (wsman_get_client_response_code(cl) != 200 &&
-				wsman_get_client_response_code(cl) != 400 &&
-				wsman_get_client_response_code(cl) != 500) {
+				if (wsman_client_get_response_code(cl) != 200 &&
+				wsman_client_get_response_code(cl) != 400 &&
+				wsman_client_get_response_code(cl) != 500) {
 					break;
 				}
 				wsman_output(doc);
@@ -336,9 +337,9 @@ main(int argc, char **argv)
 		retVal = 1;
 	}
 
-	if (wsman_get_client_response_code(cl) != 200) {
+	if (wsman_client_get_response_code(cl) != 200) {
 		fprintf(stderr, "Connection failed. response code = %ld\n",
-			wsman_get_client_response_code(cl));
+			wsman_client_get_response_code(cl));
 		if (wsman_client_get_fault_string(cl)) {
 			fprintf(stderr, "%s\n", wsman_client_get_fault_string(cl));
 		}

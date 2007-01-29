@@ -930,10 +930,10 @@ char *data = "<dummy><qq>This is qq body</qq><pp>This is pp</pp></dummy>";
       actionOptions   options;
       initialize_action_options(&options);
 
-      WsXmlDocH   request = wsman_client_create_request(cl, WSMAN_ACTION_TRANSFER_CREATE,
-                    NULL,
+      WsXmlDocH   request = wsman_client_create_request(cl,
                     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
-                     options, NULL);
+                    options,
+                    WSMAN_ACTION_TRANSFER_CREATE, NULL, NULL);
       WsXmlDocH d = wsman_client_read_memory(cl, data, strlen(data), NULL, 0);
 ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(d));
 //      WsXmlNodeH n = ws_xml_get_doc_root(d);

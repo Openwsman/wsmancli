@@ -165,11 +165,10 @@ static int list_services(WsManClient *cl, WsXmlDocH doc, void *data)
       CIM_Servie *service = ws_deserialize(wsman_client_get_context(cl),
                                            node,
                                            CIM_Servie_TypeInfo, CLASSNAME,
-                                           RESOURCE_URI, RESOURCE_URI,
+                                           RESOURCE_URI, NULL,
                                            0, 0);
       print_info(service);
     }
-    
   }
 }
 
@@ -245,15 +244,15 @@ int main(int argc, char** argv)
     } else if (start && argv[1]) {
         if (dump) wsman_set_action_option(&options,FLAG_DUMP_REQUEST );
         wsman_client_add_selector(&options, "Name", argv[1]);
-        doc = wsman_invoke(cl, RESOURCE_URI,
-                                "StartService", NULL, options);
+        doc = wsman_invoke(cl, RESOURCE_URI, options,
+                                "StartService", NULL);
         ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
         ws_xml_destroy_doc(doc);
     } else if (stop && argv[1]) {
         if (dump) wsman_set_action_option(&options,FLAG_DUMP_REQUEST );
         wsman_client_add_selector(&options, "Name", argv[1]);
-        doc = wsman_invoke(cl, RESOURCE_URI,
-                                "StopService", NULL, options);
+        doc = wsman_invoke(cl, RESOURCE_URI, options,
+                                "StopService", NULL);
         ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
         ws_xml_destroy_doc(doc);
     } else if ( argv[1] ) {
@@ -267,7 +266,7 @@ int main(int argc, char** argv)
                 CIM_Servie *service = ws_deserialize(wsman_client_get_context(cl),
                         node,
                         CIM_Servie_TypeInfo, CLASSNAME,
-                        RESOURCE_URI, RESOURCE_URI,
+                        RESOURCE_URI, NULL,
                         0, 0);
                 desc = 1;
                 status = 1;

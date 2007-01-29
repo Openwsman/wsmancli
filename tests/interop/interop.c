@@ -171,7 +171,7 @@ static int run_interop_test (WsManClient *cl, WsXmlNodeH scenario, InteropTest i
         char *resource_uri = ws_xml_get_node_text(r);
         char *method = ws_xml_get_node_text(m);
         wsman_add_selectors_list_from_node(input, &options);
-        response = wsman_invoke(cl, resource_uri, method, NULL, options);
+        response = wsman_invoke(cl, resource_uri, options, method, NULL);
         xml_parser_doc_dump(stdout, response);
     }else if (id == 18) { // 9.1 Put
 
