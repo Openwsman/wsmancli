@@ -129,7 +129,7 @@ main(int argc, char **argv)
 	wsman_setup_transport_and_library_options();
 
 	initialize_logging();
-	wsman_client_transport_init(NULL);
+//	wsman_client_transport_init(NULL);
 	initialize_action_options(&options);
 
 	debug("Certificate: %s", wsman_options_get_cafile());
