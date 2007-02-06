@@ -8,8 +8,6 @@ int main(int argc, char** argv)
 {
 	int		sid, sid1;
 	wsman_data_t	*data;
-	char		*buf;
-	int		size;
 	char 		retval = 0;
 	u_error_t 	*error = NULL;
 	u_uri_t		*uri;
@@ -45,8 +43,12 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
+	
+
 	sid = wsman_session_open(uri->host, uri->port, uri->path, uri->scheme,
 				uri->user, uri->pwd);
+
+/*	sid = wsman_session_open("localhost", 8889, "/wsman", "http", "den","den");*/
 
 	if (sid < 0) {
 		printf("Open session failed\n");
@@ -55,8 +57,9 @@ int main(int argc, char** argv)
 
 	sid1 = wsman_session_open(uri->host, uri->port, uri->path, uri->scheme,
 				uri->user, uri->pwd);
+/*	sid1 = wsman_session_open("localhost", 8889, "/wsman", "http", "den","den");*/
 
-	if (sid < 0) {
+	if (sid1 < 0) {
 		printf("Open session failed\n");
 		wsman_session_close(sid);
 		return 0;
@@ -65,32 +68,34 @@ int main(int argc, char** argv)
 	printf("\n******** Opened session id %d ********\n\n", sid);
 	printf("******** Opened session id %d ********\n\n", sid1);
 
+	wsman_session_uri_set(sid1,
+	"http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem");
+
 	data = wsman_session_do_action(sid, WSMAN_ACTION_IDENTIFY);
 
-	if (!data->response) {
+	if (data->fault_message) {
 		printf("******** Identify failed - %s ********\n",
 			data->fault_message);
 		return 0;
 	}
-	ws_xml_dump_memory_node_tree(ws_xml_get_doc_root(data->response),
-					&buf, &size);
 
-	printf ("******** Identify response (id %d) ********\n%s\n", sid, buf);
+	printf ("******** Identify response (id %d) ********\n%s\n",
+					sid, wsmanu_print_response(data));
 
 	wsman_session_close(sid);
 
 	printf("******** Closed session id %d ********\n\n", sid);
 
-	data = wsman_session_do_action(sid1, WSMAN_ACTION_ENUMERATION);
+	data = wsman_session_pull_all(sid1);
 
-	if (!data->response) {
+	if (data->fault_message) {
 		printf("******** Enumeration failed - %s ********\n",
 			data->fault_message);
 		return 0;
 	}
-	ws_xml_dump_memory_node_tree(ws_xml_get_doc_root(data->response),
-					&buf, &size);
-	printf("******** Enumeration response (id %d) ********\n%s\n", sid1,buf);
+
+	printf("******** Enumeration response (id %d) ********\n%s\n", 
+					sid1, wsmanu_print_response(data));
 
 	wsman_session_close(sid1);
 
