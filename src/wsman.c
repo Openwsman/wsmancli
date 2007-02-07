@@ -212,7 +212,7 @@ main(int argc, char **argv)
 		wsman_output(cl, doc);
 		if (doc) {
 			ws_xml_destroy_doc(doc);
-		} else 
+		}
 		break;		
 	case WSMAN_ACTION_TRANSFER_CREATE:
 		if (wsman_options_get_input_file()) {
@@ -225,7 +225,7 @@ main(int argc, char **argv)
 				ws_xml_destroy_doc(doc);
 			} 
 		} else {
-			fprintf(stderr, "Missing resource data\n");
+			fprintf(stderr, "xx Missing resource data\n");
 		}
 		break;
 	case WSMAN_ACTION_TRANSFER_PUT:
