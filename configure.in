@@ -8,6 +8,7 @@ AM_MAINTAINER_MODE
 
 AC_ISC_POSIX
 AC_PROG_CC
+AC_PROG_CXX
 AM_PROG_CC_STDC
 AC_HEADER_STDC
 
@@ -24,6 +25,7 @@ AC_OUTPUT([
 	Makefile
 	src/Makefile
 	examples/Makefile
+	examples/cpp/Makefile
         tests/Makefile
         tests/interop/Makefile
         tests/cunit/Makefile

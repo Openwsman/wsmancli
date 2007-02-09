@@ -1,3 +1,5 @@
+SUBDIRS =  cpp
+
 AM_CFLAGS = @CFLAGS@
 
 CFLAGS = \

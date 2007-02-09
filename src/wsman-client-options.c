@@ -398,7 +398,7 @@ int wsman_options_get_action (void)
 
 char* wsman_options_get_resource_uri (void)
 {	
-  return resource_uri;
+  	return resource_uri;
 }   
 
 int wsman_options_get_max_elements (void)
