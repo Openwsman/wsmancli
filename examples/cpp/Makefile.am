@@ -2,13 +2,13 @@
 LDADD = \
        -lwsman_clientpp
 
-Enum_ComputerSystem_CXXFLAGS = \
+EnumInstance_CXXFLAGS = \
        $(OPENWSMAN_CFLAGS) 
-Enum_ComputerSystem_SOURCES = \
-		Enum_ComputerSystem.cpp
+EnumInstance_SOURCES = \
+		EnumInstance.cpp
 
 noinst_PROGRAMS = \
-	Enum_ComputerSystem
+	EnumInstance
    
 
 
