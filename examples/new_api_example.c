@@ -1,17 +1,17 @@
-
-
 #include "wsman-client-api.h"
 
 static char *endpoint = NULL;
 
 int main(int argc, char** argv)
 {
-	int		sid, sid1;
-	wsman_data_t	*data;
+	int		sid;
+	int		i = 1;
+	char		*response;
 	char 		retval = 0;
 	u_error_t 	*error = NULL;
 	u_uri_t		*uri;
-
+	const char	*resource_uri =
+	"http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem";
 
 	u_option_entry_t opt[] = {
 	{ "endpoint",	'u',	U_OPTION_ARG_STRING,	&endpoint,
@@ -46,61 +46,41 @@ int main(int argc, char** argv)
 	
 
 	sid = wsman_session_open(uri->host, uri->port, uri->path, uri->scheme,
-				uri->user, uri->pwd);
-
-/*	sid = wsman_session_open("localhost", 8889, "/wsman", "http", "den","den");*/
+				uri->user, uri->pwd, 0);
 
 	if (sid < 0) {
 		printf("Open session failed\n");
 		return 0;
 	}
 
-	sid1 = wsman_session_open(uri->host, uri->port, uri->path, uri->scheme,
-				uri->user, uri->pwd);
-/*	sid1 = wsman_session_open("localhost", 8889, "/wsman", "http", "den","den");*/
-
-	if (sid1 < 0) {
-		printf("Open session failed\n");
-		wsman_session_close(sid);
-		return 0;
-	}
 
 	printf("\n******** Opened session id %d ********\n\n", sid);
-	printf("******** Opened session id %d ********\n\n", sid1);
 
-	wsman_session_uri_set(sid1,
-	"http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem");
+	response = wsman_session_enumerate(sid, resource_uri, NULL, NULL, 0);
 
-	data = wsman_session_do_action(sid, WSMAN_ACTION_IDENTIFY);
-
-	if (data->fault_message) {
-		printf("******** Identify failed - %s ********\n",
-			data->fault_message);
+	if (!response) {
+		printf("******** Enumeration failed - %s ********\n\n",
+			wsman_session_error(sid));
 		return 0;
 	}
 
-	printf ("******** Identify response (id %d) ********\n%s\n",
-					sid, wsmanu_print_response(data));
+	printf ("******** Enumeration response (id %d) ********\n%s\n",
+					sid, response);
+
+	while (wsman_session_enumerator_end(sid)) {
+		response = wsman_session_enumerator_pull(sid);
+		if (!response) {
+			printf("******** Pull (%d) failed - %s ********\n\n",
+			i, wsman_session_error(sid));
+			return 0;
+		}	
+		printf("******** Pull response (%d) *******\n%s\n", i, response);
+		i++;
+	}
 
 	wsman_session_close(sid);
 
 	printf("******** Closed session id %d ********\n\n", sid);
 
-	data = wsman_session_pull_all(sid1);
-
-	if (data->fault_message) {
-		printf("******** Enumeration failed - %s ********\n",
-			data->fault_message);
-		return 0;
-	}
-
-	printf("******** Enumeration response (id %d) ********\n%s\n", 
-					sid1, wsmanu_print_response(data));
-
-	wsman_session_close(sid1);
-
-	printf("******** Closed session id %d ********\n\n", sid1);
-
 	return 1;
 }
-

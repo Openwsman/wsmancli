@@ -9,8 +9,7 @@ LDADD = \
        $(OPENWSMAN_LIBS) \
        -lwsman_curl_client_transport
 
-wsmid_identify_SOURCES = \
-		wsmid_identify.c
+wsmid_identify_SOURCES = wsmid_identify.c new_api_example.c
 
 win32_service_SOURCES = \
 		win32_service.c
