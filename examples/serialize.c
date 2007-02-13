@@ -890,25 +890,26 @@ int retval;
 
 
 
-
-
-
-/*
 static void
-debug_message_handler(const char *str, debug_level_e level, void *user_data)
+example50()
 {
-    if (wsman_debug_level_debugged(level)) {
-        struct tm      *tm;
-        time_t          now;
-        char            timestr[128];
 
-        time(&now);
-        tm = localtime(&now);
-        strftime(timestr, 128, "%b %e %T", tm);
-        fprintf(stderr, "%s  %s\n", timestr, str);
+    printf("\n\n   ********   example50. XML datetime deserialization  ********\n");
+
+    char xml_dttm[] = "2007-02-13T12:39:14-03:30";
+    XML_DATETIME dttm;
+
+    if (ws_deserialize_datetime(xml_dttm, &dttm)) {
+        printf("deserialization failed\n");
+        return;
     }
+    printf("XML datetime =  %s\n", xml_dttm);
+    printf("deserialed = %u-%u-%uT%u:%u:%u  %i\n", dttm.tm.tm_year,
+             dttm.tm.tm_mon, dttm.tm.tm_mday, dttm.tm.tm_hour,
+             dttm.tm.tm_min, dttm.tm.tm_sec, dttm.tz_min);
 }
-*/
+
+
 
 
 
@@ -1036,6 +1037,7 @@ main(int argc, char **argv)
 //        case 5: example5(); break;
         case 6: example6(); break;
         case 7: example7(); break;
+        case 50: example50(); break;
         case 106: example106(); break;
         case 107: example107(); break;
         default:
