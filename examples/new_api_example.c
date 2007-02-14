@@ -48,6 +48,8 @@ int main(int argc, char** argv)
 	sid = wsman_session_open(uri->host, uri->port, uri->path, uri->scheme,
 				uri->user, uri->pwd, 0);
 
+/*	sid = wsman_session_open("localhost", 8889, "/wsman", "http", "den","den", 0);*/
+
 	if (sid < 0) {
 		printf("Open session failed\n");
 		return 0;
@@ -72,11 +74,42 @@ int main(int argc, char** argv)
 		if (!response) {
 			printf("******** Pull (%d) failed - %s ********\n\n",
 			i, wsman_session_error(sid));
-			return 0;
+			break;
 		}	
 		printf("******** Pull response (%d) *******\n%s\n", i, response);
 		i++;
 	}
+
+const char *ruri =
+	"http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem?Name=mstrcsd013.ims.intel.com&CreationClassName=OMC_UnitaryComputerSystem";
+
+	response = wsman_session_transfer_get(sid, ruri, 0);
+
+	if (!response) {
+		printf("******** Transfer Get failed - %s ********\n\n",
+			wsman_session_error(sid));
+	}
+
+	printf ("******** Transfer Get (first response) (id %d) ********\n%s\n",
+					sid, response);
+
+	wsman_session_locator_resource_uri(sid, resource_uri);
+	wsman_session_locator_add_selector(sid,
+					"Name",
+					"mstrcsd013.ims.intel.com");
+	wsman_session_locator_add_selector(sid,
+					"CreationClassName",
+					"OpenWBEM_UnitaryComputerSystem");
+
+	response = wsman_session_transfer_get(sid, NULL, 0);
+
+	if (!response) {
+		printf("******** Transfer Get failed - %s ********\n\n",
+			wsman_session_error(sid));
+	}
+
+	printf ("******** Transfer Get (second response) (id %d) ********\n%s\n",
+					sid, response);
 
 	wsman_session_close(sid);
 
