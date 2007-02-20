@@ -49,7 +49,8 @@
 #include <time.h>
 
 #include <u/libu.h>
-#include <wsman-api.h>
+#include <wsman-client-api.h>
+#include <wsman-debug.h>
 #include "wsman-client-options.h"
 
 

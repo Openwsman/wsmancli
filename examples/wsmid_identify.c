@@ -39,7 +39,8 @@
 #include <time.h>
 
 
-#include "wsman-api.h"
+#include "wsman-client-api.h"
+#include "wsman-xml-serializer.h"
 
 struct __wsmid_identify
 {
@@ -110,12 +111,19 @@ int main(int argc, char** argv)
 
 
     wsman_client_transport_init(NULL);
+fprintf( stderr, "wsman_create_client( host %s, port %d, path %s, scheme %s, user %s, passwd %s\n", uri->host,
+        uri->port,
+        uri->path,
+        uri->scheme,
+        uri->user,
+        uri->pwd);
+
     cl = wsman_create_client( uri->host,
         uri->port,
         uri->path,
         uri->scheme,
         uri->user,
-        uri->pwd);		
+        uri->pwd);
     initialize_action_options(&options);
 
 
