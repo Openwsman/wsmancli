@@ -5,17 +5,22 @@ static char *endpoint = NULL;
 int main(int argc, char** argv)
 {
 	int		sid;
-	int		i = 1;
+	int		eid;
+	int		lid;
+	int		i = 0;
 	char		*response;
 	char 		retval = 0;
-	u_error_t 	*error = NULL;
-	u_uri_t		*uri;
 	const char	*resource_uri =
 	"http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem";
+	u_error_t 	*error = NULL;
+	char		*user = NULL;
+	char		*passwd = NULL;
 
 	u_option_entry_t opt[] = {
-	{ "endpoint",	'u',	U_OPTION_ARG_STRING,	&endpoint,
-		"Endpoint in form of a URL", "<uri>" },
+	{ "user",	'u',	U_OPTION_ARG_STRING,	&user,
+		"user name", "<user>" },
+	{ "passwd",	'p',	U_OPTION_ARG_STRING,	&passwd,
+		"password", "<passwd>" },
 	{ NULL }
 	};
 
@@ -35,20 +40,13 @@ int main(int argc, char** argv)
 	}
 	u_error_free(error);
 
-	if (endpoint) {
-		u_uri_parse((const char *)endpoint, &uri);
-	}
-	if (!endpoint || !uri) {
-		fprintf(stderr, "endpoint option required\n");
+	if (!user || !passwd) {
+		printf("\t new_api_example: user and passwd are required\n");
 		return 1;
 	}
 
-	
-
-	sid = wsman_session_open(uri->host, uri->port, uri->path, uri->scheme,
-				uri->user, uri->pwd, 0);
-
-/*	sid = wsman_session_open("localhost", 8889, "/wsman", "http", "den","den", 0);*/
+	sid = wsman_session_open("localhost", 8889, "/wsman", "http",
+				user, passwd, 0);
 
 	if (sid < 0) {
 		printf("Open session failed\n");
@@ -58,58 +56,47 @@ int main(int argc, char** argv)
 
 	printf("\n******** Opened session id %d ********\n\n", sid);
 
-	response = wsman_session_enumerate(sid, resource_uri, NULL, NULL, 0);
+	eid = wsman_session_enumerate(sid, resource_uri, NULL, NULL,
+						FLAG_ENUMERATION_ENUM_EPR);
 
-	if (!response) {
+	if (eid < 0) {
 		printf("******** Enumeration failed - %s ********\n\n",
 			wsman_session_error(sid));
 		return 0;
 	}
 
-	printf ("******** Enumeration response (id %d) ********\n%s\n",
-					sid, response);
-
-	while (wsman_session_enumerator_end(sid)) {
-		response = wsman_session_enumerator_pull(sid);
+	while (wsman_enumerator_end(eid)) {
+		i++;
+		response = wsman_enumerator_pull(eid);
 		if (!response) {
 			printf("******** Pull (%d) failed - %s ********\n\n",
-			i, wsman_session_error(sid));
+			i, wsman_session_error(eid));
 			break;
-		}	
-		printf("******** Pull response (%d) *******\n%s\n", i, response);
-		i++;
+		}
+		printf("******** Pull response (%d) *******\n%s\n", i,
+			response);
+		lid = wsman_session_resource_locator_create(sid, response);
+		response = wsman_resource_locator_transfer_get(lid, 0);
+
+		if (!response) {
+			printf("******** Transfer Get failed - %s ********\n\n",
+				wsman_session_error(lid));
+			continue;
+		}
+		printf ("******** Transfer Get response ********\n%s\n",
+			response);
+
+		response = wsman_resource_locator_transfer_put(
+							lid, response, 0);
+
+		if (!response) {
+			printf("******** Transfer Put failed - %s ********\n\n",
+				wsman_session_error(lid));
+			continue;
+		}
+		printf ("******** Transfer Put response ********\n%s\n",
+			response);
 	}
-
-const char *ruri =
-	"http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem?Name=mstrcsd013.ims.intel.com&CreationClassName=OMC_UnitaryComputerSystem";
-
-	response = wsman_session_transfer_get(sid, ruri, 0);
-
-	if (!response) {
-		printf("******** Transfer Get failed - %s ********\n\n",
-			wsman_session_error(sid));
-	}
-
-	printf ("******** Transfer Get (first response) (id %d) ********\n%s\n",
-					sid, response);
-
-	wsman_session_locator_resource_uri(sid, resource_uri);
-	wsman_session_locator_add_selector(sid,
-					"Name",
-					"mstrcsd013.ims.intel.com");
-	wsman_session_locator_add_selector(sid,
-					"CreationClassName",
-					"OpenWBEM_UnitaryComputerSystem");
-
-	response = wsman_session_transfer_get(sid, NULL, 0);
-
-	if (!response) {
-		printf("******** Transfer Get failed - %s ********\n\n",
-			wsman_session_error(sid));
-	}
-
-	printf ("******** Transfer Get (second response) (id %d) ********\n%s\n",
-					sid, response);
 
 	wsman_session_close(sid);
 
