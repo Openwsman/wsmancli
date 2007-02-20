@@ -112,7 +112,7 @@ static TestData tests[] = {
   },
   {
     "Enumeration with valid Resource URI.",
-    "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/OMC_InitdService",
+    "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_InitdService",
     NULL,
     NULL,
     NULL,
@@ -126,7 +126,7 @@ static TestData tests[] = {
   },
   {
     "Enumeration (Count Estimation).",
-    "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/OMC_InitdService",
+    "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_InitdService",
     NULL, 
     NULL, 
     NULL, 
