@@ -51,9 +51,9 @@ struct __wsmid_identify
 typedef struct __wsmid_identify wsmid_identify;
 
 SER_START_ITEMS(wsmid_identify)
-SER_STR("ProtocolVersion", 1), 
-SER_STR("ProductVendor", 1),
-SER_STR("ProductVersion", 1),
+SER_NS_STR(XML_NS_WSMAN_ID, "ProtocolVersion", 1), 
+SER_NS_STR(XML_NS_WSMAN_ID, "ProductVendor", 1),
+SER_NS_STR(XML_NS_WSMAN_ID, "ProductVersion", 1),
 SER_END_ITEMS(wsmid_identify);
 
 
@@ -110,7 +110,6 @@ int main(int argc, char** argv)
     }
 
 
-    wsman_client_transport_init(NULL);
 fprintf( stderr, "wsman_create_client( host %s, port %d, path %s, scheme %s, user %s, passwd %s\n", uri->host,
         uri->port,
         uri->path,
