@@ -173,26 +173,8 @@
    if you want to skip the elements while deserialization(serialization). If
    define SER_INOUT_* is used the element is skipped always.
 
-   SER_* defines create elements with default namespace prefix. Initialy this
-   prefix is abcent, i.e. QNames created without namespace prefix.
    If element name is a QName (with name space prefix) the
        SER_NS_*(ns, name, ..) define set must be used.
-   There is an optimization to create many elements with the same namespace
-   prefix. SER_* defines create elements with default namespace prefix.
-   Initialy this prefix is abcent, i.e. QNames created without namespace prefix.
-   macro SER_DEFAULT_NS(<ns>) does not describe any real element but sets
-   default namespace to <ns>. So all SER_* defines after SER_DEFAULT_NS(<ns>)
-   will create elements with namespace <ns>. SER_DEFAULT_NS(NULL) disables
-   default name prefix. SER_NS_*(NULL, name) define describes the element
-   without namespace prefix in any case.
-
-   If element has attributes it must be described in TS by the special structure.
-   For example XML_TYPE_UINT8 with attributes is described as:
-        struct {XML_TYPE_UINT8 body; XML_NODE_ATTR *attrs;}
-   Here attrs is a NULL terminated list XML_NODE_ATTR holding name,
-   namespace and value of attribute.
-   Such structures are described by special macros SER_ATTR_* or SER_ATTR_NS_*
-   in TDO.
 
 
 
@@ -268,14 +250,13 @@ Sample_Servie servie = {
 SER_START_ITEMS(Sample_Servie)
 SER_BOOL("AcceptPause", 1),
 SER_BOOL("AcceptStop", 1),
-SER_DEFAULT_NS(XML_NS_WSMAN_ID),
 SER_STR("Caption", 1),
 SER_UINT32("CheckPoint", 1),
 SER_STR("CreationClassName", 1),
 SER_STR("Description", 1),
 SER_BOOL("DesktopInteract", 1),
 SER_NS_STR(EX1_NS, "DisplayName", 1),
-SER_NS_STR(NULL, "ErrorControl", 1),
+SER_STR("ErrorControl", 1),
 SER_UINT32("ExitCode", 1),
 SER_STR("InstallDate", 1),
 SER_STR("Name", 1),
@@ -283,7 +264,6 @@ SER_STR("PathName", 1),
 SER_UINT32("ProcessId", 1),
 SER_UINT32("ServiceSpecificExitCode", 1),
 SER_STR("ServiceType", 1),
-SER_DEFAULT_NS(NULL),
 SER_BOOL("Started", 1),
 SER_STR("StartMode", 1),
 SER_STR("StartName", 1),
@@ -697,15 +677,15 @@ example6()
     str_attrs[1].next = &str_attrs[2];
 
     SER_START_ITEMS(Dummy)
-        SER_ATTR_UINT8("UINT8", 1),
-        SER_ATTR_UINT16("UINT16", 1),
-        SER_ATTR_UINT32("UINT32", 1),
-        SER_ATTR_BOOL("BOOL", 1),
-        SER_ATTR_STR("STRING", 1),
+        SER_ATTR_NS_UINT8_FLAGS(NULL, "UINT8", 1, 0),
+        SER_ATTR_NS_UINT16_FLAGS(NULL, "UINT16", 1, 0),
+        SER_ATTR_NS_UINT32_FLAGS(NULL, "UINT32", 1, 0),
+        SER_ATTR_NS_BOOL_FLAGS(NULL, "BOOL", 1, 0),
+        SER_ATTR_NS_STR_FLAGS(NULL, "STRING", 1, 0),
     SER_END_ITEMS(Dummy);
 
     SER_START_ITEMS(Sample)
-        SER_ATTR_NS_STRUCT(XML_NS_WS_MAN, "STRUCT", 1, Dummy),
+        SER_ATTR_NS_STRUCT_FLAGS(XML_NS_WS_MAN, "STRUCT", 1, 0, Dummy),
     SER_END_ITEMS(Sample);
 
     WsContextH cntx;

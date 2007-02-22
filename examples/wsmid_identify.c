@@ -109,13 +109,14 @@ int main(int argc, char** argv)
       return 1;
     }
 
-
+/*
 fprintf( stderr, "wsman_create_client( host %s, port %d, path %s, scheme %s, user %s, passwd %s\n", uri->host,
         uri->port,
         uri->path,
         uri->scheme,
         uri->user,
         uri->pwd);
+	*/
 
     cl = wsman_create_client( uri->host,
         uri->port,
