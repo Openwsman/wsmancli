@@ -6,7 +6,7 @@ int main(int argc, char** argv)
 {
 	int		sid;
 	int		eid;
-	int		lid;
+	int		sid1;
 	int		i = 0;
 	char		*response;
 	char 		retval = 0;
@@ -75,27 +75,28 @@ int main(int argc, char** argv)
 		}
 		printf("******** Pull response (%d) *******\n%s\n", i,
 			response);
-		lid = wsman_session_resource_locator_create(sid, response);
-		response = wsman_resource_locator_transfer_get(lid, 0);
+		sid1 = wsman_session_resource_locator_new(sid, response);
+		response = wsman_session_transfer_get(sid1, 0);
 
 		if (!response) {
 			printf("******** Transfer Get failed - %s ********\n\n",
-				wsman_session_error(lid));
-			continue;
+				wsman_session_error(sid1));
+			goto continuep;
 		}
 		printf ("******** Transfer Get response ********\n%s\n",
 			response);
 
-		response = wsman_resource_locator_transfer_put(
-							lid, response, 0);
+		response = wsman_session_transfer_put(sid1, response, 0);
 
 		if (!response) {
 			printf("******** Transfer Put failed - %s ********\n\n",
-				wsman_session_error(lid));
-			continue;
+				wsman_session_error(sid1));
+			goto continuep;
 		}
 		printf ("******** Transfer Put response ********\n%s\n",
 			response);
+  continuep:
+		wsman_session_close(sid1);
 	}
 
 	wsman_session_close(sid);
