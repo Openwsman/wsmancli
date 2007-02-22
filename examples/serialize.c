@@ -173,8 +173,17 @@
    if you want to skip the elements while deserialization(serialization). If
    define SER_INOUT_* is used the element is skipped always.
 
+   SER_* defines create elements with default namespace prefix. Initialy this
+   prefix is abcent, i.e. QNames created without namespace prefix.
    If element name is a QName (with name space prefix) the
        SER_NS_*(ns, name, ..) define set must be used.
+   There is an optimization to create many elements with the same namespace
+   prefix. SER_* defines create elements with default namespace prefix.
+   Initialy this prefix is abcent, i.e. QNames created without namespace prefix.
+   macro SER_DEFAULT_NS(<ns>) does not describe any real element but sets
+   default namespace to <ns>. So all SER_* defines after SER_DEFAULT_NS(<ns>)
+   will create elements with namespace <ns>. SER_DEFAULT_NS(NULL) disables
+   default name prefix.
 
 
 
@@ -250,6 +259,7 @@ Sample_Servie servie = {
 SER_START_ITEMS(Sample_Servie)
 SER_BOOL("AcceptPause", 1),
 SER_BOOL("AcceptStop", 1),
+SER_DEFAULT_NS(XML_NS_WSMAN_ID),
 SER_STR("Caption", 1),
 SER_UINT32("CheckPoint", 1),
 SER_STR("CreationClassName", 1),
@@ -264,6 +274,7 @@ SER_STR("PathName", 1),
 SER_UINT32("ProcessId", 1),
 SER_UINT32("ServiceSpecificExitCode", 1),
 SER_STR("ServiceType", 1),
+SER_DEFAULT_NS(NULL),
 SER_BOOL("Started", 1),
 SER_STR("StartMode", 1),
 SER_STR("StartName", 1),
