@@ -304,7 +304,7 @@ int retval;
                                      NULL, NULL,
                                      0, 0);
     if (cs == NULL) {
-        printf("Errror ws_serialize\n");
+        printf("Error ws_serialize\n");
         return;
     }
     retval = memcmp(cs, &servie, sizeof (&servie));
@@ -801,7 +801,7 @@ example7()
     } ReferenceParameters;
 
     SER_START_ITEMS(ReferenceParameters)
-       SER_NS_STR(XML_NS_WS_MAN, "ResourceURI", 1),
+       SER_NS_STR(XML_NS_WS_MAN, WSM_RESOURCE_URI, 1),
        SER_NS_STRUCT(XML_NS_WS_MAN, WSM_SELECTOR_SET, 1, SelectorSet),
     SER_END_ITEMS(ReferenceParameters);
 
@@ -812,7 +812,7 @@ example7()
 
     SER_START_ITEMS(EPR)
         SER_NS_STR(XML_NS_ADDRESSING, WSA_ADDRESS, 1),
-        SER_NS_STRUCT(XML_NS_ADDRESSING, "ReferenceParameters", 1, ReferenceParameters),
+        SER_NS_STRUCT(XML_NS_ADDRESSING, WSA_REFERENCE_PARAMETERS, 1, ReferenceParameters),
     SER_END_ITEMS(EPR);
 
    XML_NODE_ATTR attrs[3] = {
