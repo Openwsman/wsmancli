@@ -23,6 +23,8 @@ create_resource_SOURCES = \
 
 new_api_example_SOURCES = \
 		new_api_example.c
+new_api_transfer_create_SOURCES = \
+		new_api_transfer_create.c
 		
 noinst_PROGRAMS = \
 	wsmid_identify \
@@ -30,7 +32,8 @@ noinst_PROGRAMS = \
 	enum_epr \
 	create_resource \
 	serialize \
-	new_api_example
+	new_api_example \
+	new_api_transfer_create
    
 
 
