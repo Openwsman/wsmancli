@@ -1,0 +1,83 @@
+
+wsmid_identify
+--------------
+
+Summary:
+	Issue an Identify request and de-serialize the result. 
+Options:
+	-p, --product                                   Print Product Vendor
+  	-v, --version                                   Print Product Version
+  	-P, --protocol                                  Print Protocol Version
+  	-u, --endpoint=<uri>                            Endpoint in form of a URL
+Example:
+
+	% ./wsmid_identify -u http://wsman:secret@example.com:8889/wsman   
+
+	Openwsman Project 0.7.0 supporting protocol http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd
+
+
+serialize
+----------
+
+Summary:
+	Examples using the XML serialization and de-serialization API.
+Options:
+	None
+Example:
+	run ./serialize in the local directory which will do several serialization and 
+	de-serialization routines.
+	For more details, check the file 'doc/README.serialization' in the openwsman 
+	repository for detailed documentation of the serialization API.
+	
+	
+win32_service
+----------------
+Summary:
+	A command-line client to manage and display services on a Microsoft Windows machine
+	with WS-Management support (Vista).
+Options:
+	-u, --endpoint=<uri>                            Endpoint in form of a URL
+	-l, --list-all                                  List all services
+	-d, --desc                                      Show service description
+	-s, --stop                                      Stop service
+	-S, --start                                     Start service
+	-X, --status                                    Get service status
+	-D, --dump                                      Dump request
+	
+    For actions related to one service, add the name of the service as an argument.
+	
+Example:
+
+	./win32_service -u http://wsman:secret@example.com:8889/wsman -l -X
+	...
+	...
+	wmiApSrv
+	        State: Stopped
+	WMPNetworkSvc
+	        State: Stopped
+	WPCSvc
+	        State: Stopped
+	WPDBusEnum
+	        State: Running
+	wscsvc
+	        State: Running
+	WSearch
+	        State: Running
+	wuauserv
+	        State: Running
+	wudfsvc
+	        State: Stopped	
+    ...
+    ...
+
+
+	./win32_service -u http://wsman:secret@example.com:8889/wsman  -d wudfsvc
+	
+	wudfsvc
+	        State: Stopped
+	        Description: Manages user-mode driver host processes
+	
+	
+
+
+
