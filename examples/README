@@ -48,7 +48,7 @@ Options:
 	
 Example:
 
-	./win32_service -u http://wsman:secret@example.com:8889/wsman -l -X
+	./win32_service -u http://wsman:secret@example.com:80/wsman -l -X
 	...
 	...
 	wmiApSrv
@@ -71,7 +71,7 @@ Example:
     ...
 
 
-	./win32_service -u http://wsman:secret@example.com:8889/wsman  -d wudfsvc
+	./win32_service -u http://wsman:secret@example.com:80/wsman  -d wudfsvc
 	
 	wudfsvc
 	        State: Stopped
