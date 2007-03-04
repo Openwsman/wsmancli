@@ -39,8 +39,7 @@
 #include <time.h>
 
 
-#include "wsman-client-api.h"
-#include "wsman-xml-serializer.h"
+#include "wsman-api.h"
 
 struct __wsmid_identify
 {
