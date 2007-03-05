@@ -39,8 +39,7 @@
 #include <time.h>
 
 
-#include "wsman-client-api.h"
-#include "wsman-xml-serializer.h"
+#include "wsman-api.h"
 
 struct __wsmid_identify
 {
@@ -134,7 +133,7 @@ fprintf( stderr, "wsman_create_client( host %s, port %d, path %s, scheme %s, use
          wsmid_identify *id = ws_deserialize(wsman_client_get_context(cl),
                                      soapBody,
                                      wsmid_identify_TypeInfo, "IdentifyResponse",
-                                     XML_NS_WSMAN_ID, XML_NS_WSMAN_ID,
+                                     XML_NS_WSMAN_ID, NULL,
                                      0, 0);
 
          if (vendor)
