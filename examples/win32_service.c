@@ -39,7 +39,8 @@
 #include <time.h>
 
 
-#include "wsman-api.h"
+#include "wsman-client-api.h"
+#include "wsman-xml-serializer.h"
 
 #define RESOURCE_URI "http://schemas.microsoft.com/wbem/wsman/1/wmi/root/cimv2/Win32_Service"
 #define CLASSNAME "Win32_Service"
