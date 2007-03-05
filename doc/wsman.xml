@@ -50,7 +50,29 @@
                         <para>Creates and sends a Put request to the specified remote system. In most cases this action requires a <literal>resource uri</literal> with a set of selectors which can be specfied as query paramters in the URI (See below for examples). This action also requires input which can be specified either as properties or as an XML input representing the new resource.</para>
                         <para>The result of this action is an XML output of the envelope with the new resource and its properties.</para>
                     </listitem>
-                </varlistentry>                
+                </varlistentry>    
+                <varlistentry>
+                    <term>invoke</term>
+                    <listitem>
+                        <para>Creates and sends a request with a custom action to the specified remote system. In most cases this action requires a <literal>resource uri</literal> with a set of selectors which can be specfied as query paramters in the URI (See below for examples). This action also requires input which can be specified either as properties or as an XML input representing the arguments of the custom action.</para>
+                        <para>The result of this action is an XML output of the envelope with the output of the custom action.</para>
+                    </listitem>
+                </varlistentry>    
+                <varlistentry>
+                    <term>enumerate</term>
+                    <listitem>
+                        <para>Creates and sends an Enumeration request to the specified remote system. This action also peforms Pull actions using the <literal>enumeration context</literal> provided by the enumeration response and following pull responses.</para>
+                        <para>The result of this action is an XML output of the envelope with the resource or resources and its/their properties.</para>
+                    </listitem>
+                </varlistentry>   
+                
+                <varlistentry>
+                    <term>identify</term>
+                    <listitem>
+                        <para>Creates and sends an Identify request to the specified remote system.</para>
+                        <para>The result of this action is an XML output with properties of the services defined by the specification.</para>
+                    </listitem>
+                </varlistentry>    
             </variablelist>
             
         </refsect2>
@@ -64,6 +86,7 @@
                          User name                       
                      </para></listitem>
                  </varlistentry>
+                 
                  <varlistentry>
                      <term>-c <replaceable>filename</replaceable>, --cafile=<replaceable>filename</replaceable></term>
                      <listitem><para>
@@ -86,10 +109,125 @@
                      </listitem>
                  </varlistentry>
                  
+                 <varlistentry>
+                     <term>-J <replaceable>filename</replaceable>, --input=<replaceable>filename</replaceable></term>
+                     <listitem>
+                         <para>
+                             File with resource for Create and Put operations in XML, can be a SOAP envelope
+                         </para>
+                     </listitem>
+                 </varlistentry>
+                 
+                 <varlistentry>
+                     <term>-d 1-6, --debug=1-6 </term>
+                     <listitem>
+                         <para>
+                             Debug level
+                         </para>
+                     </listitem>
+                 </varlistentry>
+                 
+                 <varlistentry>
+                     <term>-h <replaceable>hostname</replaceable>, --hostname=<replaceable>hostname</replaceable> </term>
+                     <listitem>
+                         
+                         <para>Hostname of the remote machine.</para>
+                     </listitem>
+                 </varlistentry>
+                 
+                 <varlistentry>
+                     <term>-P <replaceable>port</replaceable>, --port=<replaceable>port</replaceable></term>
+                     <listitem>
+                         <para>Port of the service</para>
+                     </listitem>
+                 </varlistentry>
+                 
+                 <varlistentry>
+                     <term>-X <replaceable>proxy</replaceable>, --proxy=<replaceable>proxy</replaceable></term>
+                     <listitem>
+                         <para>
+                             Remote proxy address
+                         </para>
+                     </listitem>
+                 </varlistentry>
+                 
+                 <varlistentry>
+                     <term>-Y  <replaceable>user:pass</replaceable>, --proxyauth=<replaceable>user:pass</replaceable></term>
+                     <listitem>
+                         <para>
+                             Remote proxy credentials
+                         </para>
+                     </listitem>
+                 </varlistentry>    
+                 
+                 
+                 <varlistentry>
+                     <term>-y <replaceable>basic|digest|gss</replaceable>, --auth=<replaceable>basic|digest|gss</replaceable></term>
+                     <listitem>
+                         <para>Authentication method to be used. By default the method is selected automatically depending on the challange from the server. This options is used to force an authentication method.</para>
+                     </listitem>
+                 </varlistentry>
+                 
+                 <varlistentry>
+                     <term>-a <replaceable>custom method</replaceable>, --method=<replaceable>custom method</replaceable></term>
+                     <listitem>
+                         <para>
+                             Custom method name.
+                         </para>
+                     </listitem>
+                 </varlistentry>
+                 <varlistentry>
+                     <term>-k <replaceable>key=val</replaceable>, --prop=<replaceable>key=val</replaceable></term>
+                     <listitem>
+                         <para>A key/value pair to pass properties for custom methods and put action.</para>
+                     </listitem>
+                 </varlistentry>
+                 
+                 <varlistentry>
+                     <term>-C <replaceable>config file</replaceable>, --config-file=<replaceable>config file</replaceable> </term>
+                     <listitem>
+                         <para>Alternate configuration file.</para>
+                     </listitem>
+                 </varlistentry>
+                 
+                 <varlistentry>
+                     <term>-O <replaceable>filename</replaceable>, --out-file=<replaceable>filename</replaceable></term>
+                     <listitem>
+                         <para>
+                             Redirect output to a file instead of console.
+                         </para>
+                     </listitem>
+                 </varlistentry>
+                 
+                 <varlistentry>
+                     <term>-V, --noverifypeer</term>
+                     <listitem>
+                         <para>Do not verify peer certificate with SSL connections</para>
+                     </listitem>
+                 </varlistentry>
+                 
                  
              </variablelist>
              
          </refsect2>
+        <refsect2>
+            <title>Enumeration Options</title>
+        </refsect2>
+        
+        <refsect2>
+            <title>Request flags and options</title>
+        </refsect2>
+        
+        
+        <refsect2>
+            <title>CIM Options</title>
+        </refsect2>
+        
+        <refsect2>
+            <title>Test and Internal Options</title>
+        </refsect2>
+        
+        
         
     </refsect1>   
 </refentry>
