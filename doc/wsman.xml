@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE refentry SYSTEM "http://www.docbook.org/xml/4.4/docbookx.dtd">
+<refentry id="wsman">
+    <refmeta>
+        <refentrytitle>wsman</refentrytitle>
+        <manvolnum>1</manvolnum>
+    </refmeta>
+    
+    <refnamediv>
+        <refname>wsman</refname>
+        <refpurpose>openwsman command-line client</refpurpose>
+    </refnamediv>
+    
+    <refsynopsisdiv>
+        <cmdsynopsis>
+            <command>/usr/bin/wsman</command>
+            <arg choice="opt">
+                <option>options</option>
+            </arg>     
+            <arg choice="req">action</arg>
+            <arg choice="opt">resource uri</arg>
+   
+        </cmdsynopsis>
+    </refsynopsisdiv>
+    
+    <refsect1><title>Description</title>
+        <para>
+            Openwsman provides a command-line tool, <command>wsman</command>, to perform basic operations on the command-line. These operations include <literal>Get</literal>, <literal>Put</literal>, <literal>Invoke</literal>, <literal>Identify</literal>, <literal>Delete</literal>, <literal>Create</literal>, and <literal>Enumerate</literal>. The command-line tool also has several switches to allow for optional features of the WS-Management specification and Testing. 
+        </para>
+        
+    </refsect1>
+    <refsect1><title>Options</title>
+        <para>
+            All <command>wsman</command> operations require and <literal>action</literal> and a group of options. The <literal>resource uri</literal> is required for the <literal>Identify</literal> action, otherwise it is required for all actions.
+        </para>
+        
+        <refsect2>
+            <title>Support Actions</title>
+            <variablelist>
+                <varlistentry>
+                    <term>get</term>
+                    <listitem>
+                        <para>Creates and sends a Get request to the specified remote system. In most cases this action requires a <literal>resource uri</literal> with a set of selectors which can be specfied as query paramters in the URI (See below for examples).</para>
+                        <para>The result of this action is an XML output of the envelope with the resource and its properties.</para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>put</term>
+                    <listitem>
+                        <para>Creates and sends a Put request to the specified remote system. In most cases this action requires a <literal>resource uri</literal> with a set of selectors which can be specfied as query paramters in the URI (See below for examples). This action also requires input which can be specified either as properties or as an XML input representing the new resource.</para>
+                        <para>The result of this action is an XML output of the envelope with the new resource and its properties.</para>
+                    </listitem>
+                </varlistentry>                
+            </variablelist>
+            
+        </refsect2>
+        
+        <refsect2>
+             <title>Basic Startup Options</title>
+             <variablelist>
+                 <varlistentry>
+                     <term>-u <replaceable>username</replaceable>, --username <replaceable>username</replaceable></term>
+                     <listitem><para>
+                         User name                       
+                     </para></listitem>
+                 </varlistentry>
+                 <varlistentry>
+                     <term>-c <replaceable>filename</replaceable>, --cafile=<replaceable>filename</replaceable></term>
+                     <listitem><para>
+                         Certificate file for SSL connections
+                     </para></listitem>
+                 </varlistentry>
+                 
+                 <varlistentry>
+                     <term>-g <replaceable>path</replaceable>, --path=<replaceable>path</replaceable></term>
+                     <listitem>
+                         <para>URL path of the service, for example <literal>/wsman</literal>.</para>
+                     </listitem>
+                 </varlistentry>
+                 <varlistentry>
+                     <term>-p <replaceable>password</replaceable>, --password=<replaceable>password</replaceable></term>
+                     <listitem>
+                         <para>
+                             User password.
+                         </para>
+                     </listitem>
+                 </varlistentry>
+                 
+                 
+             </variablelist>
+             
+         </refsect2>
+        
+    </refsect1>   
+</refentry>
