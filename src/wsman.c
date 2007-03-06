@@ -63,8 +63,6 @@ wsman_output(WsManClient *cl, WsXmlDocH doc)
 
 	err = wsman_client_get_last_error(cl);
 	if (err != WS_LASTERR_OK) {
-		fprintf(stderr, "HTTP transport error : %s\n",
-				wsman_transport_get_last_error_string(err));
 		return;
 	}
 	if (!doc) {

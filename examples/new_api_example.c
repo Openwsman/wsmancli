@@ -1,7 +1,5 @@
 #include "wsman-client-api.h"
 
-static char *endpoint = NULL;
-
 int main(int argc, char** argv)
 {
 	int		sid;
