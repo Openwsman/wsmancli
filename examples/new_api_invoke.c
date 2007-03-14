@@ -3,10 +3,11 @@
 int main(int argc, char** argv)
 {
 	int		sid;
+	int		eid;
 	char		*response;
 	char 		retval = 0;
 	const char	*resource_uri =
-	"http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem";
+	"http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_SystemTimeService";
 	u_error_t 	*error = NULL;
 	char		*user = NULL;
 	char		*passwd = NULL;
@@ -51,13 +52,35 @@ int main(int argc, char** argv)
 
 	printf("\n******** Opened session id %d ********\n\n", sid);
 
-	response = wsman_session_identify(sid, 0);
-	if (!response) {
-		printf("******** Identify failed - %s ********\n\n",
+	eid = wsman_session_enumerate(sid, resource_uri, NULL, NULL,
+						FLAG_ENUMERATION_ENUM_EPR);
+
+	if (eid < 0) {
+		printf("******** Enumeration failed - %s ********\n\n",
 			wsman_session_error(sid));
 		goto end;
 	}
-	printf("******** Identify response *******\n%s\n", response);
+
+	response = wsman_enumerator_pull(eid);
+	if (!response) {
+		printf("******** Pull failed - %s ********\n\n",
+			wsman_enumerator_error(eid));
+	}
+
+	wsman_enumerator_release(eid);
+
+	wsman_session_resource_locator_set(sid, response);
+
+	response = wsman_session_invoke(sid, "ManageSystemTime",
+					"<GetRequest>TRUE</GetRequest>", 0);
+
+	if (!response) {
+		printf("******** Invoke failed - %s ********\n\n",
+			wsman_session_error(sid));
+		goto end;
+	}
+	printf("******** Invoke response *******\n%s\n", response);
+	retval = 1;
 
  end:
 	wsman_session_close(sid);

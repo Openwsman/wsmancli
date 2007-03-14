@@ -97,7 +97,7 @@ int main(int argc, char** argv)
 	printf("\n******** Opened session id %d ********\n\n", sid);
 
 	res = wsman_session_serialize(sid, d, EXL_ExamplePolicy_TypeInfo);
-printf("%s\n", res);
+
 	res = wsman_session_transfer_create(sid, res, 0);
 
 	if (!res) {

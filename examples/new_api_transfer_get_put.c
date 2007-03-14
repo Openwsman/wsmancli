@@ -3,6 +3,9 @@
 int main(int argc, char** argv)
 {
 	int		sid;
+	int		eid;
+	int		sid1;
+	int		i = 0;
 	char		*response;
 	char 		retval = 0;
 	const char	*resource_uri =
@@ -31,13 +34,13 @@ int main(int argc, char** argv)
 		if (error->message)
 		printf ("%s\n", error->message);
 		u_error_free(error);
-		return 0;
+		return 1;
 	}
 	u_error_free(error);
 
 	if (!user || !passwd) {
 		printf("\t new_api_example: user and passwd are required\n");
-		return 0;
+		return 1;
 	}
 
 	sid = wsman_session_open("localhost", 8889, "/wsman", "http",
@@ -51,17 +54,52 @@ int main(int argc, char** argv)
 
 	printf("\n******** Opened session id %d ********\n\n", sid);
 
-	response = wsman_session_identify(sid, 0);
-	if (!response) {
-		printf("******** Identify failed - %s ********\n\n",
-			wsman_session_error(sid));
-		goto end;
-	}
-	printf("******** Identify response *******\n%s\n", response);
+	eid = wsman_session_enumerate(sid, resource_uri, NULL, NULL,
+						FLAG_ENUMERATION_ENUM_EPR);
 
- end:
+	if (eid < 0) {
+		printf("******** Enumeration failed - %s ********\n\n",
+			wsman_session_error(sid));
+		return 0;
+	}
+
+	while (wsman_enumerator_end(eid)) {
+		i++;
+		response = wsman_enumerator_pull(eid);
+		if (!response) {
+			printf("******** Pull (%d) failed - %s ********\n\n",
+			i, wsman_enumerator_error(eid));
+			break;
+		}
+		printf("******** Pull response (%d) *******\n%s\n", i,
+			response);
+		sid1 = wsman_session_resource_locator_new(sid, response);
+		response = wsman_session_transfer_get(sid1, 0);
+
+		if (!response) {
+			printf("******** Transfer Get failed - %s ********\n\n",
+				wsman_session_error(sid1));
+			goto continuep;
+		}
+		printf ("******** Transfer Get response ********\n%s\n",
+			response);
+
+		response = wsman_session_transfer_put(sid1, response, 0);
+
+		if (!response) {
+			printf("******** Transfer Put failed - %s ********\n\n",
+				wsman_session_error(sid1));
+			goto continuep;
+		}
+		printf ("******** Transfer Put response ********\n%s\n",
+			response);
+  continuep:
+		wsman_session_close(sid1);
+	}
+
 	wsman_session_close(sid);
+
 	printf("******** Closed session id %d ********\n\n", sid);
 
-	return retval;
+	return 1;
 }
