@@ -198,7 +198,6 @@ main(int argc, char **argv)
 		break;
 	case WSMAN_ACTION_CUSTOM:
 
-		options.properties = wsman_options_get_properties();
 		doc = wsman_invoke(cl, resource_uri, options,
 				wsman_options_get_invoke_method(), NULL);
 		wsman_output(cl, doc);
