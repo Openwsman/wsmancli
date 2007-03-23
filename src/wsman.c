@@ -223,7 +223,7 @@ main(int argc, char **argv)
 				ws_xml_destroy_doc(doc);
 			} 
 		} else {
-			fprintf(stderr, "xx Missing resource data\n");
+			fprintf(stderr, "Missing resource data\n");
 		}
 		break;
 	case WSMAN_ACTION_TRANSFER_PUT:
