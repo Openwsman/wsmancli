@@ -54,11 +54,10 @@
 #include "wsman-client-options.h"
 
 
-static void 
-wsman_output(WsManClient *cl, WsXmlDocH doc)
+static void wsman_output(WsManClient * cl, WsXmlDocH doc)
 {
-	FILE           *f = stdout;
-	const char     *filename = wsman_options_get_output_file();
+	FILE *f = stdout;
+	const char *filename = wsman_options_get_output_file();
 	WS_LASTERR_Code err;
 
 	err = wsman_client_get_last_error(cl);
@@ -84,30 +83,30 @@ wsman_output(WsManClient *cl, WsXmlDocH doc)
 }
 
 
-static void
-initialize_logging(void)
+static void initialize_logging(void)
 {
-	debug_add_handler(wsman_debug_message_handler, DEBUG_LEVEL_ALWAYS, NULL);
+	debug_add_handler(wsman_debug_message_handler, DEBUG_LEVEL_ALWAYS,
+			  NULL);
 }
 
 
 
-int 
-main(int argc, char **argv)
+int main(int argc, char **argv)
 {
-	int             retVal = 0;
-	int             op;
-	char           *filename;
-	dictionary     *ini = NULL;
-	WsManClient    *cl;
-	WsXmlDocH       doc;
-	char           *enumContext;
-	WsXmlDocH       rqstDoc;
-	actionOptions   options;
-	WsXmlDocH       enum_response;
-	WsXmlDocH		resource;
-	char           *enumeration_mode, *binding_enumeration_mode, *resource_uri_with_selectors;
-	char           *resource_uri = NULL;
+	int retVal = 0;
+	int op;
+	char *filename;
+	dictionary *ini = NULL;
+	WsManClient *cl;
+	WsXmlDocH doc;
+	char *enumContext;
+	WsXmlDocH rqstDoc;
+	actionOptions options;
+	WsXmlDocH enum_response;
+	WsXmlDocH resource;
+	char *enumeration_mode, *binding_enumeration_mode,
+	    *resource_uri_with_selectors;
+	char *resource_uri = NULL;
 
 
 
@@ -115,7 +114,8 @@ main(int argc, char **argv)
 	if (filename) {
 		ini = iniparser_load(filename);
 		if (ini == NULL) {
-			fprintf(stderr, "cannot parse file [%s]", filename);
+			fprintf(stderr, "cannot parse file [%s]",
+				filename);
 			exit(EXIT_FAILURE);
 		} else if (!wsman_read_client_config(ini)) {
 			fprintf(stderr, "Configuration file not found\n");
@@ -128,17 +128,17 @@ main(int argc, char **argv)
 	wsman_setup_transport_and_library_options();
 
 	initialize_logging();
-	//	wsman_client_transport_init(NULL);
+	//      wsman_client_transport_init(NULL);
 	initialize_action_options(&options);
 
 	debug("Certificate: %s", wsman_options_get_cafile());
 
 	cl = wsman_create_client(wsman_options_get_server(),
-			wsman_options_get_server_port(),
-			wsman_options_get_path(),
-			wsman_options_get_cafile() ? "https" : "http",
-			wsman_options_get_username(),
-			wsman_options_get_password());
+				 wsman_options_get_server_port(),
+				 wsman_options_get_path(),
+				 wsman_options_get_cafile()? "https" :
+				 "http", wsman_options_get_username(),
+				 wsman_options_get_password());
 
 
 
@@ -151,8 +151,10 @@ main(int argc, char **argv)
 	 */
 	resource_uri_with_selectors = wsman_options_get_resource_uri();
 	if (resource_uri_with_selectors) {
-		wsman_set_options_from_uri(resource_uri_with_selectors, &options);
-		wsman_remove_query_string(resource_uri_with_selectors, &resource_uri);
+		wsman_set_options_from_uri(resource_uri_with_selectors,
+					   &options);
+		wsman_remove_query_string(resource_uri_with_selectors,
+					  &resource_uri);
 	}
 	op = wsman_options_get_action();
 
@@ -160,7 +162,8 @@ main(int argc, char **argv)
 		wsman_set_action_option(&options, FLAG_DUMP_REQUEST);
 	}
 	if (wsman_options_get_max_envelope_size()) {
-		options.max_envelope_size = wsman_options_get_max_envelope_size();
+		options.max_envelope_size =
+		    wsman_options_get_max_envelope_size();
 	}
 	if (wsman_options_get_operation_timeout()) {
 		options.timeout = wsman_options_get_operation_timeout();
@@ -176,12 +179,16 @@ main(int argc, char **argv)
 	}
 	options.properties = wsman_options_get_properties();
 	options.cim_ns = wsman_options_get_cim_namespace();
+	if (wsman_options_get_cim_ext()) {
+		wsman_set_action_option(&options, FLAG_CIM_EXTENSIONS);
+	}
 
 
 	switch (op) {
 	case WSMAN_ACTION_TEST:
 		rqstDoc = wsman_client_read_file(cl,
-				wsman_options_get_input_file(), "UTF-8", 0);
+						 wsman_options_get_input_file
+						 (), "UTF-8", 0);
 		wsman_send_request(cl, rqstDoc);
 		doc = wsman_build_envelope_from_response(cl);
 		wsman_output(cl, doc);
@@ -199,7 +206,8 @@ main(int argc, char **argv)
 	case WSMAN_ACTION_CUSTOM:
 
 		doc = wsman_invoke(cl, resource_uri, options,
-				wsman_options_get_invoke_method(), NULL);
+				   wsman_options_get_invoke_method(),
+				   NULL);
 		wsman_output(cl, doc);
 		if (doc) {
 			ws_xml_destroy_doc(doc);
@@ -211,17 +219,20 @@ main(int argc, char **argv)
 		if (doc) {
 			ws_xml_destroy_doc(doc);
 		}
-		break;		
+		break;
 	case WSMAN_ACTION_TRANSFER_CREATE:
 		if (wsman_options_get_input_file()) {
 			resource = wsman_client_read_file(cl,
-					wsman_options_get_input_file(), "UTF-8", 0);
-			doc = ws_transfer_create(cl, resource_uri, options, resource);
+							  wsman_options_get_input_file
+							  (), "UTF-8", 0);
+			doc =
+			    ws_transfer_create(cl, resource_uri, options,
+					       resource);
 			ws_xml_destroy_doc(resource);
 			wsman_output(cl, doc);
 			if (doc) {
 				ws_xml_destroy_doc(doc);
-			} 
+			}
 		} else {
 			fprintf(stderr, "Missing resource data\n");
 		}
@@ -230,11 +241,16 @@ main(int argc, char **argv)
 		if (wsman_options_get_input_file()) {
 			printf("input file provided\n");
 			resource = wsman_client_read_file(cl,
-					wsman_options_get_input_file(), "UTF-8", 0);
-			doc = ws_transfer_put(cl, resource_uri, options, resource);
+							  wsman_options_get_input_file
+							  (), "UTF-8", 0);
+			doc =
+			    ws_transfer_put(cl, resource_uri, options,
+					    resource);
 			ws_xml_destroy_doc(resource);
 		} else {
-			doc = ws_transfer_get_and_put(cl, resource_uri, options);
+			doc =
+			    ws_transfer_get_and_put(cl, resource_uri,
+						    options);
 		}
 		wsman_output(cl, doc);
 		if (doc) {
@@ -249,14 +265,18 @@ main(int argc, char **argv)
 		}
 		break;
 	case WSMAN_ACTION_PULL:
-		doc = wsenum_pull(cl, resource_uri, options, wsman_options_get_enum_context());
+		doc =
+		    wsenum_pull(cl, resource_uri, options,
+				wsman_options_get_enum_context());
 		wsman_output(cl, doc);
 		if (doc) {
 			ws_xml_destroy_doc(doc);
 		}
 		break;
 	case WSMAN_ACTION_RELEASE:
-		doc = wsenum_release(cl, resource_uri, options, wsman_options_get_enum_context());
+		doc =
+		    wsenum_release(cl, resource_uri, options,
+				   wsman_options_get_enum_context());
 		wsman_output(cl, doc);
 		if (doc) {
 			ws_xml_destroy_doc(doc);
@@ -265,40 +285,53 @@ main(int argc, char **argv)
 	case WSMAN_ACTION_ENUMERATION:
 
 		enumeration_mode = wsman_options_get_enum_mode();
-		binding_enumeration_mode = wsman_options_get_binding_enum_mode();
+		binding_enumeration_mode =
+		    wsman_options_get_binding_enum_mode();
 
 		if (enumeration_mode) {
 			if (strcmp(enumeration_mode, "epr") == 0)
-				wsman_set_action_option(&options, FLAG_ENUMERATION_ENUM_EPR);
+				wsman_set_action_option(&options,
+							FLAG_ENUMERATION_ENUM_EPR);
 			else
-				wsman_set_action_option(&options, FLAG_ENUMERATION_ENUM_OBJ_AND_EPR);
+				wsman_set_action_option(&options,
+							FLAG_ENUMERATION_ENUM_OBJ_AND_EPR);
 		}
 		if (binding_enumeration_mode) {
-			if (strcmp(binding_enumeration_mode, "include") == 0)
-				wsman_set_action_option(&options, FLAG_IncludeSubClassProperties);
-			else if (strcmp(binding_enumeration_mode, "exclude") == 0)
-				wsman_set_action_option(&options, FLAG_ExcludeSubClassProperties);
-			else if (strcmp(binding_enumeration_mode, "none") == 0)
-				wsman_set_action_option(&options, FLAG_POLYMORPHISM_NONE);
+			if (strcmp(binding_enumeration_mode, "include") ==
+			    0)
+				wsman_set_action_option(&options,
+							FLAG_IncludeSubClassProperties);
+			else if (strcmp
+				 (binding_enumeration_mode,
+				  "exclude") == 0)
+				wsman_set_action_option(&options,
+							FLAG_ExcludeSubClassProperties);
+			else if (strcmp(binding_enumeration_mode, "none")
+				 == 0)
+				wsman_set_action_option(&options,
+							FLAG_POLYMORPHISM_NONE);
 		}
 		if (wsman_options_get_optimize_enum()) {
-			wsman_set_action_option(&options, FLAG_ENUMERATION_OPTIMIZATION);
+			wsman_set_action_option(&options,
+						FLAG_ENUMERATION_OPTIMIZATION);
 		}
 		options.max_elements = wsman_options_get_max_elements();
 
 		if (wsman_options_get_estimate_enum()) {
-			wsman_set_action_option(&options, FLAG_ENUMERATION_COUNT_ESTIMATION);
+			wsman_set_action_option(&options,
+						FLAG_ENUMERATION_COUNT_ESTIMATION);
 		}
 		enum_response = wsenum_enumerate(cl,
-				resource_uri, options);
+						 resource_uri, options);
 		wsman_output(cl, enum_response);
 		if (enum_response) {
 			if (!(wsman_client_get_response_code(cl) == 200 ||
-						wsman_client_get_response_code(cl) == 400 ||
-						wsman_client_get_response_code(cl) == 500)) {
+			      wsman_client_get_response_code(cl) == 400 ||
+			      wsman_client_get_response_code(cl) == 500)) {
 				break;
 			}
-			enumContext = wsenum_get_enum_context(enum_response);
+			enumContext =
+			    wsenum_get_enum_context(enum_response);
 			ws_xml_destroy_doc(enum_response);
 		} else {
 			break;
@@ -307,12 +340,17 @@ main(int argc, char **argv)
 		if (!wsman_options_get_step_request()) {
 			while (enumContext != NULL && enumContext[0] != 0) {
 
-				doc = wsenum_pull(cl, resource_uri, options, enumContext);
+				doc =
+				    wsenum_pull(cl, resource_uri, options,
+						enumContext);
 				wsman_output(cl, doc);
 
-				if (wsman_client_get_response_code(cl) != 200 &&
-						wsman_client_get_response_code(cl) != 400 &&
-						wsman_client_get_response_code(cl) != 500) {
+				if (wsman_client_get_response_code(cl) !=
+				    200
+				    && wsman_client_get_response_code(cl)
+				    != 400
+				    && wsman_client_get_response_code(cl)
+				    != 500) {
 					break;
 				}
 				enumContext = wsenum_get_enum_context(doc);
@@ -330,9 +368,10 @@ main(int argc, char **argv)
 
 	if (wsman_client_get_response_code(cl) != 200) {
 		fprintf(stderr, "Connection failed. response code = %ld\n",
-				wsman_client_get_response_code(cl));
+			wsman_client_get_response_code(cl));
 		if (wsman_client_get_fault_string(cl)) {
-			fprintf(stderr, "%s\n", wsman_client_get_fault_string(cl));
+			fprintf(stderr, "%s\n",
+				wsman_client_get_fault_string(cl));
 		}
 	}
 	destroy_action_options(&options);
@@ -343,7 +382,8 @@ main(int argc, char **argv)
 		iniparser_freedict(ini);
 	}
 #ifdef DEBUG_VERBOSE
-	printf("     ******   Transfer Time = %ull usecs ******\n", get_transfer_time());
+	printf("     ******   Transfer Time = %ull usecs ******\n",
+	       get_transfer_time());
 #endif
 	return retVal;
 
