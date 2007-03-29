@@ -112,6 +112,7 @@ WsActions action_data[] = {
 	{"create", WSMAN_ACTION_TRANSFER_CREATE},
 	{"delete", WSMAN_ACTION_TRANSFER_DELETE},
 	{"enumerate", WSMAN_ACTION_ENUMERATION},
+	{ "references", WSMAN_ACTION_ENUMERATE_REFERENCE_INSTANCES},
 	{"pull", WSMAN_ACTION_PULL},
 	{"release", WSMAN_ACTION_RELEASE},
 	{"invoke", WSMAN_ACTION_CUSTOM},

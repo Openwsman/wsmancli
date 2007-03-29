@@ -103,6 +103,7 @@ int main(int argc, char **argv)
 	WsXmlDocH rqstDoc;
 	actionOptions *options;
 	WsXmlDocH enum_response;
+  WsXmlDocH reference_response;
 	WsXmlDocH resource;
 	char *enumeration_mode, *binding_enumeration_mode,
 	    *resource_uri_with_selectors;
@@ -357,6 +358,40 @@ int main(int argc, char **argv)
 		}
 		u_free(enumContext);
 		break;
+	case WSMAN_ACTION_ENUMERATE_REFERENCE_INSTANCES:
+		fprintf(stderr, "Enumerate Reference Instances.  resource_uri: %s\n", resource_uri);
+		reference_response = wsenum_reference_instances(cl, resource_uri, options);
+		wsman_output(cl, reference_response);
+		if (reference_response) {
+			if (!(wsman_client_get_response_code(cl) == 200 ||
+						wsman_client_get_response_code(cl) == 400 ||
+						wsman_client_get_response_code(cl) == 500)) {
+				break;
+			}
+			enumContext = wsenum_get_enum_context(reference_response);
+			ws_xml_destroy_doc(reference_response);
+		} else {
+			break;
+		}
+
+		if (!wsman_options_get_step_request()) {
+			while (enumContext != NULL && enumContext[0] != 0) {
+
+				doc = wsenum_pull(cl, resource_uri, options, enumContext);
+				wsman_output(cl, doc);
+
+				if (wsman_client_get_response_code(cl) != 200 &&
+						wsman_client_get_response_code(cl) != 400 &&
+						wsman_client_get_response_code(cl) != 500) {
+					break;
+				}
+				enumContext = wsenum_get_enum_context(doc);
+				if (doc) {
+					ws_xml_destroy_doc(doc);
+				}
+			}
+		}
+    break;
 	default:
 		fprintf(stderr, "Action not supported\n");
 		retVal = 1;
