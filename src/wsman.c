@@ -101,7 +101,7 @@ int main(int argc, char **argv)
 	WsXmlDocH doc;
 	char *enumContext;
 	WsXmlDocH rqstDoc;
-	actionOptions options;
+	actionOptions *options;
 	WsXmlDocH enum_response;
 	WsXmlDocH resource;
 	char *enumeration_mode, *binding_enumeration_mode,
@@ -129,7 +129,7 @@ int main(int argc, char **argv)
 
 	initialize_logging();
 	//      wsman_client_transport_init(NULL);
-	initialize_action_options(&options);
+	options = initialize_action_options();
 
 	debug("Certificate: %s", wsman_options_get_cafile());
 
@@ -152,35 +152,35 @@ int main(int argc, char **argv)
 	resource_uri_with_selectors = wsman_options_get_resource_uri();
 	if (resource_uri_with_selectors) {
 		wsman_set_options_from_uri(resource_uri_with_selectors,
-					   &options);
+					   options);
 		wsman_remove_query_string(resource_uri_with_selectors,
 					  &resource_uri);
 	}
 	op = wsman_options_get_action();
 
 	if (wsman_options_get_dump_request()) {
-		wsman_set_action_option(&options, FLAG_DUMP_REQUEST);
+		wsman_set_action_option(options, FLAG_DUMP_REQUEST);
 	}
 	if (wsman_options_get_max_envelope_size()) {
-		options.max_envelope_size =
+		options->max_envelope_size =
 		    wsman_options_get_max_envelope_size();
 	}
 	if (wsman_options_get_operation_timeout()) {
-		options.timeout = wsman_options_get_operation_timeout();
+		options->timeout = wsman_options_get_operation_timeout();
 	}
 	if (wsman_options_get_fragment()) {
-		options.fragment = wsman_options_get_fragment();
+		options->fragment = wsman_options_get_fragment();
 	}
 	if (wsman_options_get_filter()) {
-		options.filter = wsman_options_get_filter();
+		options->filter = wsman_options_get_filter();
 	}
 	if (wsman_options_get_dialect()) {
-		options.dialect = wsman_options_get_dialect();
+		options->dialect = wsman_options_get_dialect();
 	}
-	options.properties = wsman_options_get_properties();
-	options.cim_ns = wsman_options_get_cim_namespace();
+	options->properties = wsman_options_get_properties();
+	options->cim_ns = wsman_options_get_cim_namespace();
 	if (wsman_options_get_cim_ext()) {
-		wsman_set_action_option(&options, FLAG_CIM_EXTENSIONS);
+		wsman_set_action_option(options, FLAG_CIM_EXTENSIONS);
 	}
 
 
@@ -290,35 +290,35 @@ int main(int argc, char **argv)
 
 		if (enumeration_mode) {
 			if (strcmp(enumeration_mode, "epr") == 0)
-				wsman_set_action_option(&options,
+				wsman_set_action_option(options,
 							FLAG_ENUMERATION_ENUM_EPR);
 			else
-				wsman_set_action_option(&options,
+				wsman_set_action_option(options,
 							FLAG_ENUMERATION_ENUM_OBJ_AND_EPR);
 		}
 		if (binding_enumeration_mode) {
 			if (strcmp(binding_enumeration_mode, "include") ==
 			    0)
-				wsman_set_action_option(&options,
+				wsman_set_action_option(options,
 							FLAG_IncludeSubClassProperties);
 			else if (strcmp
 				 (binding_enumeration_mode,
 				  "exclude") == 0)
-				wsman_set_action_option(&options,
+				wsman_set_action_option(options,
 							FLAG_ExcludeSubClassProperties);
 			else if (strcmp(binding_enumeration_mode, "none")
 				 == 0)
-				wsman_set_action_option(&options,
+				wsman_set_action_option(options,
 							FLAG_POLYMORPHISM_NONE);
 		}
 		if (wsman_options_get_optimize_enum()) {
-			wsman_set_action_option(&options,
+			wsman_set_action_option(options,
 						FLAG_ENUMERATION_OPTIMIZATION);
 		}
-		options.max_elements = wsman_options_get_max_elements();
+		options->max_elements = wsman_options_get_max_elements();
 
 		if (wsman_options_get_estimate_enum()) {
-			wsman_set_action_option(&options,
+			wsman_set_action_option(options,
 						FLAG_ENUMERATION_COUNT_ESTIMATION);
 		}
 		enum_response = wsenum_enumerate(cl,
@@ -330,35 +330,32 @@ int main(int argc, char **argv)
 			      wsman_client_get_response_code(cl) == 500)) {
 				break;
 			}
-			enumContext =
-			    wsenum_get_enum_context(enum_response);
+			enumContext = wsenum_get_enum_context(enum_response);
 			ws_xml_destroy_doc(enum_response);
 		} else {
+			u_free(enumContext);
 			break;
 		}
 
-		if (!wsman_options_get_step_request()) {
-			while (enumContext != NULL && enumContext[0] != 0) {
+		if (wsman_options_get_step_request())
+			break;
+		while (enumContext != NULL && enumContext[0] != 0) {
 
-				doc =
-				    wsenum_pull(cl, resource_uri, options,
-						enumContext);
-				wsman_output(cl, doc);
+			doc = wsenum_pull(cl, resource_uri, options,
+					enumContext);
+			wsman_output(cl, doc);
 
-				if (wsman_client_get_response_code(cl) !=
-				    200
-				    && wsman_client_get_response_code(cl)
-				    != 400
-				    && wsman_client_get_response_code(cl)
-				    != 500) {
-					break;
-				}
-				enumContext = wsenum_get_enum_context(doc);
-				if (doc) {
-					ws_xml_destroy_doc(doc);
-				}
+			if (wsman_client_get_response_code(cl) != 200
+					&& wsman_client_get_response_code(cl) != 400
+					&& wsman_client_get_response_code(cl) != 500) {
+				break;
+			}
+			enumContext = wsenum_get_enum_context(doc);
+			if (doc) {
+				ws_xml_destroy_doc(doc);
 			}
 		}
+		u_free(enumContext);
 		break;
 	default:
 		fprintf(stderr, "Action not supported\n");
@@ -374,7 +371,7 @@ int main(int argc, char **argv)
 				wsman_client_get_fault_string(cl));
 		}
 	}
-	destroy_action_options(&options);
+	destroy_action_options(options);
 	wsman_release_client(cl);
 
 	wsman_client_transport_fini();

@@ -91,7 +91,7 @@ int main(int argc, char** argv)
 {
     WsManClient *cl;
     WsXmlDocH doc;
-    actionOptions options;
+    actionOptions *options;
     char retval = 0;
     u_error_t *error = NULL;
 
@@ -139,11 +139,11 @@ int main(int argc, char** argv)
         uri->scheme,
         uri->user,
         uri->pwd);		
-    initialize_action_options(&options);
+    options = initialize_action_options();
 
-    if (dump) wsman_set_action_option(&options,FLAG_DUMP_REQUEST );
-    options.max_envelope_size = 51200;
-    options.timeout = 60000;
+    if (dump) wsman_set_action_option(options,FLAG_DUMP_REQUEST );
+    options->max_envelope_size = 51200;
+    options->timeout = 60000;
 
     EXL_ExamplePolicy *d = u_malloc(sizeof(EXL_ExamplePolicy));
     d->ElementName = u_strdup("name");
@@ -168,7 +168,7 @@ int main(int argc, char** argv)
       u_uri_free(uri);
     }
 
-    destroy_action_options(&options);
+    destroy_action_options(options);
     wsman_release_client(cl);
     return 0;
 }

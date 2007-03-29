@@ -166,7 +166,7 @@ static int ntests = sizeof (put_tests) / sizeof (put_tests[0]);
 
 
 extern WsManClient *cl;
-actionOptions options;
+actionOptions *options;
 
 static void transfer_put_test() {
     WsXmlDocH doc;
@@ -181,16 +181,16 @@ static void transfer_put_test() {
               u_strdup_printf(put_tests[i].selectors, host, host, host);
     }
 
-    initialize_action_options(&options);
+    options = initialize_action_options();
 
     if (put_tests[i].selectors != NULL) {
-       wsman_add_selectors_from_query_string (&options, selectors);
+       wsman_add_selectors_from_query_string (options, selectors);
     }
     if (put_tests[i].properties != NULL) {
-       wsman_add_properties_from_query_string (&options,
+       wsman_add_properties_from_query_string (options,
                                                put_tests[i].properties);
     }
-    options.flags = put_tests[i].flags;
+    options->flags = put_tests[i].flags;
 
 
     doc = ws_transfer_get_and_put(cl, (char *)put_tests[i].resource_uri, options);
@@ -259,7 +259,7 @@ RETURN:
         ws_xml_destroy_doc(doc);
     }
     u_free(selectors);
-    destroy_action_options(&options);
+    destroy_action_options(options);
     i++; // increase executed test number
 }
 

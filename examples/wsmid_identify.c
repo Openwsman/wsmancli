@@ -66,7 +66,7 @@ int main(int argc, char** argv)
 	
     WsManClient *cl;
     WsXmlDocH doc;
-    actionOptions options;
+    actionOptions *options;
     char retval = 0;
     u_error_t *error = NULL;
 
@@ -123,7 +123,7 @@ fprintf( stderr, "wsman_create_client( host %s, port %d, path %s, scheme %s, use
         uri->scheme,
         uri->user,
         uri->pwd);
-    initialize_action_options(&options);
+    options = initialize_action_options();
 
 
     doc = wsman_identify(cl, options);
@@ -157,7 +157,7 @@ fprintf( stderr, "wsman_create_client( host %s, port %d, path %s, scheme %s, use
         ws_xml_destroy_doc(doc);
     }
 
-    destroy_action_options(&options);
+    destroy_action_options(options);
     wsman_release_client(cl);
 
 	

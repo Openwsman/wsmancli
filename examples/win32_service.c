@@ -183,7 +183,7 @@ int main(int argc, char** argv)
 {
 	WsManClient *cl;
 	WsXmlDocH doc;
-	actionOptions options;
+	actionOptions *options;
 	char retval = 0;
 	u_error_t *error = NULL;
 
@@ -240,28 +240,28 @@ int main(int argc, char** argv)
 			uri->scheme,
 			uri->user,
 			uri->pwd);		
-	initialize_action_options(&options);
+	options = initialize_action_options();
 
 	if (listall) {
-		if (dump) wsman_set_action_option(&options,FLAG_DUMP_REQUEST );
+		if (dump) wsman_set_action_option(options,FLAG_DUMP_REQUEST );
 		wsenum_enumerate_and_pull(cl, RESOURCE_URI, options, list_services, NULL );
 	} else if (start && argv[1]) {
-		if (dump) wsman_set_action_option(&options,FLAG_DUMP_REQUEST );
-		wsman_client_add_selector(&options, "Name", argv[1]);
+		if (dump) wsman_set_action_option(options,FLAG_DUMP_REQUEST );
+		wsman_client_add_selector(options, "Name", argv[1]);
 		doc = wsman_invoke(cl, RESOURCE_URI, options,
 				"StartService", NULL);
 		ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
 		ws_xml_destroy_doc(doc);
 	} else if (stop && argv[1]) {
-		if (dump) wsman_set_action_option(&options,FLAG_DUMP_REQUEST );
-		wsman_client_add_selector(&options, "Name", argv[1]);
+		if (dump) wsman_set_action_option(options,FLAG_DUMP_REQUEST );
+		wsman_client_add_selector(options, "Name", argv[1]);
 		doc = wsman_invoke(cl, RESOURCE_URI, options,
 				"StopService", NULL);
 		ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
 		ws_xml_destroy_doc(doc);
 	} else if ( argv[1] ) {
-		if (dump) wsman_set_action_option(&options,FLAG_DUMP_REQUEST );
-		wsman_client_add_selector(&options, "Name", argv[1]);
+		if (dump) wsman_set_action_option(options,FLAG_DUMP_REQUEST );
+		wsman_client_add_selector(options, "Name", argv[1]);
 		doc = ws_transfer_get(cl, RESOURCE_URI,
 				options);
 		if (doc) {
@@ -284,7 +284,7 @@ int main(int argc, char** argv)
 		u_uri_free(uri);
 	}
 
-	destroy_action_options(&options);
+	destroy_action_options(options);
 	wsman_release_client(cl);
 	return 0;
 }

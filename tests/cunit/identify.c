@@ -88,7 +88,7 @@ static int ntests = sizeof (tests) / sizeof (tests[0]);
 
 
 extern WsManClient *cl;
-actionOptions options;
+actionOptions *options;
 
 
 
@@ -100,7 +100,7 @@ identify_test() {
     char *xp = NULL;
 
     reinit_client_connection(cl);
-    initialize_action_options(&options);
+    options = initialize_action_options();
 
     response = wsman_identify(cl, options);
     CU_ASSERT_TRUE(wsman_client_get_response_code(cl) == tests[i].final_status);
@@ -123,7 +123,7 @@ RETURN:
       ws_xml_destroy_doc(response);
     }
     u_free(xp);
-    destroy_action_options(&options);
+    destroy_action_options(options);
     i++;
 }
 

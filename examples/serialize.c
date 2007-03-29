@@ -797,8 +797,7 @@ char *data = "<dummy><qq>This is qq body</qq><pp>This is pp</pp></dummy>";
         "wsman",
         "secret");
 
-      actionOptions   options;
-      initialize_action_options(&options);
+      actionOptions   *options = initialize_action_options();
 
       WsXmlDocH   request = wsman_client_create_request(cl,
                     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",

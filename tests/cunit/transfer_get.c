@@ -156,7 +156,7 @@ static int ntests = sizeof (get_tests) / sizeof (get_tests[0]);
 
 
 extern WsManClient *cl;
-actionOptions options;
+actionOptions *options;
 
 static void transfer_get_test() {
     WsXmlDocH doc;
@@ -172,10 +172,10 @@ static void transfer_get_test() {
     }
 
     reinit_client_connection(cl);
-    initialize_action_options(&options);
+    options = initialize_action_options();
 
     if (get_tests[i].selectors != NULL) {
-       wsman_add_selectors_from_query_string (&options, get_tests[i].selectors);
+       wsman_add_selectors_from_query_string (options, get_tests[i].selectors);
     }
 
 
@@ -229,7 +229,7 @@ RETURN:
     }
     u_free((char *)get_tests[i].selectors);
     get_tests[i].selectors = old_selectors;
-    destroy_action_options(&options);
+    destroy_action_options(options);
     i++; // increase executed test number
 }
 

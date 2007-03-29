@@ -253,7 +253,7 @@ static int ntests = sizeof (tests) / sizeof (tests[0]);
 
 extern WsManClient *cl;
 
-actionOptions options;
+actionOptions *options;
 
 
 
@@ -265,17 +265,17 @@ static void enumeration_test() {
 
 
     reinit_client_connection(cl);
-    initialize_action_options(&options);
+    options = initialize_action_options();
 
-    options.flags = tests[i].flags;
+    options->flags = tests[i].flags;
 
     if (tests[i].selectors) {
         selectors =
               u_strdup_printf(tests[i].selectors, host, host, host);
-         wsman_add_selectors_from_query_string(&options, selectors);
+         wsman_add_selectors_from_query_string(options, selectors);
     }
 
-    options.max_elements = tests[i].max_elements;
+    options->max_elements = tests[i].max_elements;
     WsXmlDocH enum_response = wsenum_enumerate(cl,
                                 (char *)tests[i].resource_uri, options);
 
@@ -313,7 +313,7 @@ RETURN:
     if (enum_response) {
         ws_xml_destroy_doc(enum_response);
     }
-    destroy_action_options(&options);
+    destroy_action_options(options);
     i++; // decrease executed test number
 }
 
