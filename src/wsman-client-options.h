@@ -38,6 +38,7 @@ extern char wsman_options_get_step_request(void);
 extern char wsman_options_get_estimate_enum(void);
 extern char *wsman_options_get_fragment(void);
 extern char *wsman_options_get_filter(void);
+extern char wsman_options_get_cim_ref(void);
 
 extern char *wsman_options_get_dialect(void);
 extern const char *wsman_options_get_config_file(void);

@@ -84,6 +84,7 @@ char dump_request = 0;
 char step = 0;
 char request_only = 0;
 char cim_extensions = 0;
+char cim_references = 0;
 static char *enum_mode = NULL;
 static char *binding_enum_mode = NULL;
 static char *enum_context = NULL;
@@ -112,7 +113,6 @@ WsActions action_data[] = {
 	{"create", WSMAN_ACTION_TRANSFER_CREATE},
 	{"delete", WSMAN_ACTION_TRANSFER_DELETE},
 	{"enumerate", WSMAN_ACTION_ENUMERATION},
-	{ "references", WSMAN_ACTION_ENUMERATE_REFERENCE_INSTANCES},
 	{"pull", WSMAN_ACTION_PULL},
 	{"release", WSMAN_ACTION_RELEASE},
 	{"invoke", WSMAN_ACTION_CUSTOM},
@@ -208,7 +208,8 @@ char wsman_parse_options(int argc, char **argv)
 		 "CIM binding Enumeration Mode", "none|include|exclude"},
 		{"cim-extensions", 'T', U_OPTION_ARG_NONE, &cim_extensions,
 		 "Show CIM Extensions", NULL},
-
+		{"references", 'W', U_OPTION_ARG_NONE, &cim_references,
+		 "CIM References", NULL},
 		{NULL}
 	};
 
@@ -426,6 +427,10 @@ char wsman_options_get_optimize_enum(void)
 	return enum_optimize;
 }
 
+char wsman_options_get_cim_ref(void)
+{
+	return cim_references;
+}
 
 char wsman_options_get_cim_ext(void)
 {
