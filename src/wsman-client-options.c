@@ -71,6 +71,7 @@ static char *agent = NULL;
 static char *url_path = NULL;
 static char *authentication_method = NULL;
 static char no_verify_peer = 0;
+static int  transport_timeout = 0;
 static char *proxy = NULL;
 static char *proxy_upwd = NULL;
 
@@ -162,6 +163,8 @@ char wsman_parse_options(int argc, char **argv)
 		 "Write output to file", "<file>"},
 		{"noverifypeer", 'V', U_OPTION_ARG_NONE, &no_verify_peer,
 		 "Not to verify peer certificate", NULL},
+		{"transport-timeout", 'I', U_OPTION_ARG_INT, &transport_timeout,
+		 "Transport timeout in seconds", "<time in sec>"},
 		{NULL}
 	};
 
@@ -172,7 +175,7 @@ char wsman_parse_options(int argc, char **argv)
 		 "Filter", "<filter>"},
 		{"dialect", 'D', U_OPTION_ARG_STRING, &wsm_dialect,
 		 "Filter Dialect", "<dialect>"},
-		{"timeout", 't', U_OPTION_ARG_INT, &operation_timeout,
+		{"operation-timeout", 't', U_OPTION_ARG_INT, &operation_timeout,
 		 "Operation timeout in seconds", "<time in sec>"},
 		{"max-envelope-size", 'e', U_OPTION_ARG_INT,
 		 &max_envelope_size,
@@ -327,6 +330,7 @@ void wsman_setup_transport_and_library_options()
 		wsman_transport_set_cafile(cafile);
 	}
 	wsman_transport_set_no_verify_peer(no_verify_peer);
+	wsman_transport_set_timeout(transport_timeout);
 
 	// library options
 	wsman_debug_set_level(debug_level);
