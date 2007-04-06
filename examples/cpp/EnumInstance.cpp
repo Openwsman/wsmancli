@@ -8,7 +8,7 @@ int main(int argc, char* argv[])
 {
 	const char *endpoint, *resource_uri;
 	if (argc< 3) {
-		fprintf(stderr, "Usage: %s endpoint resource uri\n", argv[0]);
+		fprintf(stderr, "Usage: %s <endpoint> <resource uri>\n", argv[0]);
 	}
 	endpoint= argv[1];
 	resource_uri = argv[2];
