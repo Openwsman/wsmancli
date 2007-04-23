@@ -1,5 +1,3 @@
-
-
 /*******************************************************************************
  * Copyright (C) 2004-2006 Intel Corp. All rights reserved.
  *
@@ -40,8 +38,6 @@
 #include <errno.h>
 #include <time.h>
 
-#include "u/libu.h"
-
 #include "wsman-xml-serializer.h"
 #include "wsman-client-api.h"
 #include "wsman-client-transport.h"
@@ -73,14 +69,14 @@ struct __EXL_ExamplePolicy
 typedef struct __EXL_ExamplePolicy EXL_ExamplePolicy;
 
 SER_START_ITEMS(EXL_ExamplePolicy)
-SER_STR("ElementName", 1),
-SER_STR("Description", 1),
-SER_STR("Caption", 1),
-SER_STR("InstanceID", 1),
-SER_STR("PolicyName", 1),
-SER_UINT32("PolicyPrecedence", 1 ),
-SER_DYN_ARRAY("Handles", 1, 10, uint32),
-SER_BOOL("DefaultTest", 1),
+SER_NS_STR(RESOURCE_URI, "ElementName", 1),
+SER_NS_STR(RESOURCE_URI, "Description", 1),
+SER_NS_STR(RESOURCE_URI, "Caption", 1),
+SER_NS_STR(RESOURCE_URI, "InstanceID", 1),
+SER_NS_STR(RESOURCE_URI, "PolicyName", 1),
+SER_NS_UINT32(RESOURCE_URI, "PolicyPrecedence", 1 ),
+SER_NS_DYN_ARRAY(RESOURCE_URI, "Handles", 1, 10, uint32),
+SER_NS_BOOL(RESOURCE_URI, "DefaultTest", 1),
 SER_END_ITEMS(EXL_ExamplePolicy);
 
 
