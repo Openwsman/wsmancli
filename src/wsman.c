@@ -315,6 +315,10 @@ int main(int argc, char **argv)
 			wsman_set_action_option(options,
 						FLAG_CIM_REFERENCES);
 		}
+		if (wsman_options_get_cim_assoc()) {
+			wsman_set_action_option(options,
+						FLAG_CIM_ASSOCIATORS);
+		}
 		if (wsman_options_get_optimize_enum()) {
 			wsman_set_action_option(options,
 						FLAG_ENUMERATION_OPTIMIZATION);

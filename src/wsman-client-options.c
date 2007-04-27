@@ -86,6 +86,7 @@ char step = 0;
 char request_only = 0;
 char cim_extensions = 0;
 char cim_references = 0;
+char cim_associators = 0;
 static char *enum_mode = NULL;
 static char *binding_enum_mode = NULL;
 static char *enum_context = NULL;
@@ -213,6 +214,8 @@ char wsman_parse_options(int argc, char **argv)
 		 "Show CIM Extensions", NULL},
 		{"references", 'W', U_OPTION_ARG_NONE, &cim_references,
 		 "CIM References", NULL},
+		{"associators", 'w', U_OPTION_ARG_NONE, &cim_associators,
+		 "CIM Associators", NULL},
 		{NULL}
 	};
 
@@ -434,6 +437,11 @@ char wsman_options_get_optimize_enum(void)
 char wsman_options_get_cim_ref(void)
 {
 	return cim_references;
+}
+
+char wsman_options_get_cim_assoc(void)
+{
+	return cim_associators;
 }
 
 char wsman_options_get_cim_ext(void)
