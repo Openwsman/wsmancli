@@ -20,6 +20,7 @@ extern char *wsman_options_get_path(void);
 extern char *wsman_options_get_username(void);
 extern char *wsman_options_get_password(void);
 extern char *wsman_options_get_cafile(void);
+extern char *wsman_options_get_authentication_method(void);
 
 extern int wsman_options_get_max_elements(void);
 extern char *wsman_options_get_test_file(void);

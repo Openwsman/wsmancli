@@ -240,13 +240,13 @@ int main(int argc, char** argv)
     }
     wsman_debug_set_level(debug_level);
 
-    wsman_client_transport_init(NULL);
     cl = wsman_create_client( uri->host,
         uri->port,
         uri->path,
         uri->scheme,
         uri->user,
         uri->pwd);		
+    wsman_client_transport_init(cl, NULL);
     options = initialize_action_options();
 
     if (file == NULL) {

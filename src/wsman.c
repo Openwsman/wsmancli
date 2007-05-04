@@ -125,7 +125,6 @@ int main(int argc, char **argv)
 	if (!wsman_parse_options(argc, argv)) {
 		exit(EXIT_FAILURE);
 	}
-	wsman_setup_transport_and_library_options();
 
 	initialize_logging();
 	//      wsman_client_transport_init(NULL);
@@ -146,6 +145,22 @@ int main(int argc, char **argv)
 		error("Null Client");
 		exit(EXIT_FAILURE);
 	}
+	// transport options
+	wsman_transport_set_auth_method(cl, wsman_options_get_auth_method());
+	if (wsman_options_get_proxy()) {
+		wsman_transport_set_proxy(cl, wsman_options_get_proxy());
+		if (wsman_options_get_proxy_upwd()) {
+			wsman_transport_set_proxyauth(cl, wsman_options_get_proxy_upwd());
+		}
+	}
+	if (wsman_options_get_cafile()) {
+		wsman_transport_set_cafile(cl, wsman_options_get_cafile());
+	}
+	wsman_transport_set_no_verify_peer(cl, wsman_options_get_no_verify_peer());
+	wsman_transport_set_timeout(cl, wsman_options_get_transport_timeout());
+
+	// library options
+	wsman_debug_set_level(wsman_options_get_debug_level());
 	/*
 	 * Setup Resource URI and Selectors
 	 */

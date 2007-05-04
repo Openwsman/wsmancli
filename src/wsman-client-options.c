@@ -318,11 +318,11 @@ int wsman_read_client_config(dictionary * ini)
 	}
 	return 1;
 }
-
+#if 0
 void wsman_setup_transport_and_library_options()
 {
 	// transport options
-	wsman_transport_set_auth_method(authentication_method);
+	wsman_transport_set_auth_method(cl, authentication_method);
 	if (proxy) {
 		wsman_transport_set_proxy(proxy);
 		if (proxy_upwd) {
@@ -338,6 +338,7 @@ void wsman_setup_transport_and_library_options()
 	// library options
 	wsman_debug_set_level(debug_level);
 }
+#endif
 
 
 const char **wsman_options_get_argv(void)
@@ -364,6 +365,11 @@ unsigned long wsman_options_get_operation_timeout(void)
 char *wsman_options_get_cafile(void)
 {
 	return cafile;
+}
+
+char *wsman_options_get_auth_method(void)
+{
+	return authentication_method;
 }
 
 char *wsman_options_get_server(void)
@@ -506,4 +512,24 @@ char *wsman_options_get_dialect(void)
 char *wsman_options_get_path(void)
 {
 	return url_path;
+}
+char *wsman_options_get_proxy(void)
+{
+	return proxy;
+}
+char *wsman_options_get_proxy_upwd(void)
+{
+	return proxy_upwd;
+}
+char wsman_options_get_no_verify_peer(void)
+{
+	return no_verify_peer;
+}
+int wsman_options_get_debug_level(void)
+{
+	return debug_level;
+}
+unsigned long  wsman_options_get_transport_timeout(void)
+{
+	return transport_timeout;
 }
