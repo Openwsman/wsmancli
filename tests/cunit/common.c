@@ -21,7 +21,6 @@ WsManClient *cl;
 
 
 int init_test(void) {
-  wsman_client_transport_init(NULL);
 
   ServerData sd[] = {
     {"localhost", 8889, "/wsman", "http", "wsman", "secret"}
@@ -34,6 +33,7 @@ int init_test(void) {
 		      sd[0].scheme,
 		      sd[0].username,
 		      sd[0].password);
+  wsman_client_transport_init(cl, NULL);
   return 0;
 }
 
