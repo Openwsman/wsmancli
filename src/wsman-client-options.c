@@ -70,7 +70,8 @@ static char *server = "localhost";
 static char *agent = NULL;
 static char *url_path = NULL;
 static char *authentication_method = NULL;
-static char no_verify_peer = 0;
+static char verify_peer = 1;
+static char verify_host = 1;
 static int  transport_timeout = 0;
 static char *proxy = NULL;
 static char *proxy_upwd = NULL;
@@ -162,8 +163,10 @@ char wsman_parse_options(int argc, char **argv)
 		 "Alternate configuration file", "<file>"},
 		{"out-file", 'O', U_OPTION_ARG_STRING, &output_file,
 		 "Write output to file", "<file>"},
-		{"noverifypeer", 'V', U_OPTION_ARG_NONE, &no_verify_peer,
+		{"noverifypeer", 'V', U_OPTION_ARG_NONE, &verify_peer,
 		 "Not to verify peer certificate", NULL},
+		{"noverifyhost", 'v', U_OPTION_ARG_NONE, &verify_host,
+		 "Not to verify hostname", NULL},
 		{"transport-timeout", 'I', U_OPTION_ARG_INT, &transport_timeout,
 		 "Transport timeout in seconds", "<time in sec>"},
 		{NULL}
@@ -318,28 +321,6 @@ int wsman_read_client_config(dictionary * ini)
 	}
 	return 1;
 }
-#if 0
-void wsman_setup_transport_and_library_options()
-{
-	// transport options
-	wsman_transport_set_auth_method(cl, authentication_method);
-	if (proxy) {
-		wsman_transport_set_proxy(proxy);
-		if (proxy_upwd) {
-			wsman_transport_set_proxyauth(proxy_upwd);
-		}
-	}
-	if (cafile) {
-		wsman_transport_set_cafile(cafile);
-	}
-	wsman_transport_set_no_verify_peer(no_verify_peer);
-	wsman_transport_set_timeout(transport_timeout);
-
-	// library options
-	wsman_debug_set_level(debug_level);
-}
-#endif
-
 
 const char **wsman_options_get_argv(void)
 {
@@ -521,9 +502,13 @@ char *wsman_options_get_proxy_upwd(void)
 {
 	return proxy_upwd;
 }
-char wsman_options_get_no_verify_peer(void)
+char wsman_options_get_verify_peer(void)
 {
-	return no_verify_peer;
+	return verify_peer;
+}
+char wsman_options_get_verify_host(void)
+{
+	return verify_host;
 }
 int wsman_options_get_debug_level(void)
 {

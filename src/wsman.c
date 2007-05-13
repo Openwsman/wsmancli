@@ -156,7 +156,8 @@ int main(int argc, char **argv)
 	if (wsman_options_get_cafile()) {
 		wsman_transport_set_cafile(cl, wsman_options_get_cafile());
 	}
-	wsman_transport_set_no_verify_peer(cl, wsman_options_get_no_verify_peer());
+	wsman_transport_set_verify_peer(cl, wsman_options_get_verify_peer());
+	wsman_transport_set_verify_host(cl, wsman_options_get_verify_host());
 	wsman_transport_set_timeout(cl, wsman_options_get_transport_timeout());
 
 	// library options
@@ -165,9 +166,13 @@ int main(int argc, char **argv)
 	 * Setup Resource URI and Selectors
 	 */
 	resource_uri_with_selectors = wsman_options_get_resource_uri();
-	if (resource_uri_with_selectors) {
+	if (resource_uri_with_selectors &&
+			strcmp(resource_uri_with_selectors,CIM_ALL_AVAILABLE_CLASSES) != 0) {
 		wsman_set_options_from_uri(resource_uri_with_selectors,
 					   options);
+		wsman_remove_query_string(resource_uri_with_selectors,
+					  &resource_uri);
+	} else {
 		wsman_remove_query_string(resource_uri_with_selectors,
 					  &resource_uri);
 	}
@@ -329,10 +334,12 @@ int main(int argc, char **argv)
 		if (wsman_options_get_cim_ref()) {
 			wsman_set_action_option(options,
 						FLAG_CIM_REFERENCES);
+			options->dialect = WSM_ASSOCIATION_FILTER_DIALECT;
 		}
 		if (wsman_options_get_cim_assoc()) {
 			wsman_set_action_option(options,
 						FLAG_CIM_ASSOCIATORS);
+			options->dialect = WSM_ASSOCIATION_FILTER_DIALECT;
 		}
 		if (wsman_options_get_optimize_enum()) {
 			wsman_set_action_option(options,
