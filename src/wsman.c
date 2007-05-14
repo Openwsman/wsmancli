@@ -91,6 +91,37 @@ static void initialize_logging(void)
 
 
 
+static void
+request_usr_pwd( wsman_auth_type_t auth,
+                char **username,
+                char **password)
+{
+  char *pw;
+  char user[21];
+  char *p;
+
+  fprintf(stdout,"Authentication failed, please retry\n");
+  /*
+  fprintf(stdout, "%s authentication is used\n",
+          wsman_client_transport_get_auth_name( auth));
+	  */
+  printf("User name: ");
+  fflush(stdout); 
+  if ( (p = fgets(user, 20, stdin) ) != NULL ) 
+  {
+
+    if (strchr(user, '\n'))
+      (*(strchr(user, '\n'))) = '\0';
+    *username = u_strdup_printf ("%s", user);
+  } else {
+    *username = NULL;
+  }
+
+  pw = (char *)getpass("Password: ");
+  *password = u_strdup_printf ("%s", pw);
+}
+
+
 int main(int argc, char **argv)
 {
 	int retVal = 0;
@@ -139,6 +170,7 @@ int main(int argc, char **argv)
 				 "http", wsman_options_get_username(),
 				 wsman_options_get_password());
 
+	wsman_client_transport_set_auth_request_func(cl ,  &request_usr_pwd );
 
 
 	if (cl == NULL) {
@@ -172,7 +204,7 @@ int main(int argc, char **argv)
 					   options);
 		wsman_remove_query_string(resource_uri_with_selectors,
 					  &resource_uri);
-	} else {
+	} else if (resource_uri_with_selectors) {
 		wsman_remove_query_string(resource_uri_with_selectors,
 					  &resource_uri);
 	}
