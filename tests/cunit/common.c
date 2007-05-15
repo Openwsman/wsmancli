@@ -40,7 +40,7 @@ int init_test(void) {
 
 int clean_test(void) {
   wsman_release_client(cl);
-  wsman_client_transport_fini();
+  wsman_client_transport_fini(cl);
   return 0;
 }
 
