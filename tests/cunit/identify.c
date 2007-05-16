@@ -42,7 +42,6 @@
 #include <time.h>
 
 #include "u/libu.h"
-#include "wsman-errors.h"
 #include "wsman-client-api.h"
 #include "wsman-client-transport.h"
 #include "common.h"
