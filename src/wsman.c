@@ -132,7 +132,7 @@ int main(int argc, char **argv)
 	WsXmlDocH doc;
 	char *enumContext;
 	WsXmlDocH rqstDoc;
-	actionOptions *options;
+	client_opt_t *options;
 	WsXmlDocH enum_response;
 	WsXmlDocH resource;
 	char *enumeration_mode, *binding_enumeration_mode,
@@ -159,11 +159,11 @@ int main(int argc, char **argv)
 
 	initialize_logging();
 	//      wsman_client_transport_init(NULL);
-	options = initialize_action_options();
+	options = wsman_client_options_init();
 
 	debug("Certificate: %s", wsman_options_get_cafile());
 
-	cl = wsman_create_client(wsman_options_get_server(),
+	cl = wsman_client_create(wsman_options_get_server(),
 				 wsman_options_get_server_port(),
 				 wsman_options_get_path(),
 				 wsman_options_get_cafile()? "https" :
@@ -249,7 +249,7 @@ int main(int argc, char **argv)
 		}
 		break;
 	case WSMAN_ACTION_IDENTIFY:
-		doc = wsman_identify(cl, options);
+		doc = wsman_client_action_identify(cl, options);
 		wsman_output(cl, doc);
 		if (doc) {
 			ws_xml_destroy_doc(doc);
@@ -257,7 +257,7 @@ int main(int argc, char **argv)
 		break;
 	case WSMAN_ACTION_CUSTOM:
 
-		doc = wsman_invoke(cl, resource_uri, options,
+		doc = wsman_client_action_invoke(cl, resource_uri, options,
 				   wsman_options_get_invoke_method(),
 				   NULL);
 		wsman_output(cl, doc);
@@ -266,7 +266,7 @@ int main(int argc, char **argv)
 		}
 		break;
 	case WSMAN_ACTION_TRANSFER_DELETE:
-		doc = ws_transfer_delete(cl, resource_uri, options);
+		doc = wsman_client_action_delete(cl, resource_uri, options);
 		wsman_output(cl, doc);
 		if (doc) {
 			ws_xml_destroy_doc(doc);
@@ -278,7 +278,7 @@ int main(int argc, char **argv)
 							  wsman_options_get_input_file
 							  (), "UTF-8", 0);
 			doc =
-			    ws_transfer_create(cl, resource_uri, options,
+			    wsman_client_action_create(cl, resource_uri, options,
 					       resource);
 			ws_xml_destroy_doc(resource);
 			wsman_output(cl, doc);
@@ -296,12 +296,12 @@ int main(int argc, char **argv)
 							  wsman_options_get_input_file
 							  (), "UTF-8", 0);
 			doc =
-			    ws_transfer_put(cl, resource_uri, options,
+			    wsman_client_action_put(cl, resource_uri, options,
 					    resource);
 			ws_xml_destroy_doc(resource);
 		} else {
 			doc =
-			    ws_transfer_get_and_put(cl, resource_uri,
+			    wsman_client_action_get_and_put(cl, resource_uri,
 						    options);
 		}
 		wsman_output(cl, doc);
@@ -310,7 +310,7 @@ int main(int argc, char **argv)
 		}
 		break;
 	case WSMAN_ACTION_TRANSFER_GET:
-		doc = ws_transfer_get(cl, resource_uri, options);
+		doc = wsman_client_action_get(cl, resource_uri, options);
 		wsman_output(cl, doc);
 		if (doc) {
 			ws_xml_destroy_doc(doc);
@@ -318,7 +318,7 @@ int main(int argc, char **argv)
 		break;
 	case WSMAN_ACTION_PULL:
 		doc =
-		    wsenum_pull(cl, resource_uri, options,
+		    wsman_client_action_pull(cl, resource_uri, options,
 				wsman_options_get_enum_context());
 		wsman_output(cl, doc);
 		if (doc) {
@@ -327,7 +327,7 @@ int main(int argc, char **argv)
 		break;
 	case WSMAN_ACTION_RELEASE:
 		doc =
-		    wsenum_release(cl, resource_uri, options,
+		    wsman_client_action_release(cl, resource_uri, options,
 				   wsman_options_get_enum_context());
 		wsman_output(cl, doc);
 		if (doc) {
@@ -383,7 +383,7 @@ int main(int argc, char **argv)
 			wsman_set_action_option(options,
 						FLAG_ENUMERATION_COUNT_ESTIMATION);
 		}
-		enum_response = wsenum_enumerate(cl, resource_uri, options);
+		enum_response = wsman_client_action_enumerate(cl, resource_uri, options);
 		wsman_output(cl, enum_response);
 		if (enum_response) {
 			if (!(wsman_client_get_response_code(cl) == 200 ||
@@ -391,7 +391,7 @@ int main(int argc, char **argv)
 			      wsman_client_get_response_code(cl) == 500)) {
 				break;
 			}
-			enumContext = wsenum_get_enum_context(enum_response);
+			enumContext = wsman_client_get_enum_context(enum_response);
 			ws_xml_destroy_doc(enum_response);
 		} else {
 			u_free(enumContext);
@@ -402,7 +402,7 @@ int main(int argc, char **argv)
 			break;
 		while (enumContext != NULL && enumContext[0] != 0) {
 
-			doc = wsenum_pull(cl, resource_uri, options,
+			doc = wsman_client_action_pull(cl, resource_uri, options,
 					enumContext);
 			wsman_output(cl, doc);
 
@@ -411,7 +411,7 @@ int main(int argc, char **argv)
 					&& wsman_client_get_response_code(cl) != 500) {
 				break;
 			}
-			enumContext = wsenum_get_enum_context(doc);
+			enumContext = wsman_client_get_enum_context(doc);
 			if (doc) {
 				ws_xml_destroy_doc(doc);
 			}
@@ -432,8 +432,8 @@ int main(int argc, char **argv)
 				wsman_client_get_fault_string(cl));
 		}
 	}
-	destroy_action_options(options);
-	wsman_release_client(cl);
+	wsman_client_options_destroy(options);
+	wsman_client_release(cl);
 
 	wsman_client_transport_fini();
 	if (ini) {

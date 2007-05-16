@@ -131,7 +131,7 @@ int main(int argc, char** argv)
 	
     WsManClient *cl;
     WsXmlDocH doc;
-    actionOptions *options;
+    client_opt_t *options;
     char retval = 0;
     u_error_t *error = NULL;
 
@@ -169,20 +169,20 @@ int main(int argc, char** argv)
     }
 
 
-    cl = wsman_create_client( uri->host,
+    cl = wsman_client_create( uri->host,
         uri->port,
         uri->path,
         uri->scheme,
         uri->user,
         uri->pwd);		
     wsman_client_transport_init(cl, NULL);
-    options = initialize_action_options();
+    options = wsman_client_options_init();
 
     wsman_set_action_option(options, FLAG_ENUMERATION_ENUM_EPR);
     
 
     list_t *l = list_create(LISTCOUNT_T_MAX);
-    wsenum_enumerate_and_pull(cl, argv[1] , options, collect_epr, l );
+    wsman_client_action_enumerate_and_pull(cl, argv[1] , options, collect_epr, l );
     
     
     printf("returned items: %d\n", list_count(l));
@@ -206,8 +206,8 @@ int main(int argc, char** argv)
       u_uri_free(uri);
     }
     
-    destroy_action_options(options);
-    wsman_release_client(cl);
+    wsman_client_options_destroy(options);
+    wsman_client_release(cl);
     return 0;
 }
 

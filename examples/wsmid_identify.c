@@ -66,7 +66,7 @@ int main(int argc, char** argv)
 	
     WsManClient *cl;
     WsXmlDocH doc;
-    actionOptions *options;
+    client_opt_t *options;
     char retval = 0;
     u_error_t *error = NULL;
 
@@ -117,16 +117,16 @@ fprintf( stderr, "wsman_create_client( host %s, port %d, path %s, scheme %s, use
         uri->pwd);
 	*/
 
-    cl = wsman_create_client( uri->host,
+    cl = wsman_client_create( uri->host,
         uri->port,
         uri->path,
         uri->scheme,
         uri->user,
         uri->pwd);
-    options = initialize_action_options();
+    options = wsman_client_options_init();
 
 
-    doc = wsman_identify(cl, options);
+    doc = wsman_client_action_identify(cl, options);
 
     WsXmlNodeH soapBody = ws_xml_get_soap_body(doc);
     if (ws_xml_get_child(soapBody, 0, XML_NS_WSMAN_ID, "IdentifyResponse")) {
@@ -157,8 +157,8 @@ fprintf( stderr, "wsman_create_client( host %s, port %d, path %s, scheme %s, use
         ws_xml_destroy_doc(doc);
     }
 
-    destroy_action_options(options);
-    wsman_release_client(cl);
+    wsman_client_options_destroy(options);
+    wsman_client_release(cl);
 
 	
 	return 0;

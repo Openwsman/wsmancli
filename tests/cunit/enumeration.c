@@ -253,7 +253,7 @@ static int ntests = sizeof (tests) / sizeof (tests[0]);
 
 extern WsManClient *cl;
 
-actionOptions *options;
+client_opt_t *options;
 
 
 
@@ -264,8 +264,8 @@ static void enumeration_test() {
     char *selectors = NULL;
 
 
-    reinit_client_connection(cl);
-    options = initialize_action_options();
+    wsman_client_reinit_conn(cl);
+    options = wsman_client_options_init();
 
     options->flags = tests[i].flags;
 
@@ -276,7 +276,7 @@ static void enumeration_test() {
     }
 
     options->max_elements = tests[i].max_elements;
-    WsXmlDocH enum_response = wsenum_enumerate(cl,
+    WsXmlDocH enum_response = wsman_client_action_enumerate(cl,
                                 (char *)tests[i].resource_uri, options);
 
     CU_ASSERT_TRUE(wsman_client_get_response_code(cl) == tests[i].final_status);
@@ -289,7 +289,7 @@ static void enumeration_test() {
     }
     CU_ASSERT_PTR_NOT_NULL(enum_response);
     if (enum_response) {
-        enumContext = wsenum_get_enum_context(enum_response);
+        enumContext = wsman_client_get_enum_context(enum_response);
     } else {
         goto RETURN;
     }
@@ -305,7 +305,7 @@ static void enumeration_test() {
 RETURN:
     u_free(selectors);
     if (enumContext) {
-        wsenum_release(cl,
+        wsman_client_action_release(cl,
                        (char *)tests[i].resource_uri,
                        options,
                        enumContext);
@@ -313,7 +313,7 @@ RETURN:
     if (enum_response) {
         ws_xml_destroy_doc(enum_response);
     }
-    destroy_action_options(options);
+    wsman_client_options_destroy(options);
     i++; // decrease executed test number
 }
 

@@ -151,7 +151,7 @@ static int ntests = sizeof (pull_tests) / sizeof (pull_tests[0]);
 
 extern WsManClient *cl;
 
-actionOptions *options;
+client_opt_t *options;
 
 static void pull_test() {
     char *enumContext = NULL;
@@ -159,8 +159,8 @@ static void pull_test() {
     char *xp = NULL;
     int num;
 
-    reinit_client_connection(cl);
-    options = initialize_action_options();
+    wsman_client_reinit_conn(cl);
+    options = wsman_client_options_init();
 
     options->flags = pull_tests[i].flags;
 
@@ -168,7 +168,7 @@ static void pull_test() {
          wsman_add_selectors_from_query_string(options, pull_tests[i].selectors);
 
     options->max_elements = pull_tests[i].max_elements;
-    WsXmlDocH enum_response = wsenum_enumerate(cl,
+    WsXmlDocH enum_response = wsman_client_action_enumerate(cl,
                                 (char *)pull_tests[i].resource_uri, options);
     CU_ASSERT_TRUE(wsman_client_get_response_code(cl) ==
                                                 pull_tests[i].final_status);
@@ -183,13 +183,13 @@ static void pull_test() {
     CU_ASSERT_PTR_NOT_NULL(enum_response);
 
     if (enum_response) {
-        enumContext = wsenum_get_enum_context(enum_response);
+        enumContext = wsman_client_get_enum_context(enum_response);
     } else {
         enumContext = NULL;
     }
 
     while (enumContext != NULL) {
-        WsXmlDocH docp = wsenum_pull(cl, (char *)pull_tests[i].resource_uri,
+        WsXmlDocH docp = wsman_client_action_pull(cl, (char *)pull_tests[i].resource_uri,
                                      options, enumContext);
         CU_ASSERT_PTR_NOT_NULL(docp);
         if (!docp) {
@@ -223,7 +223,7 @@ static void pull_test() {
             }
             goto RETURN;
         }
-        enumContext = wsenum_get_enum_context(docp);
+        enumContext = wsman_client_get_enum_context(docp);
         ws_xml_destroy_doc(docp);
     }
 
@@ -234,7 +234,7 @@ RETURN:
         ws_xml_destroy_doc(enum_response);
     }
     u_free(xp);
-    destroy_action_options(options);
+    wsman_client_options_destroy(options);
     i++; // decrease executed test number
 }
 

@@ -26,7 +26,7 @@ int init_test(void) {
     {"localhost", 8889, "/wsman", "http", "wsman", "secret"}
   };
 
-  cl = wsman_create_client( 
+  cl = wsman_client_create( 
 		      sd[0].server,
 		      sd[0].port,
 		      sd[0].path,
@@ -39,7 +39,7 @@ int init_test(void) {
 
 
 int clean_test(void) {
-  wsman_release_client(cl);
+  wsman_client_release(cl);
   wsman_client_transport_fini(cl);
   return 0;
 }

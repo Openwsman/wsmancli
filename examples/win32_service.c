@@ -183,7 +183,7 @@ int main(int argc, char** argv)
 {
 	WsManClient *cl;
 	WsXmlDocH doc;
-	actionOptions *options;
+	client_opt_t *options;
 	char retval = 0;
 	u_error_t *error = NULL;
 
@@ -233,36 +233,36 @@ int main(int argc, char** argv)
 	}
 
 
-	cl = wsman_create_client( uri->host,
+	cl = wsman_client_create( uri->host,
 			uri->port,
 			uri->path,
 			uri->scheme,
 			uri->user,
 			uri->pwd);		
 	wsman_client_transport_init(cl, NULL);
-	options = initialize_action_options();
+	options = wsman_client_options_init();
 
 	if (listall) {
 		if (dump) wsman_set_action_option(options,FLAG_DUMP_REQUEST );
-		wsenum_enumerate_and_pull(cl, RESOURCE_URI, options, list_services, NULL );
+		wsman_client_action_enumerate_and_pull(cl, RESOURCE_URI, options, list_services, NULL );
 	} else if (start && argv[1]) {
 		if (dump) wsman_set_action_option(options,FLAG_DUMP_REQUEST );
 		wsman_client_add_selector(options, "Name", argv[1]);
-		doc = wsman_invoke(cl, RESOURCE_URI, options,
+		doc = wsman_client_action_invoke(cl, RESOURCE_URI, options,
 				"StartService", NULL);
 		ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
 		ws_xml_destroy_doc(doc);
 	} else if (stop && argv[1]) {
 		if (dump) wsman_set_action_option(options,FLAG_DUMP_REQUEST );
 		wsman_client_add_selector(options, "Name", argv[1]);
-		doc = wsman_invoke(cl, RESOURCE_URI, options,
+		doc = wsman_client_action_invoke(cl, RESOURCE_URI, options,
 				"StopService", NULL);
 		ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
 		ws_xml_destroy_doc(doc);
 	} else if ( argv[1] ) {
 		if (dump) wsman_set_action_option(options,FLAG_DUMP_REQUEST );
 		wsman_client_add_selector(options, "Name", argv[1]);
-		doc = ws_transfer_get(cl, RESOURCE_URI,
+		doc = wsman_client_action_get(cl, RESOURCE_URI,
 				options);
 		if (doc) {
 			WsXmlNodeH node = ws_xml_get_soap_body(doc);
@@ -284,8 +284,8 @@ int main(int argc, char** argv)
 		u_uri_free(uri);
 	}
 
-	destroy_action_options(options);
-	wsman_release_client(cl);
+	wsman_client_options_destroy(options);
+	wsman_client_release(cl);
 	return 0;
 }
 

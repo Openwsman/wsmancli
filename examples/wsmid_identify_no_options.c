@@ -71,7 +71,7 @@ int main(int argc, char** argv)
 	
     WsManClient *cl;
     WsXmlDocH doc;
-    actionOptions options;
+    client_opt_t options;
     char retval = 0;
 	
 	WsXmlNodeH soapBody;
@@ -94,7 +94,7 @@ int main(int argc, char** argv)
         uri->scheme,
         uri->user,
         uri->pwd);		
-    initialize_action_options(&options);
+    wsman_client_options_init(&options);
 	//wsman_set_action_option(&options,FLAG_DUMP_REQUEST );
 
     doc = wsman_identify(cl, options);
@@ -128,7 +128,7 @@ int main(int argc, char** argv)
         ws_xml_destroy_doc(doc);
     }
 
-    destroy_action_options(&options);
+    wsman_client_options_destroy(&options);
     wsman_release_client(cl);
 
 	

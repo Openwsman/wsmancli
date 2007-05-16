@@ -27,7 +27,7 @@ typedef enum {
       INTEROP_IDENTIFY = 0
 } InteropTest;
 
-static set_props(actionOptions *op, char *k, char *v) 
+static set_props(client_opt_t *op, char *k, char *v) 
 {
     op->properties = hash_create(HASHCOUNT_T_MAX, 0, 0);
 
@@ -38,7 +38,7 @@ static set_props(actionOptions *op, char *k, char *v)
 }
 
 static void
-wsman_add_selectors_list_from_node( WsXmlNodeH input, actionOptions *options)
+wsman_add_selectors_list_from_node( WsXmlNodeH input, client_opt_t *options)
 {
     hash_t *h = hash_create(HASHCOUNT_T_MAX, 0, 0);
 
@@ -81,10 +81,10 @@ static int pull_items(WsManClient *cl, WsXmlDocH doc, void *data)
 static int run_interop_test (WsManClient *cl, WsXmlNodeH scenario, InteropTest id)
 {
     WsXmlDocH response;
-    actionOptions *options = initialize_action_options();
+    client_opt_t *options = wsman_client_options_init();
     wsman_set_action_option(options,FLAG_DUMP_REQUEST ); 
     if (id == 0) { // 6.1 Identify
-        response = wsman_identify(cl, options);
+        response = wsman_client_action_identify(cl, options);
         xml_parser_doc_dump(stdout, response);
     }else if (id == 2) { // 6.2 Get
 
@@ -92,7 +92,7 @@ static int run_interop_test (WsManClient *cl, WsXmlNodeH scenario, InteropTest i
         WsXmlNodeH r  = ws_xml_get_child(input, 0, NULL, "ResourceURI");
         wsman_add_selectors_list_from_node(input, options);
         char *resource_uri = ws_xml_get_node_text(r);
-        response = ws_transfer_get(cl, resource_uri, options);
+        response = wsman_client_action_get(cl, resource_uri, options);
         xml_parser_doc_dump(stdout, response);
     }else if (id == 3) { // 6.3 Get failure - invalid resoure URI
 
@@ -100,7 +100,7 @@ static int run_interop_test (WsManClient *cl, WsXmlNodeH scenario, InteropTest i
         WsXmlNodeH r  = ws_xml_get_child(input, 0, NULL, "ResourceURI");
         wsman_add_selectors_list_from_node(input, options);
         char *resource_uri = ws_xml_get_node_text(r);
-        response = ws_transfer_get(cl, resource_uri, options);
+        response = wsman_client_action_get(cl, resource_uri, options);
         xml_parser_doc_dump(stdout, response);
     }else if (id == 4) { // 6.4 Get failure (MaxEnvelop exceeded)
 
@@ -108,7 +108,7 @@ static int run_interop_test (WsManClient *cl, WsXmlNodeH scenario, InteropTest i
         WsXmlNodeH r  = ws_xml_get_child(input, 0, NULL, "ResourceURI");
         wsman_add_selectors_list_from_node(input, options);
         char *resource_uri = ws_xml_get_node_text(r);
-        response = ws_transfer_get(cl, resource_uri, options);
+        response = wsman_client_action_get(cl, resource_uri, options);
         xml_parser_doc_dump(stdout, response);
     }else if (id == 5) { // 6.5 Get failure - invalid selectors
 
@@ -116,7 +116,7 @@ static int run_interop_test (WsManClient *cl, WsXmlNodeH scenario, InteropTest i
         WsXmlNodeH r  = ws_xml_get_child(input, 0, NULL, "ResourceURI");
         wsman_add_selectors_list_from_node(input, options);
         char *resource_uri = ws_xml_get_node_text(r);
-        response = ws_transfer_get(cl, resource_uri, options);
+        response = wsman_client_action_get(cl, resource_uri, options);
         xml_parser_doc_dump(stdout, response);
     }else if (id == 8) { // 7.1 Enumerate"
 
@@ -170,7 +170,7 @@ static int run_interop_test (WsManClient *cl, WsXmlNodeH scenario, InteropTest i
         char *resource_uri = ws_xml_get_node_text(r);
         char *method = ws_xml_get_node_text(m);
         wsman_add_selectors_list_from_node(input, options);
-        response = wsman_invoke(cl, resource_uri, options, method, NULL);
+        response = wsman_client_action_invoke(cl, resource_uri, options, method, NULL);
         xml_parser_doc_dump(stdout, response);
     }else if (id == 18) { // 9.1 Put
 
@@ -183,7 +183,7 @@ static int run_interop_test (WsManClient *cl, WsXmlNodeH scenario, InteropTest i
         wsman_add_selectors_list_from_node(input, options);
         set_props(options, ws_xml_get_node_text(k), ws_xml_get_node_text(v) );
 
-        response = ws_transfer_get_and_put(cl, resource_uri, options);
+        response = wsman_client_action_get_and_put(cl, resource_uri, options);
         xml_parser_doc_dump(stdout, response);
     }
 
@@ -199,7 +199,7 @@ int main(int argc, char** argv)
     WsManClient *cl;
 
     WsXmlDocH doc;
-    actionOptions *options;
+    client_opt_t *options;
     char retval = 0;
     u_error_t *error = NULL;
 
@@ -240,14 +240,14 @@ int main(int argc, char** argv)
     }
     wsman_debug_set_level(debug_level);
 
-    cl = wsman_create_client( uri->host,
+    cl = wsman_client_create( uri->host,
         uri->port,
         uri->path,
         uri->scheme,
         uri->user,
         uri->pwd);		
     wsman_client_transport_init(cl, NULL);
-    options = initialize_action_options();
+    options = wsman_client_options_init();
 
     if (file == NULL) {
       fprintf(stderr, "Interop file required\n");
