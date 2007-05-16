@@ -175,7 +175,7 @@ static void transfer_get_test() {
     options = wsman_client_options_init();
 
     if (get_tests[i].selectors != NULL) {
-       wsman_add_selectors_from_query_string (options, get_tests[i].selectors);
+       wsman_client_add_selectors_from_str (options, get_tests[i].selectors);
     }
 
 

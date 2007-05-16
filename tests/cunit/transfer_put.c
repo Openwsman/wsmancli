@@ -184,10 +184,10 @@ static void transfer_put_test() {
     options = wsman_client_options_init();
 
     if (put_tests[i].selectors != NULL) {
-       wsman_add_selectors_from_query_string (options, selectors);
+       wsman_client_add_selectors_from_str (options, selectors);
     }
     if (put_tests[i].properties != NULL) {
-       wsman_add_properties_from_query_string (options,
+       wsman_client_add_prop_from_str (options,
                                                put_tests[i].properties);
     }
     options->flags = put_tests[i].flags;

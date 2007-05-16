@@ -165,7 +165,7 @@ static void pull_test() {
     options->flags = pull_tests[i].flags;
 
     if (pull_tests[i].selectors != NULL)
-         wsman_add_selectors_from_query_string(options, pull_tests[i].selectors);
+         wsman_client_add_selectors_from_str(options, pull_tests[i].selectors);
 
     options->max_elements = pull_tests[i].max_elements;
     WsXmlDocH enum_response = wsman_client_action_enumerate(cl,

@@ -200,7 +200,7 @@ int main(int argc, char **argv)
 	resource_uri_with_selectors = wsman_options_get_resource_uri();
 	if (resource_uri_with_selectors &&
 			strcmp(resource_uri_with_selectors,CIM_ALL_AVAILABLE_CLASSES) != 0) {
-		wsman_set_options_from_uri(resource_uri_with_selectors,
+		wsman_client_set_options_from_uri(resource_uri_with_selectors,
 					   options);
 		wsman_remove_query_string(resource_uri_with_selectors,
 					  &resource_uri);
@@ -211,7 +211,7 @@ int main(int argc, char **argv)
 	op = wsman_options_get_action();
 
 	if (wsman_options_get_dump_request()) {
-		wsman_set_action_option(options, FLAG_DUMP_REQUEST);
+		wsman_client_set_action_option(options, FLAG_DUMP_REQUEST);
 	}
 	if (wsman_options_get_max_envelope_size()) {
 		options->max_envelope_size =
@@ -232,7 +232,7 @@ int main(int argc, char **argv)
 	options->properties = wsman_options_get_properties();
 	options->cim_ns = wsman_options_get_cim_namespace();
 	if (wsman_options_get_cim_ext()) {
-		wsman_set_action_option(options, FLAG_CIM_EXTENSIONS);
+		wsman_client_set_action_option(options, FLAG_CIM_EXTENSIONS);
 	}
 
 
@@ -342,45 +342,45 @@ int main(int argc, char **argv)
 
 		if (enumeration_mode) {
 			if (strcmp(enumeration_mode, "epr") == 0)
-				wsman_set_action_option(options,
+				wsman_client_set_action_option(options,
 							FLAG_ENUMERATION_ENUM_EPR);
 			else if (strcmp(enumeration_mode, "objepr") == 0)
-				wsman_set_action_option(options,
+				wsman_client_set_action_option(options,
 							FLAG_ENUMERATION_ENUM_OBJ_AND_EPR);
 		}
 		if (binding_enumeration_mode) {
 			if (strcmp(binding_enumeration_mode, "include") ==
 			    0)
-				wsman_set_action_option(options,
+				wsman_client_set_action_option(options,
 							FLAG_IncludeSubClassProperties);
 			else if (strcmp
 				 (binding_enumeration_mode,
 				  "exclude") == 0)
-				wsman_set_action_option(options,
+				wsman_client_set_action_option(options,
 							FLAG_ExcludeSubClassProperties);
 			else if (strcmp(binding_enumeration_mode, "none")
 				 == 0)
-				wsman_set_action_option(options,
+				wsman_client_set_action_option(options,
 							FLAG_POLYMORPHISM_NONE);
 		}
 		if (wsman_options_get_cim_ref()) {
-			wsman_set_action_option(options,
+			wsman_client_set_action_option(options,
 						FLAG_CIM_REFERENCES);
 			options->dialect = WSM_ASSOCIATION_FILTER_DIALECT;
 		}
 		if (wsman_options_get_cim_assoc()) {
-			wsman_set_action_option(options,
+			wsman_client_set_action_option(options,
 						FLAG_CIM_ASSOCIATORS);
 			options->dialect = WSM_ASSOCIATION_FILTER_DIALECT;
 		}
 		if (wsman_options_get_optimize_enum()) {
-			wsman_set_action_option(options,
+			wsman_client_set_action_option(options,
 						FLAG_ENUMERATION_OPTIMIZATION);
 		}
 		options->max_elements = wsman_options_get_max_elements();
 
 		if (wsman_options_get_estimate_enum()) {
-			wsman_set_action_option(options,
+			wsman_client_set_action_option(options,
 						FLAG_ENUMERATION_COUNT_ESTIMATION);
 		}
 		enum_response = wsman_client_action_enumerate(cl, resource_uri, options);

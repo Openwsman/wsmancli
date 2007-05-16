@@ -272,7 +272,7 @@ static void enumeration_test() {
     if (tests[i].selectors) {
         selectors =
               u_strdup_printf(tests[i].selectors, host, host, host);
-         wsman_add_selectors_from_query_string(options, selectors);
+         wsman_client_add_selectors_from_str(options, selectors);
     }
 
     options->max_elements = tests[i].max_elements;

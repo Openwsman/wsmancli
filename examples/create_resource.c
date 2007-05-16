@@ -137,7 +137,7 @@ int main(int argc, char** argv)
     wsman_client_transport_init(cl, NULL);
     options = wsman_client_options_init();
 
-    if (dump) wsman_set_action_option(options,FLAG_DUMP_REQUEST );
+    if (dump) wsman_client_set_action_option(options,FLAG_DUMP_REQUEST );
     options->max_envelope_size = 51200;
     options->timeout = 60000;
 

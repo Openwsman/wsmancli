@@ -178,7 +178,7 @@ int main(int argc, char** argv)
     wsman_client_transport_init(cl, NULL);
     options = wsman_client_options_init();
 
-    wsman_set_action_option(options, FLAG_ENUMERATION_ENUM_EPR);
+    wsman_client_set_action_option(options, FLAG_ENUMERATION_ENUM_EPR);
     
 
     list_t *l = list_create(LISTCOUNT_T_MAX);

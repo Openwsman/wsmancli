@@ -200,10 +200,10 @@ static void invoke_test() {
     wsman_client_reinit_conn(cl);
 
     if (selectors != NULL) {
-         wsman_add_selectors_from_query_string (options, selectors);
+         wsman_client_add_selectors_from_str (options, selectors);
     }
     if (invoke_tests[i].properties != NULL) {
-       wsman_add_properties_from_query_string (options,
+       wsman_client_add_prop_from_str (options,
                                         invoke_tests[i].properties);
     }
     options->flags = invoke_tests[i].flags;
