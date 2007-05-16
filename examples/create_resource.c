@@ -128,16 +128,16 @@ int main(int argc, char** argv)
     }
 
 
-    cl = wsman_client_create( uri->host,
+    cl = wsmc_create( uri->host,
         uri->port,
         uri->path,
         uri->scheme,
         uri->user,
         uri->pwd);		
-    wsman_client_transport_init(cl, NULL);
-    options = wsman_client_options_init();
+    wsmc_transport_init(cl, NULL);
+    options = wsmc_options_init();
 
-    if (dump) wsman_client_set_action_option(options,FLAG_DUMP_REQUEST );
+    if (dump) wsmc_set_action_option(options,FLAG_DUMP_REQUEST );
     options->max_envelope_size = 51200;
     options->timeout = 60000;
 
@@ -155,7 +155,7 @@ int main(int argc, char** argv)
     d->Handles.count = count;
     d->Handles.data = array;
 
-    doc = wsman_client_action_create_serialized(cl, RESOURCE_URI, options,  d,
+    doc = wsmc_action_create_serialized(cl, RESOURCE_URI, options,  d,
                               EXL_ExamplePolicy_TypeInfo);
     if (doc)
         ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
@@ -164,8 +164,8 @@ int main(int argc, char** argv)
       u_uri_free(uri);
     }
 
-    wsman_client_options_destroy(options);
-    wsman_client_release(cl);
+    wsmc_options_destroy(options);
+    wsmc_release(cl);
     return 0;
 }
 

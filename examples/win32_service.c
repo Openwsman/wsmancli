@@ -168,7 +168,7 @@ static int list_services(WsManClient *cl, WsXmlDocH doc, void *data)
 	node = ws_xml_get_child(node, 0,  XML_NS_ENUMERATION, WSENUM_PULL_RESP);
 	node = ws_xml_get_child(node, 0,  XML_NS_ENUMERATION, WSENUM_ITEMS);
 	if (ws_xml_get_child(node, 0, RESOURCE_URI , CLASSNAME )) {
-		CIM_Servie *service = ws_deserialize(wsman_client_get_context(cl),
+		CIM_Servie *service = ws_deserialize(wsmc_get_context(cl),
 				node,
 				CIM_Servie_TypeInfo, CLASSNAME,
 				RESOURCE_URI, NULL,
@@ -233,41 +233,41 @@ int main(int argc, char** argv)
 	}
 
 
-	cl = wsman_client_create( uri->host,
+	cl = wsmc_create( uri->host,
 			uri->port,
 			uri->path,
 			uri->scheme,
 			uri->user,
 			uri->pwd);		
-	wsman_client_transport_init(cl, NULL);
-	options = wsman_client_options_init();
+	wsmc_transport_init(cl, NULL);
+	options = wsmc_options_init();
 
 	if (listall) {
-		if (dump) wsman_client_set_action_option(options,FLAG_DUMP_REQUEST );
-		wsman_client_action_enumerate_and_pull(cl, RESOURCE_URI, options, list_services, NULL );
+		if (dump) wsmc_set_action_option(options,FLAG_DUMP_REQUEST );
+		wsmc_action_enumerate_and_pull(cl, RESOURCE_URI, options, list_services, NULL );
 	} else if (start && argv[1]) {
-		if (dump) wsman_client_set_action_option(options,FLAG_DUMP_REQUEST );
-		wsman_client_add_selector(options, "Name", argv[1]);
-		doc = wsman_client_action_invoke(cl, RESOURCE_URI, options,
+		if (dump) wsmc_set_action_option(options,FLAG_DUMP_REQUEST );
+		wsmc_add_selector(options, "Name", argv[1]);
+		doc = wsmc_action_invoke(cl, RESOURCE_URI, options,
 				"StartService", NULL);
 		ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
 		ws_xml_destroy_doc(doc);
 	} else if (stop && argv[1]) {
-		if (dump) wsman_client_set_action_option(options,FLAG_DUMP_REQUEST );
-		wsman_client_add_selector(options, "Name", argv[1]);
-		doc = wsman_client_action_invoke(cl, RESOURCE_URI, options,
+		if (dump) wsmc_set_action_option(options,FLAG_DUMP_REQUEST );
+		wsmc_add_selector(options, "Name", argv[1]);
+		doc = wsmc_action_invoke(cl, RESOURCE_URI, options,
 				"StopService", NULL);
 		ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
 		ws_xml_destroy_doc(doc);
 	} else if ( argv[1] ) {
-		if (dump) wsman_client_set_action_option(options,FLAG_DUMP_REQUEST );
-		wsman_client_add_selector(options, "Name", argv[1]);
-		doc = wsman_client_action_get(cl, RESOURCE_URI,
+		if (dump) wsmc_set_action_option(options,FLAG_DUMP_REQUEST );
+		wsmc_add_selector(options, "Name", argv[1]);
+		doc = wsmc_action_get(cl, RESOURCE_URI,
 				options);
 		if (doc) {
 			WsXmlNodeH node = ws_xml_get_soap_body(doc);
 			if (ws_xml_get_child(node, 0, RESOURCE_URI , CLASSNAME )) {
-				CIM_Servie *service = ws_deserialize(wsman_client_get_context(cl),
+				CIM_Servie *service = ws_deserialize(wsmc_get_context(cl),
 						node,
 						CIM_Servie_TypeInfo, CLASSNAME,
 						RESOURCE_URI, NULL,
@@ -284,8 +284,8 @@ int main(int argc, char** argv)
 		u_uri_free(uri);
 	}
 
-	wsman_client_options_destroy(options);
-	wsman_client_release(cl);
+	wsmc_options_destroy(options);
+	wsmc_release(cl);
 	return 0;
 }
 

@@ -181,28 +181,28 @@ static void transfer_put_test() {
               u_strdup_printf(put_tests[i].selectors, host, host, host);
     }
 
-    options = wsman_client_options_init();
+    options = wsmc_options_init();
 
     if (put_tests[i].selectors != NULL) {
-       wsman_client_add_selectors_from_str (options, selectors);
+       wsmc_add_selectors_from_str (options, selectors);
     }
     if (put_tests[i].properties != NULL) {
-       wsman_client_add_prop_from_str (options,
+       wsmc_add_prop_from_str (options,
                                                put_tests[i].properties);
     }
     options->flags = put_tests[i].flags;
 
 
-    doc = wsman_client_action_get_and_put(cl, (char *)put_tests[i].resource_uri, options);
+    doc = wsmc_action_get_and_put(cl, (char *)put_tests[i].resource_uri, options);
     //ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
-    CU_ASSERT_TRUE(wsman_client_get_response_code(cl) ==
+    CU_ASSERT_TRUE(wsmc_get_response_code(cl) ==
                                                put_tests[i].final_status);
-    if (wsman_client_get_response_code(cl) !=
+    if (wsmc_get_response_code(cl) !=
                             put_tests[i].final_status) {
         if (verbose) {
             printf("\nExpected = %ld, Returned = %ld        ",
                            put_tests[i].final_status,
-                           wsman_client_get_response_code(cl));
+                           wsmc_get_response_code(cl));
          //   ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
         }
         goto RETURN;
@@ -259,7 +259,7 @@ RETURN:
         ws_xml_destroy_doc(doc);
     }
     u_free(selectors);
-    wsman_client_options_destroy(options);
+    wsmc_options_destroy(options);
     i++; // increase executed test number
 }
 

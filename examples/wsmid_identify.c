@@ -117,20 +117,20 @@ fprintf( stderr, "wsman_create_client( host %s, port %d, path %s, scheme %s, use
         uri->pwd);
 	*/
 
-    cl = wsman_client_create( uri->host,
+    cl = wsmc_create( uri->host,
         uri->port,
         uri->path,
         uri->scheme,
         uri->user,
         uri->pwd);
-    options = wsman_client_options_init();
+    options = wsmc_options_init();
 
 
-    doc = wsman_client_action_identify(cl, options);
+    doc = wsmc_action_identify(cl, options);
 
     WsXmlNodeH soapBody = ws_xml_get_soap_body(doc);
     if (ws_xml_get_child(soapBody, 0, XML_NS_WSMAN_ID, "IdentifyResponse")) {
-         wsmid_identify *id = ws_deserialize(wsman_client_get_context(cl),
+         wsmid_identify *id = ws_deserialize(wsmc_get_context(cl),
                                      soapBody,
                                      wsmid_identify_TypeInfo, "IdentifyResponse",
                                      XML_NS_WSMAN_ID, NULL,
@@ -157,8 +157,8 @@ fprintf( stderr, "wsman_create_client( host %s, port %d, path %s, scheme %s, use
         ws_xml_destroy_doc(doc);
     }
 
-    wsman_client_options_destroy(options);
-    wsman_client_release(cl);
+    wsmc_options_destroy(options);
+    wsmc_release(cl);
 
 	
 	return 0;

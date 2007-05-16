@@ -98,11 +98,11 @@ identify_test() {
     static int i = 0;
     char *xp = NULL;
 
-    wsman_client_reinit_conn(cl);
-    options = wsman_client_options_init();
+    wsmc_reinit_conn(cl);
+    options = wsmc_options_init();
 
-    response = wsman_client_action_identify(cl, options);
-    CU_ASSERT_TRUE(wsman_client_get_response_code(cl) == tests[i].final_status);
+    response = wsmc_action_identify(cl, options);
+    CU_ASSERT_TRUE(wsmc_get_response_code(cl) == tests[i].final_status);
 
     CU_ASSERT_PTR_NOT_NULL(response);
     if (response == NULL) {
@@ -122,7 +122,7 @@ RETURN:
       ws_xml_destroy_doc(response);
     }
     u_free(xp);
-    wsman_client_options_destroy(options);
+    wsmc_options_destroy(options);
     i++;
 }
 

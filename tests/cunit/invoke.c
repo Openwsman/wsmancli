@@ -191,34 +191,34 @@ static void invoke_test() {
     char *selectors = NULL;
 
 
-    options = wsman_client_options_init();
+    options = wsmc_options_init();
     if (invoke_tests[i].selectors) {
         selectors =
               u_strdup_printf(invoke_tests[i].selectors, host, host, host);
     }
 
-    wsman_client_reinit_conn(cl);
+    wsmc_reinit_conn(cl);
 
     if (selectors != NULL) {
-         wsman_client_add_selectors_from_str (options, selectors);
+         wsmc_add_selectors_from_str (options, selectors);
     }
     if (invoke_tests[i].properties != NULL) {
-       wsman_client_add_prop_from_str (options,
+       wsmc_add_prop_from_str (options,
                                         invoke_tests[i].properties);
     }
     options->flags = invoke_tests[i].flags;
 
-    doc = wsman_client_action_invoke(cl, (char *)invoke_tests[i].resource_uri, options,
+    doc = wsmc_action_invoke(cl, (char *)invoke_tests[i].resource_uri, options,
                                 (char *)invoke_tests[i].method, NULL);
     //ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
-    CU_ASSERT_TRUE(wsman_client_get_response_code(cl) ==
+    CU_ASSERT_TRUE(wsmc_get_response_code(cl) ==
                                         invoke_tests[i].final_status);
-    if (wsman_client_get_response_code(cl) !=
+    if (wsmc_get_response_code(cl) !=
                          invoke_tests[i].final_status) {
         if (verbose) {
             printf("\nExpected = %ld\nReturned = %ld       ",
                     invoke_tests[i].final_status,
-                    wsman_client_get_response_code(cl));
+                    wsmc_get_response_code(cl));
         }
         goto RETURN;
     }
@@ -274,7 +274,7 @@ RETURN:
         ws_xml_destroy_doc(doc);
     }
     u_free(selectors);
-    wsman_client_options_destroy(options);
+    wsmc_options_destroy(options);
     i++; // increase executed test number
 }
 

@@ -264,36 +264,36 @@ static void enumeration_test() {
     char *selectors = NULL;
 
 
-    wsman_client_reinit_conn(cl);
-    options = wsman_client_options_init();
+    wsmc_reinit_conn(cl);
+    options = wsmc_options_init();
 
     options->flags = tests[i].flags;
 
     if (tests[i].selectors) {
         selectors =
               u_strdup_printf(tests[i].selectors, host, host, host);
-         wsman_client_add_selectors_from_str(options, selectors);
+         wsmc_add_selectors_from_str(options, selectors);
     }
 
     options->max_elements = tests[i].max_elements;
-    WsXmlDocH enum_response = wsman_client_action_enumerate(cl,
+    WsXmlDocH enum_response = wsmc_action_enumerate(cl,
                                 (char *)tests[i].resource_uri, options);
 
-    CU_ASSERT_TRUE(wsman_client_get_response_code(cl) == tests[i].final_status);
-    if (wsman_client_get_response_code(cl) != tests[i].final_status) {
+    CU_ASSERT_TRUE(wsmc_get_response_code(cl) == tests[i].final_status);
+    if (wsmc_get_response_code(cl) != tests[i].final_status) {
         if (verbose) {
             printf("\nExpected = %ld\nReturned = %ld         ",
-                   tests[i].final_status, wsman_client_get_response_code(cl));
+                   tests[i].final_status, wsmc_get_response_code(cl));
         }
         goto RETURN;
     }
     CU_ASSERT_PTR_NOT_NULL(enum_response);
     if (enum_response) {
-        enumContext = wsman_client_get_enum_context(enum_response);
+        enumContext = wsmc_get_enum_context(enum_response);
     } else {
         goto RETURN;
     }
-    check_response_header(enum_response, wsman_client_get_response_code(cl),
+    check_response_header(enum_response, wsmc_get_response_code(cl),
        ENUM_ACTION_ENUMERATERESPONSE);
 
 //if (i==11) ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(enum_response));
@@ -305,7 +305,7 @@ static void enumeration_test() {
 RETURN:
     u_free(selectors);
     if (enumContext) {
-        wsman_client_action_release(cl,
+        wsmc_action_release(cl,
                        (char *)tests[i].resource_uri,
                        options,
                        enumContext);
@@ -313,7 +313,7 @@ RETURN:
     if (enum_response) {
         ws_xml_destroy_doc(enum_response);
     }
-    wsman_client_options_destroy(options);
+    wsmc_options_destroy(options);
     i++; // decrease executed test number
 }
 

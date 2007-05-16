@@ -171,16 +171,16 @@ static void transfer_get_test() {
               u_strdup_printf(get_tests[i].selectors, host, host, host);
     }
 
-    wsman_client_reinit_conn(cl);
-    options = wsman_client_options_init();
+    wsmc_reinit_conn(cl);
+    options = wsmc_options_init();
 
     if (get_tests[i].selectors != NULL) {
-       wsman_client_add_selectors_from_str (options, get_tests[i].selectors);
+       wsmc_add_selectors_from_str (options, get_tests[i].selectors);
     }
 
 
-    doc = wsman_client_action_get(cl, (char *)get_tests[i].resource_uri, options);
-    CU_ASSERT_TRUE(wsman_client_get_response_code(cl) == get_tests[i].final_status);
+    doc = wsmc_action_get(cl, (char *)get_tests[i].resource_uri, options);
+    CU_ASSERT_TRUE(wsmc_get_response_code(cl) == get_tests[i].final_status);
 
     CU_ASSERT_PTR_NOT_NULL(doc);
     if (!doc) {
@@ -229,7 +229,7 @@ RETURN:
     }
     u_free((char *)get_tests[i].selectors);
     get_tests[i].selectors = old_selectors;
-    wsman_client_options_destroy(options);
+    wsmc_options_destroy(options);
     i++; // increase executed test number
 }
 

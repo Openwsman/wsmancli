@@ -87,21 +87,21 @@ int main(int argc, char** argv)
     }
 
 
-    wsman_client_transport_init(NULL);
+    wsmc_transport_init(NULL);
     cl = wsman_create_client( uri->host,
         uri->port,
         uri->path,
         uri->scheme,
         uri->user,
         uri->pwd);		
-    wsman_client_options_init(&options);
+    wsmc_options_init(&options);
 	//wsman_set_action_option(&options,FLAG_DUMP_REQUEST );
 
     doc = wsman_identify(cl, options);
 
     soapBody = ws_xml_get_soap_body(doc);
     if (ws_xml_get_child(soapBody, 0, XML_NS_WSMAN_ID, "IdentifyResponse")) {
-         wsmid_identify *id = ws_deserialize(wsman_client_get_context(cl),
+         wsmid_identify *id = ws_deserialize(wsmc_get_context(cl),
                                      soapBody,
                                      wsmid_identify_TypeInfo,"IdentifyResponse",
                                      XML_NS_WSMAN_ID, XML_NS_WSMAN_ID,
@@ -128,7 +128,7 @@ int main(int argc, char** argv)
         ws_xml_destroy_doc(doc);
     }
 
-    wsman_client_options_destroy(&options);
+    wsmc_options_destroy(&options);
     wsman_release_client(cl);
 
 	
