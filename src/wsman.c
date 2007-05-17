@@ -59,6 +59,7 @@ static const char **wsman_argv = NULL;
 
 static int server_port = 0;
 static char *cafile = NULL;
+static char *endpoint = NULL;
 static char *username = NULL;
 static char *password = NULL;
 static char *server = "localhost";
@@ -146,6 +147,8 @@ char wsman_parse_options(int argc, char **argv)
 		 "Password", "<password>"},
 		{"hostname", 'h', U_OPTION_ARG_STRING, &server,
 		 "Host name", "<hostname>"},
+		{"endpoint", 'b', U_OPTION_ARG_STRING, &endpoint,
+		 "End point", "<url>"},
 		{"port", 'P', U_OPTION_ARG_INT, &server_port,
 		 "Server Port", "<port>"},
 		{"proxy", 'X', U_OPTION_ARG_STRING, &proxy,
@@ -453,12 +456,16 @@ int main(int argc, char **argv)
 
 	debug("Certificate: %s", cafile);
 
-	cl = wsmc_create(server,
-			 server_port,
-			 url_path,
-			 cafile? "https" : "http", 
-			 username,
-			 password);
+	if (endpoint) {
+		cl = wsmc_create_from_uri(endpoint);
+	} else {
+		cl = wsmc_create(server,
+				server_port,
+				url_path,
+				cafile? "https" : "http", 
+				username,
+				password);
+	}
 
 	wsmc_transport_set_auth_request_func(cl ,  &request_usr_pwd );
 
