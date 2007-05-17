@@ -58,7 +58,8 @@ static const char **wsman_argv = NULL;
 
 
 static int server_port = 0;
-static char *cafile = NULL;
+static char *cainfo = NULL;
+static char *cert = NULL;
 static char *endpoint = NULL;
 static char *username = NULL;
 static char *password = NULL;
@@ -66,8 +67,9 @@ static char *server = "localhost";
 static char *agent = NULL;
 static char *url_path = NULL;
 static char *authentication_method = NULL;
-static char verify_peer = 1;
-static char verify_host = 1;
+static char noverify_peer = 0;
+static char noverify_host = 0;
+
 static int  transport_timeout = 0;
 static char *proxy = NULL;
 static char *proxy_upwd = NULL;
@@ -134,8 +136,10 @@ char wsman_parse_options(int argc, char **argv)
 	u_option_entry_t options[] = {
 		{"debug", 'd', U_OPTION_ARG_INT, &debug_level,
 		 "Set the verbosity of debugging output.", "1-6"},
-		{"cafile", 'c', U_OPTION_ARG_STRING, &cafile,
-		 "Certificate file", "<filename>"},
+		{"cacert", 'c', U_OPTION_ARG_STRING, &cainfo,
+		 "Certificate file to verify the peer", "<filename>"},
+		{"cert", 'A', U_OPTION_ARG_STRING, &cert,
+		 "Certificate file. The certificate must be in PEM format.", "<filename>"},
 		{"username", 'u', U_OPTION_ARG_STRING, &username,
 		 "User name", "<username>"},
 		{"path", 'g', U_OPTION_ARG_STRING, &url_path,
@@ -166,9 +170,9 @@ char wsman_parse_options(int argc, char **argv)
 		 "Alternate configuration file", "<file>"},
 		{"out-file", 'O', U_OPTION_ARG_STRING, &output_file,
 		 "Write output to file", "<file>"},
-		{"noverifypeer", 'V', U_OPTION_ARG_NONE, &verify_peer,
+		{"noverifypeer", 'V', U_OPTION_ARG_NONE, &noverify_peer,
 		 "Not to verify peer certificate", NULL},
-		{"noverifyhost", 'v', U_OPTION_ARG_NONE, &verify_host,
+		{"noverifyhost", 'v', U_OPTION_ARG_NONE, &noverify_host,
 		 "Not to verify hostname", NULL},
 		{"transport-timeout", 'I', U_OPTION_ARG_INT, &transport_timeout,
 		 "Transport timeout in seconds", "<time in sec>"},
@@ -293,7 +297,7 @@ char wsman_parse_options(int argc, char **argv)
 
 	// set default options 
 	if (server_port == 0) {
-		server_port = cafile ? 8888 : 8889;
+		server_port = cainfo ? 8888 : 8889;
 	}
 	if (url_path == NULL) {
 		url_path = "/wsman";
@@ -454,7 +458,7 @@ int main(int argc, char **argv)
 	//      wsmc_transport_init(NULL);
 	options = wsmc_options_init();
 
-	debug("Certificate: %s", cafile);
+	debug("Certificate: %s", cainfo);
 
 	if (endpoint) {
 		cl = wsmc_create_from_uri(endpoint);
@@ -462,7 +466,7 @@ int main(int argc, char **argv)
 		cl = wsmc_create(server,
 				server_port,
 				url_path,
-				cafile? "https" : "http", 
+				cainfo? "https" : "http", 
 				username,
 				password);
 	}
@@ -482,11 +486,15 @@ int main(int argc, char **argv)
 			wsman_transport_set_proxyauth(cl, proxy_upwd);
 		}
 	}
-	if (cafile) {
-		wsman_transport_set_cafile(cl, cafile);
+
+	if (cainfo) {
+		wsman_transport_set_cainfo(cl, cainfo);
 	}
-	wsman_transport_set_verify_peer(cl, verify_peer);
-	wsman_transport_set_verify_host(cl, verify_host);
+	if (cert) {
+		wsman_transport_set_cert(cl, cert);
+	}
+	wsman_transport_set_verify_peer(cl, !noverify_peer);
+	wsman_transport_set_verify_host(cl, !noverify_host);
 	wsman_transport_set_timeout(cl, transport_timeout);
 
 	// library options
