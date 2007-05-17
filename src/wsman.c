@@ -202,10 +202,10 @@ int main(int argc, char **argv)
 			strcmp(resource_uri_with_selectors,CIM_ALL_AVAILABLE_CLASSES) != 0) {
 		wsmc_set_options_from_uri(resource_uri_with_selectors,
 					   options);
-		wsman_remove_query_string(resource_uri_with_selectors,
+		wsmc_remove_query_string(resource_uri_with_selectors,
 					  &resource_uri);
 	} else if (resource_uri_with_selectors) {
-		wsman_remove_query_string(resource_uri_with_selectors,
+		wsmc_remove_query_string(resource_uri_with_selectors,
 					  &resource_uri);
 	}
 	op = wsman_options_get_action();
@@ -242,7 +242,7 @@ int main(int argc, char **argv)
 						 wsman_options_get_input_file
 						 (), "UTF-8", 0);
 		wsman_send_request(cl, rqstDoc);
-		doc = wsman_build_envelope_from_response(cl);
+		doc = wsmc_build_envelope_from_response(cl);
 		wsman_output(cl, doc);
 		if (doc) {
 			ws_xml_destroy_doc(doc);
