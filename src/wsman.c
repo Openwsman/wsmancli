@@ -103,7 +103,7 @@ static unsigned long max_envelope_size = 0;
 static char *_action = NULL;
 static char *config_file = NULL;
 static char *output_file = NULL;
-static char *resource_uri = NULL;
+static char *resource_uri_opt = NULL;
 static char *invoke_method = NULL;
 static char **properties = NULL;
 
@@ -281,7 +281,7 @@ char wsman_parse_options(int argc, char **argv)
 
 	if (argc > 2) {
 		_action = argv[1];
-		resource_uri = argv[2];
+		resource_uri_opt = argv[2];
 	} else {
 		if (argv[1] && (strcmp(argv[1], "identify") == 0 ||
 				strcmp(argv[1], "test") == 0)) {
@@ -436,8 +436,6 @@ int main(int argc, char **argv)
 	    *resource_uri_with_selectors;
 	char *resource_uri = NULL;
 
-
-
 	filename = (char *) config_file;
 	if (filename) {
 		ini = iniparser_load(filename);
@@ -502,7 +500,7 @@ int main(int argc, char **argv)
 	/*
 	 * Setup Resource URI and Selectors
 	 */
-	resource_uri_with_selectors = resource_uri;
+	resource_uri_with_selectors = resource_uri_opt;
 	if (resource_uri_with_selectors &&
 			strcmp(resource_uri_with_selectors,CIM_ALL_AVAILABLE_CLASSES) != 0) {
 		wsmc_set_options_from_uri(resource_uri_with_selectors,
