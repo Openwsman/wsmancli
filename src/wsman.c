@@ -60,6 +60,7 @@ static const char **wsman_argv = NULL;
 static int server_port = 0;
 static char *cainfo = NULL;
 static char *cert = NULL;
+static char *sslkey = NULL;
 static char *endpoint = NULL;
 static char *username = NULL;
 static char *password = NULL;
@@ -140,6 +141,8 @@ char wsman_parse_options(int argc, char **argv)
 		 "Certificate file to verify the peer", "<filename>"},
 		{"cert", 'A', U_OPTION_ARG_STRING, &cert,
 		 "Certificate file. The certificate must be in PEM format.", "<filename>"},
+		{"sslkey", 'K', U_OPTION_ARG_STRING, &sslkey,
+		 "SSL Key.", "<key>"},
 		{"username", 'u', U_OPTION_ARG_STRING, &username,
 		 "User name", "<username>"},
 		{"path", 'g', U_OPTION_ARG_STRING, &url_path,
@@ -490,6 +493,9 @@ int main(int argc, char **argv)
 	}
 	if (cert) {
 		wsman_transport_set_cert(cl, cert);
+	}
+	if (sslkey) {
+		wsman_transport_set_cert(cl, sslkey);
 	}
 	wsman_transport_set_verify_peer(cl, !noverify_peer);
 	wsman_transport_set_verify_host(cl, !noverify_host);
