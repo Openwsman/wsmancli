@@ -349,7 +349,7 @@ static void initialize_logging(void)
 
 
 static void
-request_usr_pwd( wsman_auth_type_t auth,
+request_usr_pwd( WsManClient *client, wsman_auth_type_t auth,
                 char **username,
                 char **password)
 {
