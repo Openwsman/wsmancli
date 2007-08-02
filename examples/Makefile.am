@@ -1,4 +1,4 @@
-SUBDIRS =  #cpp
+SUBDIRS =  cpp
 
 AM_CFLAGS = @CFLAGS@
 
