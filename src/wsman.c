@@ -298,7 +298,7 @@ char wsman_parse_options(int argc, char **argv)
 	}
 	u_error_free(error);
 
-	// set default options 
+	// set default options
 	if (server_port == 0) {
 		server_port = cainfo ? 8888 : 8889;
 	}
@@ -363,8 +363,8 @@ request_usr_pwd( WsManClient *client, wsman_auth_type_t auth,
           wsmc_transport_get_auth_name( auth));
 	  */
   printf("User name: ");
-  fflush(stdout); 
-  if ( (p = fgets(user, 20, stdin) ) != NULL ) 
+  fflush(stdout);
+  if ( (p = fgets(user, 20, stdin) ) != NULL )
   {
 
     if (strchr(user, '\n'))
@@ -467,7 +467,7 @@ int main(int argc, char **argv)
 		cl = wsmc_create(server,
 				server_port,
 				url_path,
-				cainfo? "https" : "http", 
+				cainfo? "https" : "http",
 				username,
 				password);
 	}
@@ -711,8 +711,10 @@ int main(int argc, char **argv)
 			if (wsmc_get_response_code(cl) != 200
 					&& wsmc_get_response_code(cl) != 400
 					&& wsmc_get_response_code(cl) != 500) {
+				u_free(enumContext);
 				break;
 			}
+			u_free(enumContext);
 			enumContext = wsmc_get_enum_context(doc);
 			if (doc) {
 				ws_xml_destroy_doc(doc);
@@ -735,9 +737,8 @@ int main(int argc, char **argv)
 		}
 	}
 	wsmc_options_destroy(options);
-	wsmc_release(cl);
-
 	wsmc_transport_fini();
+	wsmc_release(cl);
 	if (ini) {
 		iniparser_freedict(ini);
 	}

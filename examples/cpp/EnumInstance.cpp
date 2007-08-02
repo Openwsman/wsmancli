@@ -1,5 +1,6 @@
 #include <iostream>
-#include <cpp/WsmanClient.h>
+#include <cpp/OpenWsmanClient.h>
+#include <u/libu.h>
 
 using std::cout;
 
@@ -7,6 +8,7 @@ using namespace WsmanClientNamespace;
 int main(int argc, char* argv[])
 {
 	const char *endpoint, *resource_uri;
+	u_uri_t *uri;
 	if (argc< 3) {
 		fprintf(stderr, "Usage: %s <endpoint> <resource uri>\n", argv[0]);
 	}
@@ -17,18 +19,25 @@ int main(int argc, char* argv[])
 		fprintf(stderr, "endpoint option required\n");
 		return 1;
 	}
-	WsmanClient client = WsmanClient(endpoint);
+	if (endpoint != NULL)
+		if (u_uri_parse((const char *) endpoint, &uri) != 0 )
+			return 1;
+	OpenWsmanClient *client = new OpenWsmanClient( uri->host,
+			uri->port,
+			uri->path,
+			uri->scheme,
+			"digest",
+			uri->user,
+			uri->pwd);
 	vector<string> vec;
 	try {
-		client.Enumerate(resource_uri, vec );
+		client->Enumerate(resource_uri, vec );
 	}
 
-	catch (WsmanException &e) {
-		cout << "Fault:\n";
-		cout << "\tCode:\t\t" << e.GetFaultCode() << "\n";
-		cout << "\tSubCode:\t" << e.GetFaultSubcode() << "\n";
-		cout << "\tDetail:\t\t" << e.GetFaultDetail() << "\n";
-		cout << "\tReson:\t\t" << e.GetFaultReason() << "\n";
+	catch (GeneralWsmanException &e) {
+		printf("\nError: failed while calling AMT_SOAPEventSubscriber::Delete routine\n");
+		printf("GeneralWsmanException:\n");
+		printf("%s\n", e.what());
 
 	}
 	for (vector<string>::iterator iter = vec.begin();
