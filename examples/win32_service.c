@@ -160,7 +160,7 @@ static void print_info(CIM_Servie *service)
 static int list_services(WsManClient *cl, WsXmlDocH doc, void *data)
 {
 	if (!doc) {
-		return;
+		return 0;
 	}
 	if (dump)
 		ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));
@@ -174,7 +174,9 @@ static int list_services(WsManClient *cl, WsXmlDocH doc, void *data)
 				RESOURCE_URI, NULL,
 				0, 0);
 		print_info(service);
+		return 1;
 	}
+	return 0;
 }
 
 
