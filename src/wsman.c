@@ -486,7 +486,7 @@ int main(int argc, char **argv)
 	dictionary *ini = NULL;
 	WsManClient *cl;
 	WsXmlDocH doc;
-	char *enumContext;
+	char *enumContext = NULL;
 	WsXmlDocH rqstDoc;
 	client_opt_t *options;
 	WsXmlDocH enum_response;
