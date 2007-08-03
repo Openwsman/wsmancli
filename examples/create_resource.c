@@ -120,7 +120,7 @@ int main(int argc, char** argv)
     u_uri_t *uri;
     if (endpoint) {
       if (u_uri_parse((const char *)endpoint, &uri)!=0 )
-      	return;
+      	return 1;
     }
     if (!endpoint || !uri) {
       fprintf(stderr, "endpoint option required\n");
