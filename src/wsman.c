@@ -49,13 +49,13 @@
 #include <time.h>
 
 #include <wsman-client-api.h>
+#include <wsman-client-transport.h>
 #include <wsman-debug.h>
 // #include "wsman-client-options.h"
 
-
-
-static const char **wsman_argv = NULL;
-
+#if __linux__
+extern char *getpass (const char *__prompt);
+#endif
 
 static int server_port = 0;
 static char *cainfo = NULL;
@@ -836,7 +836,7 @@ int main(int argc, char **argv)
 		}
 	}
 	wsmc_options_destroy(options);
-	wsmc_transport_fini();
+	wsmc_transport_fini(cl);
 	wsmc_release(cl);
 	if (ini) {
 		iniparser_freedict(ini);
