@@ -130,7 +130,6 @@ int main(int argc, char** argv)
 {
 	
     WsManClient *cl;
-    WsXmlDocH doc;
     client_opt_t *options;
     char retval = 0;
     u_error_t *error = NULL;
@@ -185,7 +184,7 @@ int main(int argc, char** argv)
     wsmc_action_enumerate_and_pull(cl, argv[1] , options, collect_epr, l );
     
     
-    printf("returned items: %d\n", list_count(l));
+    printf("returned items: %d\n", (int)list_count(l));
     lnode_t *node = list_first(l);
     while(node) {
       WsmanEpr* epr = (WsmanEpr*) node->list_data;
