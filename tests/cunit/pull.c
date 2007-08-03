@@ -48,22 +48,14 @@
 #include "common.h"
 
 
-static char *filters2[] = {
-   "/s:Envelope/s:Body/wsen:PullResponse/wsman:Items/wsa:EndpointReference/wsa:Address",
-    NULL,
-    NULL, NULL,
-};
-
-
-
 
 static TestData pull_tests[] = {
   {
-    "Pull. Enumeration with non existent Resource URI.", 
-    "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystemxx", 
-    NULL, 
-    NULL, 
-    NULL, 
+    "Pull. Enumeration with non existent Resource URI.",
+    "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystemxx",
+    NULL,
+    NULL,
+    NULL,
     "/s:Envelope/s:Body/s:Fault/s:Code/s:Subcode/s:Value",
     "wsa:DestinationUnreachable",
     "/s:Envelope/s:Body/s:Fault/s:Detail/wsman:FaultDetail",
@@ -73,58 +65,58 @@ static TestData pull_tests[] = {
     0
   },
   {
-    "Pull. Enumeration (Optimized)", 
-    "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_InitdService", 
-    NULL, 
-    NULL, 
-    NULL, 
-    NULL, 
-    NULL, 
-    NULL, 
-    NULL, 
+    "Pull. Enumeration (Optimized)",
+    "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_InitdService",
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
     200,
     FLAG_ENUMERATION_OPTIMIZATION,
     0
   },
   {
-    "Pull. Enumeration (Optimized/EPR/Count)", 
-    "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_InitdService", 
-    NULL, 
-    NULL, 
-    NULL, 
-    NULL, 
-    NULL, 
-    NULL, 
-    NULL, 
+    "Pull. Enumeration (Optimized/EPR/Count)",
+    "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_InitdService",
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
     200,
     FLAG_ENUMERATION_OPTIMIZATION | FLAG_ENUMERATION_ENUM_EPR |
                                          FLAG_ENUMERATION_COUNT_ESTIMATION ,
     10
   },
   {
-    "Pull. Enumeration (Optimized/EPR)", 
-    "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_InitdService", 
-    NULL, 
-    NULL, 
-    NULL, 
-    NULL, 
-    NULL, 
-    NULL, 
-    NULL, 
+    "Pull. Enumeration (Optimized/EPR)",
+    "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_InitdService",
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
     200,
     FLAG_ENUMERATION_OPTIMIZATION | FLAG_ENUMERATION_ENUM_EPR,
     10
   },
   {
-    "Pull. Enumeration (Optimized/ObjEPR)", 
-    "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_InitdService", 
-    NULL, 
-    NULL, 
-    NULL, 
-    NULL, 
-    NULL, 
-    NULL, 
-    NULL, 
+    "Pull. Enumeration (Optimized/ObjEPR)",
+    "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_InitdService",
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
     200,
     FLAG_ENUMERATION_OPTIMIZATION | FLAG_ENUMERATION_ENUM_OBJ_AND_EPR,
     10
@@ -132,9 +124,9 @@ static TestData pull_tests[] = {
   {
     "Pull. Enumeration with valid Resource URI and Items Count Estimation.",
     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem",
-    NULL, 
-    NULL, 
-    NULL, 
+    NULL,
+    NULL,
+    NULL,
     "/s:Envelope/s:Header/wsman:TotalItemsCountEstimate",
     NULL,
     NULL,
@@ -153,7 +145,7 @@ extern WsManClient *cl;
 
 client_opt_t *options;
 
-static void pull_test() {
+static void pull_test(void) {
     char *enumContext = NULL;
     static int i = 0;
     char *xp = NULL;
@@ -174,7 +166,7 @@ static void pull_test() {
                                                 pull_tests[i].final_status);
     if (wsmc_get_response_code(cl) != pull_tests[i].final_status) {
         if (verbose) {
-            printf("\nExpected = %ld\nReturned = %ld       ",
+            printf("\nExpected = %d\nReturned = %ld       ",
                    pull_tests[i].final_status,
                    wsmc_get_response_code(cl));
         }

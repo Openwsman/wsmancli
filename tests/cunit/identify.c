@@ -53,11 +53,11 @@
 
 static TestData tests[] = {
   {
-    "Testing Identify Request, check protocol version", 
-    NULL, 
-    NULL, 
-    NULL, 
-    NULL, 
+    "Testing Identify Request, check protocol version",
+    NULL,
+    NULL,
+    NULL,
+    NULL,
     "/s:Envelope/s:Body/wsmid:IdentifyResponse/wsmid:ProtocolVersion",
     XML_NS_WS_MAN,
     "/s:Envelope/s:Body/wsmid:IdentifyResponse/wsmid:ProductVersion",
@@ -67,11 +67,11 @@ static TestData tests[] = {
     0
   },
   {
-    "Testing Identify Request, check product vendor", 
-    NULL, 
-    NULL, 
-    NULL, 
-    NULL, 
+    "Testing Identify Request, check product vendor",
+    NULL,
+    NULL,
+    NULL,
+    NULL,
     "/s:Envelope/s:Body/wsmid:IdentifyResponse/wsmid:ProductVendor",
     "Openwsman Project",
     NULL,
@@ -91,8 +91,7 @@ client_opt_t *options;
 
 
 
-static void
-identify_test() {
+static void identify_test(void) {
 
     WsXmlDocH response;
     static int i = 0;

@@ -50,7 +50,6 @@
 
 
 
-static int _debug = 0;
 
 
 static char *filters1[] = {
@@ -76,17 +75,6 @@ static char *filters3[] = {
     NULL, NULL,
 };
 
-static char *filters4[] = {
-    NULL, // "/s:Envelope/s:Body/wsen:EnumerateResponse/wsman:Items[1]/p:OMC_InitdService[1]/p:SystemName",
-    "%s",
-    NULL, NULL,
-};
-
-static char *filters5[] = {
-    "/s:Envelope/s:Body/s:EnumerateResponse/wsman:EndOfSequence",
-    "",
-    NULL, NULL,
-};
 static char *filters[] = {
     "/s:Envelope/s:Body/s:EnumerateResponse/s:EnumerationContext",
     NULL,
@@ -96,8 +84,8 @@ static char *filters[] = {
 
 static TestData tests[] = {
   {
-    "Enumeration with non existent Resource URI.", 
-    "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystemxx", 
+    "Enumeration with non existent Resource URI.",
+    "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystemxx",
     NULL,
     NULL,
     NULL,
@@ -127,12 +115,12 @@ static TestData tests[] = {
   {
     "Enumeration (Count Estimation).",
     "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_InitdService",
-    NULL, 
-    NULL, 
-    NULL, 
-    NULL, 
-    NULL, 
-    NULL, 
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
     NULL,
     200,
     FLAG_ENUMERATION_COUNT_ESTIMATION,
@@ -140,7 +128,7 @@ static TestData tests[] = {
     filters3,
   },
   {
-    "Enumeration  (Optimized)", 
+    "Enumeration  (Optimized)",
     "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_InitdService",
     NULL,
     NULL,
@@ -154,7 +142,7 @@ static TestData tests[] = {
     200,
   },
   {
-    "Enumeration  (EPR)", 
+    "Enumeration  (EPR)",
     "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_InitdService",
     NULL,
     NULL,
@@ -168,7 +156,7 @@ static TestData tests[] = {
     200,
   },
   {
-    "Enumeration  (ObjEPR)", 
+    "Enumeration  (ObjEPR)",
     "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_InitdService",
     NULL,
     NULL,
@@ -182,7 +170,7 @@ static TestData tests[] = {
     200,
   },
   {
-    "Enumeration  (Optimized/EPR/Count Estimation)", 
+    "Enumeration  (Optimized/EPR/Count Estimation)",
     "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_InitdService",
     NULL,
     NULL,
@@ -257,10 +245,9 @@ client_opt_t *options;
 
 
 
-static void enumeration_test() {
+static void enumeration_test(void) {
     char *enumContext = NULL;
     static int i = 0;
-    int num;
     char *selectors = NULL;
 
 
@@ -282,7 +269,7 @@ static void enumeration_test() {
     CU_ASSERT_TRUE(wsmc_get_response_code(cl) == tests[i].final_status);
     if (wsmc_get_response_code(cl) != tests[i].final_status) {
         if (verbose) {
-            printf("\nExpected = %ld\nReturned = %ld         ",
+            printf("\nExpected = %d\nReturned = %ld         ",
                    tests[i].final_status, wsmc_get_response_code(cl));
         }
         goto RETURN;

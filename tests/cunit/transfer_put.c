@@ -56,7 +56,7 @@ TestData put_tests[] = {
     "wsman:InvalidSelectors",
     "/s:Envelope/s:Body/s:Fault/s:Detail/wsman:FaultDetail",
     "http://schemas.dmtf.org/wbem/wsman/1/wsman/faultDetail/InsufficientSelectors",
-    400, 
+    400,
     0,
     0
   },
@@ -65,13 +65,13 @@ TestData put_tests[] = {
     "Transfer Put with non existent Resource URI.",
     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystemxx",
     NULL,
-    NULL, 
+    NULL,
     NULL,
     "/s:Envelope/s:Body/s:Fault/s:Code/s:Subcode/s:Value",
-    "wsa:DestinationUnreachable",  
+    "wsa:DestinationUnreachable",
     "/s:Envelope/s:Body/s:Fault/s:Detail/wsman:FaultDetail",
     "http://schemas.dmtf.org/wbem/wsman/1/wsman/faultDetail/InvalidResourceURI",
-    400, 
+    400,
     0,
     0
   },
@@ -168,7 +168,7 @@ static int ntests = sizeof (put_tests) / sizeof (put_tests[0]);
 extern WsManClient *cl;
 client_opt_t *options;
 
-static void transfer_put_test() {
+static void transfer_put_test(void) {
     WsXmlDocH doc;
     char *xpf = NULL;
     char *xpd = NULL;
@@ -200,7 +200,7 @@ static void transfer_put_test() {
     if (wsmc_get_response_code(cl) !=
                             put_tests[i].final_status) {
         if (verbose) {
-            printf("\nExpected = %ld, Returned = %ld        ",
+            printf("\nExpected = %d, Returned = %ld        ",
                            put_tests[i].final_status,
                            wsmc_get_response_code(cl));
          //   ws_xml_dump_node_tree(stdout, ws_xml_get_doc_root(doc));

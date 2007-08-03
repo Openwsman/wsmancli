@@ -66,13 +66,13 @@ TestData get_tests[] = {
     "Transfer Get with non existent Resource URI.",
     "http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystemxx",
     NULL,
-    NULL, 
+    NULL,
     NULL,
     "/s:Envelope/s:Body/s:Fault/s:Code/s:Subcode/s:Value",
-    "wsa:DestinationUnreachable",  
+    "wsa:DestinationUnreachable",
     "/s:Envelope/s:Body/s:Fault/s:Detail/wsman:FaultDetail",
     "http://schemas.dmtf.org/wbem/wsman/1/wsman/faultDetail/InvalidResourceURI",
-    400, 
+    400,
     0,
     0
   },
@@ -158,7 +158,7 @@ static int ntests = sizeof (get_tests) / sizeof (get_tests[0]);
 extern WsManClient *cl;
 client_opt_t *options;
 
-static void transfer_get_test() {
+static void transfer_get_test(void) {
     WsXmlDocH doc;
     char *xpf = NULL;
     char *xpd = NULL;

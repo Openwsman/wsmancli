@@ -53,10 +53,10 @@ TestData invoke_tests[] = {
     NULL,
     NULL,
     "/s:Envelope/s:Body/s:Fault/s:Code/s:Subcode/s:Value",
-    "wsman:InvalidSelectors",	    
+    "wsman:InvalidSelectors",
     "/s:Envelope/s:Body/s:Fault/s:Detail/wsman:FaultDetail",
     "http://schemas.dmtf.org/wbem/wsman/1/wsman/faultDetail/InsufficientSelectors",
-    400, 
+    400,
     0,
     0
   },
@@ -65,13 +65,13 @@ TestData invoke_tests[] = {
     "Custom Method with non existent Resource URI.",
     "http://schema.omc-project.org/wbem/wscim/1/cim-schema/2/OMC_InitdServicex",
     "ServiceStatus",
-    NULL, 
+    NULL,
     NULL,
     "/s:Envelope/s:Body/s:Fault/s:Code/s:Subcode/s:Value",
-    "wsa:DestinationUnreachable",  
+    "wsa:DestinationUnreachable",
     "/s:Envelope/s:Body/s:Fault/s:Detail/wsman:FaultDetail",
     "http://schemas.dmtf.org/wbem/wsman/1/wsman/faultDetail/InvalidResourceURI",
-    400, 
+    400,
     0,
     0
   },
@@ -183,7 +183,7 @@ static int ntests = sizeof (invoke_tests) / sizeof (invoke_tests[0]);
 extern WsManClient *cl;
 client_opt_t *options;
 
-static void invoke_test() {
+static void invoke_test(void) {
     WsXmlDocH doc;
     char *xpf = NULL;
     char *xpd = NULL;
@@ -216,7 +216,7 @@ static void invoke_test() {
     if (wsmc_get_response_code(cl) !=
                          invoke_tests[i].final_status) {
         if (verbose) {
-            printf("\nExpected = %ld\nReturned = %ld       ",
+            printf("\nExpected = %d\nReturned = %ld       ",
                     invoke_tests[i].final_status,
                     wsmc_get_response_code(cl));
         }

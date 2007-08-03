@@ -145,9 +145,8 @@ WsActions delivery_mode[] = {
 	{NULL, 0}
 };
 
-char wsman_parse_options(int argc, char **argv)
+static char wsman_parse_options(int argc, char **argv)
 {
-
 	char retval = 0;
 	u_error_t *error = NULL;
 
