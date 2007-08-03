@@ -234,22 +234,22 @@ char wsman_parse_options(int argc, char **argv)
 	};
 
 	u_option_entry_t event_options[] = {
-		{"delivery mode", 'G', U_OPTION_ARG_STRING, &event_delivery_mode,
+		{"delivery-mode", 'G', U_OPTION_ARG_STRING, &event_delivery_mode,
 		"Four delivery modes available: push/pushwithack/events/pull",
 		"<mode>"},
-		{"notification URI", 'Z', U_OPTION_ARG_STRING, &event_delivery_uri,
+		{"notification-uri", 'Z', U_OPTION_ARG_STRING, &event_delivery_uri,
 		"Where notifications are sent",
 		"<uri>"},
-		{"subscription expire time", 'r', U_OPTION_ARG_INT, &event_subscription_expire,
-		"subscription will be expired in such a time",
+		{"subscription-expiry-time", 'r', U_OPTION_ARG_INT, &event_subscription_expire,
+		"subscription expiry time in seconds",
 		"<seconds>"},
 		{"heartbeat",'H', U_OPTION_ARG_INT, &event_heartbeat,
 		"Send hearbeat in an interval",
 		"<seconds>"},
 		{"bookmark", 'l', U_OPTION_ARG_NONE, &event_sendbookmark,
 		"Send bookmark",NULL},
-		{"subscription identifier", 'i', U_OPTION_ARG_STRING, &event_subscription_id,
-		"To specify which subscription",
+		{"subscription-identifier", 'i', U_OPTION_ARG_STRING, &event_subscription_id,
+		"Used to specify which subscription",
 		"<uuid:XXX>"},
 		{NULL}
 	};
@@ -459,7 +459,7 @@ static int wsman_options_get_delivery_mode(void)
 			break;
 		}
 	}
-	return mode;	
+	return mode;
 }
 
 static int wsman_read_client_config(dictionary * ini)
