@@ -90,7 +90,12 @@ char cim_associators = 0;
 static char *enum_mode = NULL;
 static char *binding_enum_mode = NULL;
 static char *enum_context = NULL;
-
+static char *event_delivery_mode = NULL;
+static char *event_delivery_uri = NULL;
+static int event_subscription_expire = 0;
+static int event_heartbeat = 0;
+static int event_sendbookmark =0;
+static char *event_subscription_id = NULL;
 
 static char *cim_namespace = NULL;
 static char *fragment = NULL;
@@ -124,8 +129,20 @@ WsActions action_data[] = {
 	{"release", WSMAN_ACTION_RELEASE},
 	{"invoke", WSMAN_ACTION_CUSTOM},
 	{"identify", WSMAN_ACTION_IDENTIFY},
+	{"subscribe", WSMAN_ACTION_SUBSCRIBE},
+	{"unsubscribe", WSMAN_ACTION_UNSUBSCRIBE},
+	{"renew", WSMAN_ACTION_RENEW},
+	{"pull", WSMAN_ACTION_EVENT_PULL},
 	{"test", WSMAN_ACTION_TEST},
 	{NULL, 0},
+};
+
+WsActions delivery_mode[] = {
+	{"push", WSMAN_DELIVERY_PUSH},
+	{"pushwithack", WSMAN_DELIVERY_PUSHWITHACK},
+	{"events", WSMAN_DELIVERY_EVENTS},
+	{"pull", WSMAN_DELIVERY_PULL},
+	{NULL, 0}
 };
 
 char wsman_parse_options(int argc, char **argv)
@@ -216,6 +233,27 @@ char wsman_parse_options(int argc, char **argv)
 		{NULL}
 	};
 
+	u_option_entry_t event_options[] = {
+		{"delivery mode", 'G', U_OPTION_ARG_STRING, &event_delivery_mode,
+		"Four delivery modes available: push/pushwithack/events/pull",
+		"<mode>"},
+		{"notification URI", 'Z', U_OPTION_ARG_STRING, &event_delivery_uri,
+		"Where notifications are sent",
+		"<uri>"},
+		{"subscription expire time", 'r', U_OPTION_ARG_INT, &event_subscription_expire,
+		"subscription will be expired in such a time",
+		"<seconds>"},
+		{"heartbeat",'H', U_OPTION_ARG_INT, &event_heartbeat,
+		"Send hearbeat in an interval",
+		"<seconds>"},
+		{"bookmark", 'l', U_OPTION_ARG_NONE, &event_sendbookmark,
+		"Send bookmark",NULL},
+		{"subscription identifier", 'i', U_OPTION_ARG_STRING, &event_subscription_id,
+		"To specify which subscription",
+		"<uuid:XXX>"},
+		{NULL}
+	};
+
 	u_option_entry_t cim_options[] = {
 
 		{"namespace", 'N', U_OPTION_ARG_STRING, &cim_namespace,
@@ -247,6 +285,7 @@ char wsman_parse_options(int argc, char **argv)
 	};
 
 	u_option_group_t *enum_group;
+	u_option_group_t *event_group;
 	u_option_group_t *test_group;
 	u_option_group_t *cim_group;
 	u_option_group_t *req_flag_group;
@@ -257,6 +296,7 @@ char wsman_parse_options(int argc, char **argv)
 					"Enumeration Options");
 	test_group = u_option_group_new("tests", "Tests", "Test Cases");
 	cim_group = u_option_group_new("cim", "CIM", "CIM Options");
+	event_group = u_option_group_new("event", "Event subscription", "Subscription Options");
 	req_flag_group =
 	    u_option_group_new("flags", "Flags", "Request Flags");
 
@@ -264,6 +304,7 @@ char wsman_parse_options(int argc, char **argv)
 	u_option_group_add_entries(test_group, test_options);
 	u_option_group_add_entries(cim_group, cim_options);
 	u_option_group_add_entries(req_flag_group, request_options);
+	u_option_group_add_entries(event_group, event_options);
 
 	u_option_context_set_ignore_unknown_options(opt_ctx, FALSE);
 	u_option_context_add_main_entries(opt_ctx, options, "wsman");
@@ -271,6 +312,7 @@ char wsman_parse_options(int argc, char **argv)
 	u_option_context_add_group(opt_ctx, test_group);
 	u_option_context_add_group(opt_ctx, cim_group);
 	u_option_context_add_group(opt_ctx, req_flag_group);
+	u_option_context_add_group(opt_ctx, event_group);
 
 	retval = u_option_context_parse(opt_ctx, &argc, &argv, &error);
 	u_option_context_free(opt_ctx);
@@ -406,6 +448,20 @@ static int wsman_options_get_action(void)
 	}
 	return op;
 }
+
+static int wsman_options_get_delivery_mode(void)
+{
+	int mode = 0;
+	int i;
+	for (i = 0; delivery_mode[i].action != NULL; i++) {
+		if (strcmp(delivery_mode[i].action, event_delivery_mode) == 0) {
+			mode = delivery_mode[i].value;
+			break;
+		}
+	}
+	return mode;	
+}
+
 static int wsman_read_client_config(dictionary * ini)
 {
 	if (iniparser_find_entry(ini, "client")) {
@@ -437,6 +493,7 @@ int main(int argc, char **argv)
 	WsXmlDocH resource;
 	char *enumeration_mode, *binding_enumeration_mode,
 	    *resource_uri_with_selectors;
+	char *event_mode, *delivery_uri;
 	char *resource_uri = NULL;
 
 	filename = (char *) config_file;
@@ -721,6 +778,48 @@ int main(int argc, char **argv)
 			}
 		}
 		u_free(enumContext);
+		break;
+	case WSMAN_ACTION_SUBSCRIBE:
+		event_mode = event_delivery_mode;
+		delivery_uri = event_delivery_uri;
+		if(event_sendbookmark)
+			wsmc_set_action_option(options, FLAG_EVENT_SENDBOOKMARK);
+		if(event_delivery_mode)
+			options->delivery_mode = wsman_options_get_delivery_mode();
+		if(event_delivery_uri)
+			options->delivery_uri = event_delivery_uri;
+		if(event_heartbeat)
+			options->heartbeat_interval = event_heartbeat;
+		if(event_subscription_expire)
+			options->expires = event_subscription_expire;
+		if(wsm_dialect)
+			options->dialect = wsm_dialect;
+		rqstDoc = wsmc_action_subscribe(cl, resource_uri, options);
+		wsman_output(cl, rqstDoc);
+		if (rqstDoc) {
+			ws_xml_destroy_doc(rqstDoc);
+		}
+		break;
+	case WSMAN_ACTION_UNSUBSCRIBE:
+		rqstDoc = wsmc_action_unsubscribe(cl, resource_uri, options, event_subscription_id);
+		wsman_output(cl, rqstDoc);
+		if (rqstDoc) {
+			ws_xml_destroy_doc(rqstDoc);
+		}
+		break;
+	case WSMAN_ACTION_RENEW:
+		rqstDoc = wsmc_action_renew(cl, resource_uri, options, event_subscription_id);
+		wsman_output(cl, rqstDoc);
+		if (rqstDoc) {
+			ws_xml_destroy_doc(rqstDoc);
+		}
+		break;
+	case WSMAN_ACTION_EVENT_PULL:
+		rqstDoc = wsmc_action_evt_pull(cl, resource_uri, options, enum_context);
+		wsman_output(cl, rqstDoc);
+		if (rqstDoc) {
+			ws_xml_destroy_doc(rqstDoc);
+		}
 		break;
 	default:
 		fprintf(stderr, "Action not supported\n");
