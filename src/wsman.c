@@ -328,7 +328,9 @@ static char wsman_parse_options(int argc, char **argv)
 		resource_uri_opt = argv[2];
 	} else {
 		if (argv[1] && (strcmp(argv[1], "identify") == 0 ||
-				strcmp(argv[1], "test") == 0)) {
+				strcmp(argv[1], "test") == 0 ||
+                                strcmp(argv[1], "unsubscribe") == 0 ||
+                                strcmp(argv[1], "renew") == 0)) {
 			_action = argv[1];
 		} else {
 			fprintf(stderr,
@@ -510,7 +512,6 @@ int main(int argc, char **argv)
 	if (!wsman_parse_options(argc, argv)) {
 		exit(EXIT_FAILURE);
 	}
-
 	initialize_logging();
 	//      wsmc_transport_init(NULL);
 	options = wsmc_options_init();
@@ -807,6 +808,8 @@ int main(int argc, char **argv)
 		}
 		break;
 	case WSMAN_ACTION_RENEW:
+		if(event_subscription_expire)
+			options->expires = event_subscription_expire;
 		rqstDoc = wsmc_action_renew(cl, resource_uri, options, event_subscription_id);
 		wsman_output(cl, rqstDoc);
 		if (rqstDoc) {
