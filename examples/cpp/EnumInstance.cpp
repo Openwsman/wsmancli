@@ -35,7 +35,6 @@ int main(int argc, char* argv[])
 	}
 
 	catch (GeneralWsmanException &e) {
-		printf("\nError: failed while calling AMT_SOAPEventSubscriber::Delete routine\n");
 		printf("GeneralWsmanException:\n");
 		printf("%s\n", e.what());
 

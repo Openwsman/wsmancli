@@ -421,6 +421,8 @@ request_usr_pwd( WsManClient *client, wsman_auth_type_t auth,
   *password = u_strdup_printf ("%s", pw);
 }
 
+
+
 static hash_t *wsman_options_get_properties(void)
 {
 	int c = 0;
@@ -499,7 +501,7 @@ int main(int argc, char **argv)
 
 	filename = (char *) config_file;
 	if (filename) {
-		ini = iniparser_load(filename);
+		ini = iniparser_new(filename);
 		if (ini == NULL) {
 			fprintf(stderr, "cannot parse file [%s]",
 				filename);
@@ -841,7 +843,7 @@ int main(int argc, char **argv)
 	wsmc_transport_fini(cl);
 	wsmc_release(cl);
 	if (ini) {
-		iniparser_freedict(ini);
+		iniparser_free(ini);
 	}
 #ifdef DEBUG_VERBOSE
 	printf("     ******   Transfer Time = %ull usecs ******\n",

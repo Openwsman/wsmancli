@@ -50,10 +50,10 @@ struct __wsmid_identify
 typedef struct __wsmid_identify wsmid_identify;
 
 SER_START_ITEMS(wsmid_identify)
-SER_NS_STR(XML_NS_WSMAN_ID, "ProtocolVersion", 1), 
-SER_NS_STR(XML_NS_WSMAN_ID, "ProductVendor", 1),
-SER_NS_STR(XML_NS_WSMAN_ID, "ProductVersion", 1),
-SER_END_ITEMS(wsmid_identify);
+SER_NS_STR(XML_NS_WSMAN_ID, "ProtocolVersion", 1),
+	SER_NS_STR(XML_NS_WSMAN_ID, "ProductVendor", 1),
+	SER_NS_STR(XML_NS_WSMAN_ID, "ProductVersion", 1),
+	SER_END_ITEMS(wsmid_identify);
 
 
 static char  vendor = 0;
@@ -63,104 +63,112 @@ static char *endpoint = NULL;
 
 int main(int argc, char** argv)
 {
-	
-    WsManClient *cl;
-    WsXmlDocH doc;
-    client_opt_t *options;
-    char retval = 0;
-    u_error_t *error = NULL;
 
-    u_option_entry_t opt[] = {
-    { "product",	'p',	U_OPTION_ARG_NONE,	&vendor,
-		"Print Product Vendor",	NULL },
-    { "version",	'v',	U_OPTION_ARG_NONE,	&version,
-		"Print Product Version",	NULL  },
-    { "protocol",	'P',	U_OPTION_ARG_NONE,	&protocol,
-		"Print Protocol Version",	NULL  },
-    { "endpoint",	'u',	U_OPTION_ARG_STRING,	&endpoint,
-		"Endpoint in form of a URL", "<uri>" },
-    { NULL }
-    };
+	WsManClient *cl;
+	WsXmlDocH doc;
+	client_opt_t *options;
+	char retval = 0;
+	u_error_t *error = NULL;
 
-    u_option_context_t *opt_ctx;	
-    opt_ctx = u_option_context_new("");
-    u_option_context_set_ignore_unknown_options(opt_ctx, FALSE);
-    u_option_context_add_main_entries(opt_ctx, opt, "wsmid_identify");
-    retval = u_option_context_parse(opt_ctx, &argc, &argv, &error);
+	u_option_entry_t opt[] = {
+		{ "product",	'p',	U_OPTION_ARG_NONE,	&vendor,
+			"Print Product Vendor",	NULL },
+		{ "version",	'v',	U_OPTION_ARG_NONE,	&version,
+			"Print Product Version",	NULL  },
+		{ "protocol",	'P',	U_OPTION_ARG_NONE,	&protocol,
+			"Print Protocol Version",	NULL  },
+		{ "endpoint",	'u',	U_OPTION_ARG_STRING,	&endpoint,
+			"Endpoint in form of a URL", "<uri>" },
+		{ NULL }
+	};
 
-    u_option_context_free(opt_ctx);
+	u_option_context_t *opt_ctx;
+	opt_ctx = u_option_context_new("");
+	u_option_context_set_ignore_unknown_options(opt_ctx, FALSE);
+	u_option_context_add_main_entries(opt_ctx, opt, "wsmid_identify");
+	retval = u_option_context_parse(opt_ctx, &argc, &argv, &error);
 
-    if (error) {
-      if (error->message)
-        printf ("%s\n", error->message);
-      u_error_free(error);
-      return 1;
-    }
-    u_error_free(error);
+	u_option_context_free(opt_ctx);
 
-
-    u_uri_t *uri;
-    if (endpoint) {
-      u_uri_parse((const char *)endpoint, &uri);
-    }
-    if (!endpoint || !uri) {
-      fprintf(stderr, "endpoint option required\n");
-      return 1;
-    }
-
-/*
-fprintf( stderr, "wsman_create_client( host %s, port %d, path %s, scheme %s, user %s, passwd %s\n", uri->host,
-        uri->port,
-        uri->path,
-        uri->scheme,
-        uri->user,
-        uri->pwd);
-	*/
-
-    cl = wsmc_create( uri->host,
-        uri->port,
-        uri->path,
-        uri->scheme,
-        uri->user,
-        uri->pwd);
-    options = wsmc_options_init();
+	if (error) {
+		if (error->message)
+			printf ("%s\n", error->message);
+		u_error_free(error);
+		return 1;
+	}
+	u_error_free(error);
 
 
-    doc = wsmc_action_identify(cl, options);
+	u_uri_t *uri;
+	if (endpoint) {
+		u_uri_parse((const char *)endpoint, &uri);
+	}
+	if (!endpoint || !uri) {
+		fprintf(stderr, "endpoint option required\n");
+		return 1;
+	}
 
-    WsXmlNodeH soapBody = ws_xml_get_soap_body(doc);
-    if (ws_xml_get_child(soapBody, 0, XML_NS_WSMAN_ID, "IdentifyResponse")) {
-         wsmid_identify *id = ws_deserialize(wsmc_get_context(cl),
-                                     soapBody,
-                                     wsmid_identify_TypeInfo, "IdentifyResponse",
-                                     XML_NS_WSMAN_ID, NULL,
-                                     0, 0);
+	/*
+	   fprintf( stderr, "wsman_create_client( host %s, port %d, path %s, scheme %s, user %s, passwd %s\n", uri->host,
+	   uri->port,
+	   uri->path,
+	   uri->scheme,
+	   uri->user,
+	   uri->pwd);
+	   */
 
-         if (vendor)
-           printf("%s\n", id->ProductVendor);
-         if (version)
-           printf("%s\n", id->ProductVersion);
-         if (protocol)
-           printf("%s\n", id->ProtocolVersion);
+	cl = wsmc_create( uri->host,
+			uri->port,
+			uri->path,
+			uri->scheme,
+			uri->user,
+			uri->pwd);
+	options = wsmc_options_init();
 
-         if (!protocol && !vendor && !version ) {
-             printf("\n");
-           printf("%s %s supporting protocol %s\n", id->ProductVendor, id->ProductVersion,id->ProtocolVersion);
-         }
-           
-    }
-    if (uri) {
-      u_uri_free(uri);
-    }
-    
-    if (doc) {			
-        ws_xml_destroy_doc(doc);
-    }
 
-    wsmc_options_destroy(options);
-    wsmc_release(cl);
+	doc = wsmc_action_identify(cl, options);
+	if (doc) {
+		WsXmlNodeH soapBody = ws_xml_get_soap_body(doc);
+		if (ws_xml_get_child(soapBody, 0, XML_NS_WSMAN_ID, "IdentifyResponse")) {
+			wsmid_identify *id = ws_deserialize(wsmc_get_context(cl),
+					soapBody,
+					wsmid_identify_TypeInfo, "IdentifyResponse",
+					XML_NS_WSMAN_ID, NULL,
+					0, 0);
 
-	
+			if (vendor)
+				printf("%s\n", id->ProductVendor);
+			if (version)
+				printf("%s\n", id->ProductVersion);
+			if (protocol)
+				printf("%s\n", id->ProtocolVersion);
+
+			if (!protocol && !vendor && !version ) {
+				printf("\n");
+				printf("%s %s supporting protocol %s\n", id->ProductVendor, id->ProductVersion,id->ProtocolVersion);
+			}
+
+		}
+		if (uri) {
+			u_uri_free(uri);
+		}
+
+		ws_xml_destroy_doc(doc);
+	} else {
+		if (wsmc_get_response_code(cl) != 200) {
+			fprintf(stderr, "Connection failed. response code = %ld\n",
+					wsmc_get_response_code(cl));
+			if (wsmc_get_fault_string(cl)) {
+				fprintf(stderr, "%s\n",
+						wsmc_get_fault_string(cl));
+			}
+		}
+	}
+
+	wsmc_options_destroy(options);
+	wsmc_release(cl);
+
+
 	return 0;
 }
 
