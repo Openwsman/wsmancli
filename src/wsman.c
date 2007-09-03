@@ -96,6 +96,7 @@ static int event_subscription_expire = 0;
 static int event_heartbeat = 0;
 static int event_sendbookmark =0;
 static char *event_subscription_id = NULL;
+static char *event_reference_properties = NULL;
 
 static char *cim_namespace = NULL;
 static char *fragment = NULL;
@@ -250,6 +251,9 @@ static char wsman_parse_options(int argc, char **argv)
 		{"subscription-identifier", 'i', U_OPTION_ARG_STRING, &event_subscription_id,
 		"Used to specify which subscription",
 		"<uuid:XXX>"},
+		{"notify-reference-properties", 'L', U_OPTION_ARG_STRING, &event_reference_properties,
+		"Notify Reference Properties",
+		"<xs:anyURI>"},
 		{NULL}
 	};
 
@@ -602,7 +606,6 @@ int main(int argc, char **argv)
 		wsmc_set_action_option(options, FLAG_CIM_EXTENSIONS);
 	}
 
-
 	switch (op) {
 	case WSMAN_ACTION_TEST:
 		rqstDoc = wsmc_read_file(cl, input, "UTF-8", 0);
@@ -796,6 +799,8 @@ int main(int argc, char **argv)
 			options->expires = event_subscription_expire;
 		if(wsm_dialect)
 			options->dialect = wsm_dialect;
+		if(event_reference_properties)
+			options->reference = event_reference_properties;
 		rqstDoc = wsmc_action_subscribe(cl, resource_uri, options);
 		wsman_output(cl, rqstDoc);
 		if (rqstDoc) {
