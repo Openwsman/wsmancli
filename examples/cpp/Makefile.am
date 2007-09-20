@@ -1,6 +1,6 @@
        
 LDADD = \
-       -lwsman_clientpp
+       -lwsman -lwsman_clientpp
 
 CXXFLAGS = \
        $(OPENWSMAN_CFLAGS) 
