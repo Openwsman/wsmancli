@@ -608,7 +608,7 @@ int main(int argc, char **argv)
 
 	switch (op) {
 	case WSMAN_ACTION_TEST:
-		rqstDoc = wsmc_read_file(cl, input, "UTF-8", 0);
+		rqstDoc = wsmc_read_file(input, "UTF-8", 0);
 		wsman_send_request(cl, rqstDoc);
 		doc = wsmc_build_envelope_from_response(cl);
 		wsman_output(cl, doc);
@@ -642,7 +642,7 @@ int main(int argc, char **argv)
 		break;
 	case WSMAN_ACTION_TRANSFER_CREATE:
 		if (input) {
-			resource = wsmc_read_file(cl, input, "UTF-8", 0);
+			resource = wsmc_read_file(input, "UTF-8", 0);
 			doc =
 			    wsmc_action_create(cl, resource_uri, options,
 					       resource);
@@ -658,7 +658,7 @@ int main(int argc, char **argv)
 	case WSMAN_ACTION_TRANSFER_PUT:
 		if (input) {
 			printf("input file provided\n");
-			resource = wsmc_read_file(cl, input, "UTF-8", 0);
+			resource = wsmc_read_file(input, "UTF-8", 0);
 			doc =
 			    wsmc_action_put(cl, resource_uri, options,
 					    resource);

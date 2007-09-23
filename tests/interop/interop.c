@@ -251,7 +251,7 @@ int main(int argc, char** argv)
 		fprintf(stderr, "Interop file required\n");
 		return 1;
 	}
-	doc = wsmc_read_file(cl, file, "UTF-8", 0);
+	doc = wsmc_read_file(file, "UTF-8", 0);
 	//xml_parser_doc_dump(stdout, doc);
 
 
