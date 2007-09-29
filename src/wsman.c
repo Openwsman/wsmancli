@@ -133,7 +133,6 @@ WsActions action_data[] = {
 	{"subscribe", WSMAN_ACTION_SUBSCRIBE},
 	{"unsubscribe", WSMAN_ACTION_UNSUBSCRIBE},
 	{"renew", WSMAN_ACTION_RENEW},
-	{"pull", WSMAN_ACTION_EVENT_PULL},
 	{"test", WSMAN_ACTION_TEST},
 	{NULL, 0},
 };
@@ -808,7 +807,7 @@ int main(int argc, char **argv)
 		}
 		break;
 	case WSMAN_ACTION_UNSUBSCRIBE:
-		rqstDoc = wsmc_action_unsubscribe(cl, resource_uri, options, event_subscription_id);
+		rqstDoc = wsmc_action_unsubscribe(cl, options, event_subscription_id);
 		wsman_output(cl, rqstDoc);
 		if (rqstDoc) {
 			ws_xml_destroy_doc(rqstDoc);
@@ -817,14 +816,7 @@ int main(int argc, char **argv)
 	case WSMAN_ACTION_RENEW:
 		if(event_subscription_expire)
 			options->expires = event_subscription_expire;
-		rqstDoc = wsmc_action_renew(cl, resource_uri, options, event_subscription_id);
-		wsman_output(cl, rqstDoc);
-		if (rqstDoc) {
-			ws_xml_destroy_doc(rqstDoc);
-		}
-		break;
-	case WSMAN_ACTION_EVENT_PULL:
-		rqstDoc = wsmc_action_evt_pull(cl, resource_uri, options, enum_context);
+		rqstDoc = wsmc_action_renew(cl, options, event_subscription_id);
 		wsman_output(cl, rqstDoc);
 		if (rqstDoc) {
 			ws_xml_destroy_doc(rqstDoc);
