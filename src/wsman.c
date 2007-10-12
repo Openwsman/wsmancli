@@ -77,6 +77,7 @@ static char *proxy_upwd = NULL;
 
 
 static int debug_level = -1;
+static char *encoding = NULL;
 static char *test_case = NULL;
 static int enum_max_elements = 0;
 char enum_optimize = 0;
@@ -153,6 +154,8 @@ static char wsman_parse_options(int argc, char **argv)
 	u_option_entry_t options[] = {
 		{"debug", 'd', U_OPTION_ARG_INT, &debug_level,
 		 "Set the verbosity of debugging output.", "1-6"},
+		{"encoding", 'j', U_OPTION_ARG_STRING, &encoding,
+		"Set request message encoding"},
 		{"cacert", 'c', U_OPTION_ARG_STRING, &cainfo,
 		 "Certificate file to verify the peer", "<filename>"},
 		{"cert", 'A', U_OPTION_ARG_STRING, &cert,
@@ -580,7 +583,9 @@ int main(int argc, char **argv)
 					  &resource_uri);
 	}
 	op = wsman_options_get_action();
-
+	if (encoding) {
+		wsmc_set_encoding(cl, encoding);
+	}
 	if (dump_request) {
 		wsmc_set_action_option(options, FLAG_DUMP_REQUEST);
 	}
@@ -607,7 +612,7 @@ int main(int argc, char **argv)
 
 	switch (op) {
 	case WSMAN_ACTION_TEST:
-		rqstDoc = wsmc_read_file(input, "UTF-8", 0);
+		rqstDoc = wsmc_read_file(input, wsmc_get_encoding(cl), 0);
 		wsman_send_request(cl, rqstDoc);
 		doc = wsmc_build_envelope_from_response(cl);
 		wsman_output(cl, doc);
@@ -657,7 +662,7 @@ int main(int argc, char **argv)
 	case WSMAN_ACTION_TRANSFER_PUT:
 		if (input) {
 			printf("input file provided\n");
-			resource = wsmc_read_file(input, "UTF-8", 0);
+			resource = wsmc_read_file(input, wsmc_get_encoding(cl), 0);
 			doc =
 			    wsmc_action_put(cl, resource_uri, options,
 					    resource);
