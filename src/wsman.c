@@ -498,7 +498,7 @@ int main(int argc, char **argv)
 	WsXmlDocH rqstDoc;
 	client_opt_t *options;
 	WsXmlDocH enum_response;
-	WsXmlDocH resource;
+	WsXmlDocH resource = NULL;
 	char *enumeration_mode, *binding_enumeration_mode,
 	    *resource_uri_with_selectors;
 	char *event_mode, *delivery_uri;
@@ -646,6 +646,7 @@ int main(int argc, char **argv)
 			ws_xml_destroy_doc(doc);
 		}
 		break;
+		
 	case WSMAN_ACTION_TRANSFER_CREATE:
 		if (input) {
 			resource = wsmc_read_file(input, "UTF-8", 0);
