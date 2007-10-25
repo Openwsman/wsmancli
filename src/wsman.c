@@ -30,7 +30,6 @@
 
 /**
  * @author Anas Nashif
- * @author Eugene Yarmosh
  * @author Vadim Revyakin
  */
 #ifdef HAVE_CONFIG_H
@@ -51,7 +50,7 @@
 #include <wsman-client-api.h>
 #include <wsman-client-transport.h>
 #include <wsman-debug.h>
-// #include "wsman-client-options.h"
+
 
 #if __linux__
 extern char *getpass (const char *__prompt);
@@ -628,10 +627,13 @@ int main(int argc, char **argv)
 		}
 		break;
 	case WSMAN_ACTION_CUSTOM:
-
+		if (input) {
+			resource = wsmc_read_file(input, wsmc_get_encoding(cl), 0);			
+		}
 		doc = wsmc_action_invoke(cl, resource_uri, options,
 				   invoke_method,
-				   NULL);
+				   resource);
+		ws_xml_destroy_doc(resource);
 		wsman_output(cl, doc);
 		if (doc) {
 			ws_xml_destroy_doc(doc);
@@ -663,8 +665,7 @@ int main(int argc, char **argv)
 		if (input) {
 			printf("input file provided\n");
 			resource = wsmc_read_file(input, wsmc_get_encoding(cl), 0);
-			doc =
-			    wsmc_action_put(cl, resource_uri, options,
+			doc =  wsmc_action_put(cl, resource_uri, options,
 					    resource);
 			ws_xml_destroy_doc(resource);
 		} else {
