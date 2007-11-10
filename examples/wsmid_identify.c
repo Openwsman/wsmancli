@@ -60,6 +60,14 @@ static char  vendor = 0;
 static char version = 0;
 static char protocol = 0;
 static char *endpoint = NULL;
+static int debug_level = -1;
+
+static void initialize_logging(void)
+{
+	debug_add_handler(wsman_debug_message_handler, DEBUG_LEVEL_ALWAYS,
+						              NULL);
+}
+
 
 int main(int argc, char** argv)
 {
@@ -69,6 +77,9 @@ int main(int argc, char** argv)
 	client_opt_t *options;
 	char retval = 0;
 	u_error_t *error = NULL;
+	WsContextH cntx = NULL;
+
+	initialize_logging();
 
 	u_option_entry_t opt[] = {
 		{ "product",	'p',	U_OPTION_ARG_NONE,	&vendor,
@@ -98,6 +109,7 @@ int main(int argc, char** argv)
 	}
 	u_error_free(error);
 
+	wsman_debug_set_level(debug_level);
 
 	u_uri_t *uri;
 	if (endpoint) {
@@ -130,11 +142,19 @@ int main(int argc, char** argv)
 	if (doc) {
 		WsXmlNodeH soapBody = ws_xml_get_soap_body(doc);
 		if (ws_xml_get_child(soapBody, 0, XML_NS_WSMAN_ID, "IdentifyResponse")) {
-			wsmid_identify *id = ws_deserialize(wsmc_get_context(cl),
+
+			cntx = wsmc_get_context(cl);
+			debug("cntx: %p", cntx);
+
+			wsmid_identify *id = ws_deserialize(cntx,
 					soapBody,
 					wsmid_identify_TypeInfo, "IdentifyResponse",
 					XML_NS_WSMAN_ID, NULL,
 					0, 0);
+			if (!id) {
+					fprintf(stderr, "Serialization failed\n");
+					return 1;
+			}
 
 			if (vendor)
 				printf("%s\n", id->ProductVendor);
@@ -143,7 +163,7 @@ int main(int argc, char** argv)
 			if (protocol)
 				printf("%s\n", id->ProtocolVersion);
 
-			if (!protocol && !vendor && !version ) {
+			if (!protocol && !vendor && !version && id) {
 				printf("\n");
 				printf("%s %s supporting protocol %s\n", id->ProductVendor, id->ProductVersion,id->ProtocolVersion);
 			}
