@@ -40,6 +40,7 @@
 
 
 #include "wsman-api.h"
+#include "wsman-xml-serialize.h"
 
 struct __wsmid_identify
 {
@@ -77,7 +78,7 @@ int main(int argc, char** argv)
 	client_opt_t *options;
 	char retval = 0;
 	u_error_t *error = NULL;
-	WsContextH cntx = NULL;
+	WsSerializerContextH cntx = NULL;
 
 	initialize_logging();
 
@@ -143,7 +144,7 @@ int main(int argc, char** argv)
 		WsXmlNodeH soapBody = ws_xml_get_soap_body(doc);
 		if (ws_xml_get_child(soapBody, 0, XML_NS_WSMAN_ID, "IdentifyResponse")) {
 
-			cntx = wsmc_get_context(cl);
+			cntx = ws_serializer_init();
 			debug("cntx: %p", cntx);
 
 			wsmid_identify *id = ws_deserialize(cntx,
