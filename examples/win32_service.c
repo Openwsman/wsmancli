@@ -168,7 +168,7 @@ static int list_services(WsManClient *cl, WsXmlDocH doc, void *data)
 	node = ws_xml_get_child(node, 0,  XML_NS_ENUMERATION, WSENUM_PULL_RESP);
 	node = ws_xml_get_child(node, 0,  XML_NS_ENUMERATION, WSENUM_ITEMS);
 	if (ws_xml_get_child(node, 0, RESOURCE_URI , CLASSNAME )) {
-		CIM_Servie *service = ws_deserialize(wsmc_get_context(cl),
+		CIM_Servie *service = ws_deserialize( wsmc_get_serialization_context( cl ),
 				node,
 				CIM_Servie_TypeInfo, CLASSNAME,
 				RESOURCE_URI, NULL,
@@ -208,7 +208,7 @@ int main(int argc, char** argv)
 		{ NULL }
 	};
 
-	u_option_context_t *opt_ctx;	
+	u_option_context_t *opt_ctx;
 	opt_ctx = u_option_context_new("");
 	u_option_context_set_ignore_unknown_options(opt_ctx, FALSE);
 	u_option_context_add_main_entries(opt_ctx, opt, "Win32 Service");
@@ -240,7 +240,7 @@ int main(int argc, char** argv)
 			uri->path,
 			uri->scheme,
 			uri->user,
-			uri->pwd);		
+			uri->pwd);
 	wsmc_transport_init(cl, NULL);
 	options = wsmc_options_init();
 
@@ -269,7 +269,7 @@ int main(int argc, char** argv)
 		if (doc) {
 			WsXmlNodeH node = ws_xml_get_soap_body(doc);
 			if (ws_xml_get_child(node, 0, RESOURCE_URI , CLASSNAME )) {
-				CIM_Servie *service = ws_deserialize(wsmc_get_context(cl),
+				CIM_Servie *service = ws_deserialize( wsmc_get_serialization_context( cl ),
 						node,
 						CIM_Servie_TypeInfo, CLASSNAME,
 						RESOURCE_URI, NULL,

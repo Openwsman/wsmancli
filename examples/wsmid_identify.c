@@ -40,7 +40,6 @@
 
 
 #include "wsman-api.h"
-#include "wsman-xml-serialize.h"
 
 struct __wsmid_identify
 {
