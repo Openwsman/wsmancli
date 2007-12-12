@@ -503,7 +503,7 @@ int main(int argc, char **argv)
 	    *resource_uri_with_selectors;
 	char *event_mode, *delivery_uri;
 	char *resource_uri = NULL;
-
+	char subscontext[512];
 	filename = (char *) config_file;
 	if (filename) {
 		ini = iniparser_new(filename);
@@ -814,7 +814,10 @@ int main(int argc, char **argv)
 		}
 		break;
 	case WSMAN_ACTION_UNSUBSCRIBE:
-		rqstDoc = wsmc_action_unsubscribe(cl, resource_uri, options, event_subscription_id);
+		snprintf(subscontext, 512 , "<?xml version=\"1.0\" encoding=\"UTF-8\"?><wsa:ReferenceParameters xmlns:wsa=\"http://schemas.xmlsoap.org/ws/2004/08/addressing\" \
+			xmlns:wse=\"http://schemas.xmlsoap.org/ws/2004/08/eventing\"><wse:Identifier>%s</wse:Identifier> \
+			</wsa:ReferenceParameters>", event_subscription_id);
+		rqstDoc = wsmc_action_unsubscribe(cl, resource_uri, options, subscontext);
 		wsman_output(cl, rqstDoc);
 		if (rqstDoc) {
 			ws_xml_destroy_doc(rqstDoc);
@@ -823,6 +826,9 @@ int main(int argc, char **argv)
 	case WSMAN_ACTION_RENEW:
 		if(event_subscription_expire)
 			options->expires = event_subscription_expire;
+		snprintf(subscontext, 512 , "<wsa:ReferenceParameters xmlns:wsa=\"http://schemas.xmlsoap.org/ws/2004/08/addressing\" \
+                        xmlns:wse=\"http://schemas.xmlsoap.org/ws/2004/08/eventing\"><wse:Identifier>%s</wse:Identifier> \
+                        </wsa:ReferenceParameters>", event_subscription_id);
 		rqstDoc = wsmc_action_renew(cl, resource_uri, options, event_subscription_id);
 		wsman_output(cl, rqstDoc);
 		if (rqstDoc) {
