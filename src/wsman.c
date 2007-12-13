@@ -814,7 +814,7 @@ int main(int argc, char **argv)
 		}
 		break;
 	case WSMAN_ACTION_UNSUBSCRIBE:
-		snprintf(subscontext, 512 , "<?xml version=\"1.0\" encoding=\"UTF-8\"?><wsa:ReferenceParameters xmlns:wsa=\"http://schemas.xmlsoap.org/ws/2004/08/addressing\" \
+		snprintf(subscontext, 512 , "<wsa:ReferenceParameters xmlns:wsa=\"http://schemas.xmlsoap.org/ws/2004/08/addressing\" \
 			xmlns:wse=\"http://schemas.xmlsoap.org/ws/2004/08/eventing\"><wse:Identifier>%s</wse:Identifier> \
 			</wsa:ReferenceParameters>", event_subscription_id);
 		rqstDoc = wsmc_action_unsubscribe(cl, resource_uri, options, subscontext);
@@ -829,7 +829,7 @@ int main(int argc, char **argv)
 		snprintf(subscontext, 512 , "<wsa:ReferenceParameters xmlns:wsa=\"http://schemas.xmlsoap.org/ws/2004/08/addressing\" \
                         xmlns:wse=\"http://schemas.xmlsoap.org/ws/2004/08/eventing\"><wse:Identifier>%s</wse:Identifier> \
                         </wsa:ReferenceParameters>", event_subscription_id);
-		rqstDoc = wsmc_action_renew(cl, resource_uri, options, event_subscription_id);
+		rqstDoc = wsmc_action_renew(cl, resource_uri, options, subscontext);
 		wsman_output(cl, rqstDoc);
 		if (rqstDoc) {
 			ws_xml_destroy_doc(rqstDoc);
