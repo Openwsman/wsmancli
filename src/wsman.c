@@ -130,6 +130,7 @@ WsActions action_data[] = {
 	{"release", WSMAN_ACTION_RELEASE},
 	{"invoke", WSMAN_ACTION_CUSTOM},
 	{"identify", WSMAN_ACTION_IDENTIFY},
+	{"anonid", WSMAN_ACTION_ANON_IDENTIFY},
 	{"subscribe", WSMAN_ACTION_SUBSCRIBE},
 	{"unsubscribe", WSMAN_ACTION_UNSUBSCRIBE},
 	{"renew", WSMAN_ACTION_RENEW},
@@ -144,6 +145,19 @@ WsActions delivery_mode[] = {
 	{"pull", WSMAN_DELIVERY_PULL},
 	{NULL, 0}
 };
+
+static int wsman_options_get_action(void)
+{
+	int op = 0;
+	int i;
+	for (i = 0; action_data[i].action != NULL; i++) {
+		if (strcmp(action_data[i].action, _action) == 0) {
+			op = action_data[i].value;
+			break;
+		}
+	}
+	return op;
+}
 
 static char wsman_parse_options(int argc, char **argv)
 {
@@ -334,6 +348,7 @@ static char wsman_parse_options(int argc, char **argv)
 	} else {
 		if (argv[1] && (strcmp(argv[1], "identify") == 0 ||
 				strcmp(argv[1], "test") == 0 ||
+				strcmp(argv[1], "anonid") == 0 ||
                                 strcmp(argv[1], "unsubscribe") == 0 ||
                                 strcmp(argv[1], "renew") == 0)) {
 			_action = argv[1];
@@ -351,7 +366,10 @@ static char wsman_parse_options(int argc, char **argv)
 		server_port = cainfo ? 8888 : 8889;
 	}
 	if (url_path == NULL) {
-		url_path = "/wsman";
+		if (strcmp(argv[1], "anonid") == 0)
+			url_path = "/wsman-anon/identify";
+		else
+			url_path = "/wsman";
 	}
 	return TRUE;
 }
@@ -444,18 +462,6 @@ static hash_t *wsman_options_get_properties(void)
 	return h;
 }
 
-static int wsman_options_get_action(void)
-{
-	int op = 0;
-	int i;
-	for (i = 0; action_data[i].action != NULL; i++) {
-		if (strcmp(action_data[i].action, _action) == 0) {
-			op = action_data[i].value;
-			break;
-		}
-	}
-	return op;
-}
 
 static int wsman_options_get_delivery_mode(void)
 {
@@ -619,6 +625,7 @@ int main(int argc, char **argv)
 			ws_xml_destroy_doc(doc);
 		}
 		break;
+	case WSMAN_ACTION_ANON_IDENTIFY:
 	case WSMAN_ACTION_IDENTIFY:
 		doc = wsmc_action_identify(cl, options);
 		wsman_output(cl, doc);
@@ -628,7 +635,7 @@ int main(int argc, char **argv)
 		break;
 	case WSMAN_ACTION_CUSTOM:
 		if (input) {
-			resource = wsmc_read_file(input, wsmc_get_encoding(cl), 0);			
+			resource = wsmc_read_file(input, wsmc_get_encoding(cl), 0);
 		}
 		doc = wsmc_action_invoke(cl, resource_uri, options,
 				   invoke_method,
@@ -646,7 +653,7 @@ int main(int argc, char **argv)
 			ws_xml_destroy_doc(doc);
 		}
 		break;
-		
+
 	case WSMAN_ACTION_TRANSFER_CREATE:
 		if (input) {
 			resource = wsmc_read_file(input, "UTF-8", 0);
