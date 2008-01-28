@@ -31,6 +31,7 @@
 /**
  * @author Anas Nashif
  * @author Vadim Revyakin
+ * @author Liang Hou
  */
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -91,12 +92,16 @@ static char *enum_mode = NULL;
 static char *binding_enum_mode = NULL;
 static char *enum_context = NULL;
 static char *event_delivery_mode = NULL;
+static char *event_delivery_sec_mode = NULL;
 static char *event_delivery_uri = NULL;
 static int event_subscription_expire = 0;
 static int event_heartbeat = 0;
 static int event_sendbookmark =0;
 static char *event_subscription_id = NULL;
 static char *event_reference_properties = NULL;
+static char *event_username = NULL;
+static char *event_password = NULL;
+static char *event_thumbprint = NULL;
 
 static char *cim_namespace = NULL;
 static char *fragment = NULL;
@@ -143,6 +148,17 @@ WsActions delivery_mode[] = {
 	{"pushwithack", WSMAN_DELIVERY_PUSHWITHACK},
 	{"events", WSMAN_DELIVERY_EVENTS},
 	{"pull", WSMAN_DELIVERY_PULL},
+	{NULL, 0}
+};
+
+WsActions delivery_sec_mode[] = {
+	{"httpbasic", WSMAN_DELIVERY_SEC_HTTP_BASIC},
+	{"httpdigest", WSMAN_DELIVERY_SEC_HTTP_DIGEST},
+	{"httpsbasic", WSMAN_DELIVERY_SEC_HTTPS_BASIC},
+	{"httpsdigest", WSMAN_DELIVERY_SEC_HTTPS_DIGEST},
+	{"httpsmutual", WSMAN_DELIVERY_SEC_HTTPS_MUTUAL},
+	{"httpsmutualbasic", WSMAN_DELIVERY_SEC_HTTPS_MUTUAL_BASIC},
+	{"httpsmutualdigest", WSMAN_DELIVERY_SEC_HTTPS_MUTUAL_DIGEST},
 	{NULL, 0}
 };
 
@@ -252,6 +268,18 @@ static char wsman_parse_options(int argc, char **argv)
 		{"delivery-mode", 'G', U_OPTION_ARG_STRING, &event_delivery_mode,
 		"Four delivery modes available: push/pushwithack/events/pull",
 		"<mode>"},
+		{"delivery-sec-mode", 's', U_OPTION_ARG_STRING, &event_delivery_sec_mode,
+                "Four delivery modes available: httpbasic/httpdigest/httpsbasic/httpsdigest/httpsmutual/httpsmutualbasic/httpsmutualdigest",
+                "<mode>"},
+		{"delivery-username", 'n', U_OPTION_ARG_STRING, &event_username,
+		"username for the eventing receiver",
+		"<username>"},
+		{"delivery-password", 'z', U_OPTION_ARG_STRING, &event_password,
+                "password for the eventing receiver",
+                "<password>"},
+		{"delivery-thumbprint", 'Y', U_OPTION_ARG_STRING, &event_thumbprint,
+                "ceritificate thumbprint of the eventing receiver",
+                "<thumbprint>"},
 		{"notification-uri", 'Z', U_OPTION_ARG_STRING, &event_delivery_uri,
 		"Where notifications are sent",
 		"<uri>"},
@@ -266,9 +294,9 @@ static char wsman_parse_options(int argc, char **argv)
 		{"subscription-identifier", 'i', U_OPTION_ARG_STRING, &event_subscription_id,
 		"Used to specify which subscription",
 		"<uuid:XXX>"},
-		{"notify-reference-properties", 'L', U_OPTION_ARG_STRING, &event_reference_properties,
-		"Notify Reference Properties",
-		"<xs:anyURI>"},
+		{"event-reference-properties", 'L', U_OPTION_ARG_STRING, &event_reference_properties,
+		"Event Reference Properties, correlation of Events with Subscription",
+		"<xml string>"},
 		{NULL}
 	};
 
@@ -475,6 +503,20 @@ static int wsman_options_get_delivery_mode(void)
 	}
 	return mode;
 }
+
+static int wsman_options_get_delivery_sec_mode(void)
+{
+        int mode = 0;
+        int i;
+        for (i = 0; delivery_sec_mode[i].action != NULL; i++) {
+                if (strcmp(delivery_sec_mode[i].action, event_delivery_sec_mode) == 0) {
+                        mode = delivery_sec_mode[i].value;
+                        break;
+                }
+        }
+        return mode;
+}
+
 
 static int wsman_read_client_config(dictionary * ini)
 {
@@ -804,6 +846,14 @@ int main(int argc, char **argv)
 			wsmc_set_action_option(options, FLAG_EVENT_SENDBOOKMARK);
 		if(event_delivery_mode)
 			options->delivery_mode = wsman_options_get_delivery_mode();
+		if(event_delivery_sec_mode)
+                        options->delivery_sec_mode = wsman_options_get_delivery_sec_mode();
+		if(event_username)
+			options->delivery_username = event_username;
+		if(event_password)
+			options->delivery_password = event_password;
+		if(event_thumbprint)
+			options->delivery_certificatethumbprint = event_thumbprint;
 		if(event_delivery_uri)
 			options->delivery_uri = event_delivery_uri;
 		if(event_heartbeat)
