@@ -6,11 +6,13 @@ CFLAGS = \
 wsman_LDADD = \
        $(OPENWSMAN_LIBS) \
        -lwsman_curl_client_transport
+wseventmgr_LDADD = \
+	$(wsman_LDADD)
 
-wsman_SOURCES = wsman.c 
+wsman_SOURCES = wsman.c
+wseventmgr_SOURCES = wseventmgr.c 
 
 bin_PROGRAMS = \
-	wsman
-   
-
+	wsman \
+	wseventmgr
 
