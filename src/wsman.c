@@ -785,12 +785,12 @@ int main(int argc, char **argv)
 		if (cim_references) {
 			wsmc_set_action_option(options,
 						FLAG_CIM_REFERENCES);
-			options->dialect = WSM_ASSOCIATION_FILTER_DIALECT;
+			wsmc_set_dialect(WSM_ASSOCIATION_FILTER_DIALECT, options);
 		}
 		if (cim_associators) {
 			wsmc_set_action_option(options,
 						FLAG_CIM_ASSOCIATORS);
-			options->dialect = WSM_ASSOCIATION_FILTER_DIALECT;
+			wsmc_set_dialect(WSM_ASSOCIATION_FILTER_DIALECT, options);
 		}
 		if (enum_optimize) {
 			wsmc_set_action_option(options,
