@@ -414,7 +414,7 @@ int main(int argc, char **argv)
 	if (!wsman_parse_options(argc, argv)) {
 		exit(EXIT_FAILURE);
 	}
-	
+
 	initialize_logging();
 	//      wsmc_transport_init(NULL);
 	options = wsmc_options_init();
@@ -485,10 +485,7 @@ int main(int argc, char **argv)
 		wsmc_set_action_option(options, FLAG_DUMP_REQUEST);
 	}
 	if (wsm_filter) {
-		options->filter = wsm_filter;
-	}
-	if (wsm_dialect) {
-		options->dialect = wsm_dialect;
+		options->filter = filter_create_simple(wsm_dialect, wsm_filter );
 	}
 	options->cim_ns = cim_namespace;
 
@@ -523,8 +520,10 @@ int main(int argc, char **argv)
 			options->heartbeat_interval = event_heartbeat;
 		if(event_subscription_expire)
 			options->expires = event_subscription_expire;
+		/*
 		if(wsm_dialect)
 			options->dialect = wsm_dialect;
+			*/
 		if(event_reference_properties)
 			options->reference = event_reference_properties;
 		rqstDoc = wsmc_action_subscribe(cl, resource_uri, options);

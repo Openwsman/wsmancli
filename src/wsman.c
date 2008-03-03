@@ -86,8 +86,6 @@ char dump_request = 0;
 char step = 0;
 char request_only = 0;
 char cim_extensions = 0;
-char cim_references = 0;
-char cim_associators = 0;
 static char *enum_mode = NULL;
 static char *binding_enum_mode = NULL;
 static char *enum_context = NULL;
@@ -139,6 +137,8 @@ WsActions action_data[] = {
 	{"subscribe", WSMAN_ACTION_SUBSCRIBE},
 	{"unsubscribe", WSMAN_ACTION_UNSUBSCRIBE},
 	{"renew", WSMAN_ACTION_RENEW},
+	{"associators", WSMAN_ACTION_ASSOCIATORS},
+	{"references", WSMAN_ACTION_REFERENCES},
 	{"test", WSMAN_ACTION_TEST},
 	{NULL, 0},
 };
@@ -309,10 +309,6 @@ static char wsman_parse_options(int argc, char **argv)
 		 "CIM binding Enumeration Mode", "none|include|exclude"},
 		{"cim-extensions", 'T', U_OPTION_ARG_NONE, &cim_extensions,
 		 "Show CIM Extensions", NULL},
-		{"references", 'W', U_OPTION_ARG_NONE, &cim_references,
-		 "CIM References", NULL},
-		{"associators", 'w', U_OPTION_ARG_NONE, &cim_associators,
-		 "CIM Associators", NULL},
 		{NULL}
 	};
 
@@ -645,12 +641,7 @@ int main(int argc, char **argv)
 	if (fragment) {
 		options->fragment = fragment;
 	}
-	if (wsm_filter) {
-		options->filter = wsm_filter;
-	}
-	if (wsm_dialect) {
-		options->dialect = wsm_dialect;
-	}
+
 	options->properties = wsman_options_get_properties();
 	options->cim_ns = cim_namespace;
 	if (cim_extensions) {
@@ -753,7 +744,22 @@ int main(int argc, char **argv)
 			ws_xml_destroy_doc(doc);
 		}
 		break;
+	case WSMAN_ACTION_ASSOCIATORS:
+	case WSMAN_ACTION_REFERENCES:
 	case WSMAN_ACTION_ENUMERATION:
+		if ( op == WSMAN_ACTION_REFERENCES || op == WSMAN_ACTION_ASSOCIATORS ) {
+			if (wsm_filter) {
+				epr_t *epr = epr_from_string(wsm_filter);
+				if(options->cim_ns) {
+					epr_add_selector_text(epr, CIM_NAMESPACE_SELECTOR, options->cim_ns);
+				}
+				if (epr) {
+					options->filter = filter_create_assoc(epr, (op == WSMAN_ACTION_REFERENCES )?0:1, NULL, NULL, NULL, NULL, NULL, 0 );
+				}
+			} else {
+				error("Filter Requied");
+			}
+		}
 
 		enumeration_mode = enum_mode;
 		binding_enumeration_mode =
@@ -781,16 +787,6 @@ int main(int argc, char **argv)
 				 == 0)
 				wsmc_set_action_option(options,
 							FLAG_POLYMORPHISM_NONE);
-		}
-		if (cim_references) {
-			wsmc_set_action_option(options,
-						FLAG_CIM_REFERENCES);
-			wsmc_set_dialect(WSM_ASSOCIATION_FILTER_DIALECT, options);
-		}
-		if (cim_associators) {
-			wsmc_set_action_option(options,
-						FLAG_CIM_ASSOCIATORS);
-			wsmc_set_dialect(WSM_ASSOCIATION_FILTER_DIALECT, options);
 		}
 		if (enum_optimize) {
 			wsmc_set_action_option(options,
@@ -860,8 +856,10 @@ int main(int argc, char **argv)
 			options->heartbeat_interval = event_heartbeat;
 		if(event_subscription_expire)
 			options->expires = event_subscription_expire;
+		/*
 		if(wsm_dialect)
 			options->dialect = wsm_dialect;
+			*/
 		if(event_reference_properties)
 			options->reference = event_reference_properties;
 		rqstDoc = wsmc_action_subscribe(cl, resource_uri, options);
