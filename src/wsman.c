@@ -553,7 +553,6 @@ int main(int argc, char **argv)
 
 	filename = (char *) config_file;
 
-
 	if (filename) {
 		ini = iniparser_new(filename);
 		if (ini == NULL) {
@@ -859,10 +858,9 @@ int main(int argc, char **argv)
 			options->heartbeat_interval = event_heartbeat;
 		if(event_subscription_expire)
 			options->expires = event_subscription_expire;
-		/*
-		if(wsm_dialect)
-			options->dialect = wsm_dialect;
-			*/
+		if(wsm_filter)
+			filter = filter_create_simple(wsm_dialect, wsm_filter);
+
 		if(event_reference_properties)
 			options->reference = event_reference_properties;
 		rqstDoc = wsmc_action_subscribe(cl, resource_uri, options, filter);
