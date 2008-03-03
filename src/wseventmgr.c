@@ -411,6 +411,7 @@ int main(int argc, char **argv)
 	char *event_mode, *delivery_uri;
 	char *resource_uri = NULL;
 	char subscontext[512];
+	filter_t *filter = NULL;
 	if (!wsman_parse_options(argc, argv)) {
 		exit(EXIT_FAILURE);
 	}
@@ -485,14 +486,13 @@ int main(int argc, char **argv)
 		wsmc_set_action_option(options, FLAG_DUMP_REQUEST);
 	}
 	if (wsm_filter) {
-		options->filter = filter_create_simple(wsm_dialect, wsm_filter );
+		filter = filter_create_simple(wsm_dialect, wsm_filter );
 	}
 	options->cim_ns = cim_namespace;
 
 	switch (op) {
 	case WSMAN_ACTION_PULL:
-		doc =
-		    wsmc_action_pull(cl, resource_uri, options,
+		doc = wsmc_action_pull(cl, resource_uri, options, filter,
 				enum_context);
 		wsman_output(cl, doc);
 		if (doc) {
@@ -526,7 +526,7 @@ int main(int argc, char **argv)
 			*/
 		if(event_reference_properties)
 			options->reference = event_reference_properties;
-		rqstDoc = wsmc_action_subscribe(cl, resource_uri, options);
+		rqstDoc = wsmc_action_subscribe(cl, resource_uri, options, filter);
 		wsman_output(cl, rqstDoc);
 		if (rqstDoc) {
 			ws_xml_destroy_doc(rqstDoc);

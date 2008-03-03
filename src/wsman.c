@@ -548,7 +548,12 @@ int main(int argc, char **argv)
 	char *event_mode, *delivery_uri;
 	char *resource_uri = NULL;
 	char subscontext[512];
+	filter_t *filter = NULL;
+
+
 	filename = (char *) config_file;
+
+
 	if (filename) {
 		ini = iniparser_new(filename);
 		if (ini == NULL) {
@@ -727,9 +732,7 @@ int main(int argc, char **argv)
 		}
 		break;
 	case WSMAN_ACTION_PULL:
-		doc =
-		    wsmc_action_pull(cl, resource_uri, options,
-				enum_context);
+		doc = wsmc_action_pull(cl, resource_uri, options, filter, enum_context);
 		wsman_output(cl, doc);
 		if (doc) {
 			ws_xml_destroy_doc(doc);
@@ -754,7 +757,7 @@ int main(int argc, char **argv)
 					epr_add_selector_text(epr, CIM_NAMESPACE_SELECTOR, options->cim_ns);
 				}
 				if (epr) {
-					options->filter = filter_create_assoc(epr, (op == WSMAN_ACTION_REFERENCES )?0:1, NULL, NULL, NULL, NULL, NULL, 0 );
+					filter = filter_create_assoc(epr, (op == WSMAN_ACTION_REFERENCES )?0:1, NULL, NULL, NULL, NULL, NULL, 0 );
 				}
 			} else {
 				error("Filter Requied");
@@ -798,7 +801,7 @@ int main(int argc, char **argv)
 			wsmc_set_action_option(options,
 						FLAG_ENUMERATION_COUNT_ESTIMATION);
 		}
-		enum_response = wsmc_action_enumerate(cl, resource_uri, options);
+		enum_response = wsmc_action_enumerate(cl, resource_uri, options, filter);
 		wsman_output(cl, enum_response);
 		if (enum_response) {
 			if (!(wsmc_get_response_code(cl) == 200 ||
@@ -817,7 +820,7 @@ int main(int argc, char **argv)
 			break;
 		while (enumContext != NULL && enumContext[0] != 0) {
 
-			doc = wsmc_action_pull(cl, resource_uri, options,
+			doc = wsmc_action_pull(cl, resource_uri, options, filter,
 					enumContext);
 			wsman_output(cl, doc);
 
@@ -862,7 +865,7 @@ int main(int argc, char **argv)
 			*/
 		if(event_reference_properties)
 			options->reference = event_reference_properties;
-		rqstDoc = wsmc_action_subscribe(cl, resource_uri, options);
+		rqstDoc = wsmc_action_subscribe(cl, resource_uri, options, filter);
 		wsman_output(cl, rqstDoc);
 		if (rqstDoc) {
 			ws_xml_destroy_doc(rqstDoc);
@@ -905,6 +908,7 @@ int main(int argc, char **argv)
 		}
 	}
 	wsmc_options_destroy(options);
+	filter_destroy(filter);
 	wsmc_transport_fini(cl);
 	wsmc_release(cl);
 	if (ini) {

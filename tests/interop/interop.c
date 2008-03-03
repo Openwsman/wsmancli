@@ -121,14 +121,14 @@ static int run_interop_test (WsManClient *cl, WsXmlNodeH scenario, InteropTest i
 		WsXmlNodeH input  = ws_xml_get_child(scenario, 0, NULL, "Input");
 		WsXmlNodeH r  = ws_xml_get_child(input, 0, NULL, "ResourceURI");
 		char *resource_uri = ws_xml_get_node_text(r);
-		wsmc_action_enumerate_and_pull(cl, resource_uri , options, pull_items, NULL );
+		wsmc_action_enumerate_and_pull(cl, resource_uri , options, NULL, pull_items, NULL );
 	} else if (id == 9) { // 7.2 Optimized Enumerate
 
 		wsmc_set_action_option(options, FLAG_ENUMERATION_OPTIMIZATION);
 		WsXmlNodeH input  = ws_xml_get_child(scenario, 0, NULL, "Input");
 		WsXmlNodeH r  = ws_xml_get_child(input, 0, NULL, "ResourceURI");
 		char *resource_uri = ws_xml_get_node_text(r);
-		wsmc_action_enumerate_and_pull(cl, resource_uri , options, pull_items, NULL );
+		wsmc_action_enumerate_and_pull(cl, resource_uri , options, NULL, pull_items, NULL );
 	} else if (id == 10) {  // 7.3 Enumerate failure
 
 		/*
@@ -152,14 +152,14 @@ static int run_interop_test (WsManClient *cl, WsXmlNodeH scenario, InteropTest i
 		WsXmlNodeH input  = ws_xml_get_child(scenario, 0, NULL, "Input");
 		WsXmlNodeH r  = ws_xml_get_child(input, 0, NULL, "ResourceURI");
 		char *resource_uri = ws_xml_get_node_text(r);
-		wsmc_action_enumerate_and_pull(cl, resource_uri , options, pull_items, NULL );
+		wsmc_action_enumerate_and_pull(cl, resource_uri , options, NULL, pull_items, NULL );
 	}else if (id == 16) { // 7.9 Enumerate Polymorphism
 
 		wsmc_set_action_option(options, FLAG_POLYMORPHISM_NONE);
 		WsXmlNodeH input  = ws_xml_get_child(scenario, 0, NULL, "Input");
 		WsXmlNodeH r  = ws_xml_get_child(input, 0, NULL, "ResourceURI");
 		char *resource_uri = ws_xml_get_node_text(r);
-		wsmc_action_enumerate_and_pull(cl, resource_uri , options, pull_items, NULL );
+		wsmc_action_enumerate_and_pull(cl, resource_uri , options, NULL, pull_items, NULL );
 	}else if (id == 17) { // 8.1 Invoke
 
 		WsXmlNodeH input  = ws_xml_get_child(scenario, 0, NULL, "Input");

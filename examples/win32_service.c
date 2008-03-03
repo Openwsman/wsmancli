@@ -246,7 +246,7 @@ int main(int argc, char** argv)
 
 	if (listall) {
 		if (dump) wsmc_set_action_option(options,FLAG_DUMP_REQUEST );
-		wsmc_action_enumerate_and_pull(cl, RESOURCE_URI, options, list_services, NULL );
+		wsmc_action_enumerate_and_pull(cl, RESOURCE_URI, options, NULL, list_services, NULL );
 	} else if (start && argv[1]) {
 		if (dump) wsmc_set_action_option(options,FLAG_DUMP_REQUEST );
 		wsmc_add_selector(options, "Name", argv[1]);

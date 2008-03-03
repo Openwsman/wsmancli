@@ -54,44 +54,44 @@ typedef struct __WsmanEpr WsmanEpr;
 
 static int collect_epr(WsManClient *cl, WsXmlDocH doc, void *data)
 {
-  
+
   if (!doc) {
     return 0;
   }
 
   list_t *list = (list_t *)data;
    WsXmlNodeH resource_uri_node, node1, node2, node3, node4;
- 
+
 
   WsmanEpr *epr = (WsmanEpr *)u_zalloc(sizeof(WsmanEpr));
 
   WsXmlNodeH body = ws_xml_get_soap_body(doc);
 
- 
+
   if (body != NULL)
     node1 = ws_xml_get_child(body, 0,  XML_NS_ENUMERATION, WSENUM_PULL_RESP);
-  else  
+  else
     return 0;
-  
+
   if (node1 != NULL )
     node2 = ws_xml_get_child(node1, 0,  XML_NS_ENUMERATION, WSENUM_ITEMS);
   else
     return 0;
-  if (node2 != NULL) 
+  if (node2 != NULL)
     node3 =  ws_xml_get_child(node2, 0,  XML_NS_ADDRESSING, WSA_EPR);
   else
     return 0;
 
-  if (node3 != NULL) 
+  if (node3 != NULL)
     node4 =  ws_xml_get_child(node3, 0,  XML_NS_ADDRESSING, WSA_REFERENCE_PARAMETERS);
   else
     return 0;
-  
-  if (node4 != NULL) 
+
+  if (node4 != NULL)
     resource_uri_node = ws_xml_get_child(node4, 0,  XML_NS_WS_MAN, WSM_RESOURCE_URI);
   else
     return 0;
-  
+
   if (resource_uri_node != NULL) {
     epr->resource_uri =  u_strdup(ws_xml_get_node_text(resource_uri_node));
   } else {
@@ -108,14 +108,14 @@ static int collect_epr(WsManClient *cl, WsXmlDocH doc, void *data)
       char* attrVal = ws_xml_find_attr_value(selector, XML_NS_WS_MAN, WSM_NAME);
       if ( attrVal == NULL )
         attrVal = ws_xml_find_attr_value(selector, NULL, WSM_NAME);
-        
+
       if ( attrVal ) {
         if (!hash_alloc_insert(epr->selectors, u_strdup(attrVal), u_strdup(ws_xml_get_node_text(selector)))) {
           error("hash_alloc_insert failed");
         }
       }
     }
-    
+
   }
 
   lnode_t *n = lnode_create(epr);
@@ -128,7 +128,7 @@ static int collect_epr(WsManClient *cl, WsXmlDocH doc, void *data)
 
 int main(int argc, char** argv)
 {
-	
+
     WsManClient *cl;
     client_opt_t *options;
     char retval = 0;
@@ -141,7 +141,7 @@ int main(int argc, char** argv)
     { NULL }
     };
 
-    u_option_context_t *opt_ctx;	
+    u_option_context_t *opt_ctx;
     opt_ctx = u_option_context_new("");
     u_option_context_set_ignore_unknown_options(opt_ctx, FALSE);
     u_option_context_add_main_entries(opt_ctx, opt, "Win32 Service");
@@ -173,17 +173,17 @@ int main(int argc, char** argv)
         uri->path,
         uri->scheme,
         uri->user,
-        uri->pwd);		
+        uri->pwd);
     wsmc_transport_init(cl, NULL);
     options = wsmc_options_init();
 
     wsmc_set_action_option(options, FLAG_ENUMERATION_ENUM_EPR);
-    
+
 
     list_t *l = list_create(LISTCOUNT_T_MAX);
-    wsmc_action_enumerate_and_pull(cl, argv[1] , options, collect_epr, l );
-    
-    
+    wsmc_action_enumerate_and_pull(cl, argv[1] , options, NULL, collect_epr, l );
+
+
     printf("returned items: %d\n", (int)list_count(l));
     lnode_t *node = list_first(l);
     while(node) {
@@ -197,14 +197,14 @@ int main(int argc, char** argv)
         printf("\t%s  =   %s\n", (char*) hnode_getkey(hn),
                (char*) hnode_get(hn) );
       }
-     
+
       node = list_next (l, node);
-    }		
+    }
 
     if (uri) {
       u_uri_free(uri);
     }
-    
+
     wsmc_options_destroy(options);
     wsmc_release(cl);
     return 0;
