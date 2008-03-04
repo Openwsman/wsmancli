@@ -762,7 +762,8 @@ int main(int argc, char **argv)
 				error("Filter Requied");
 			}
 		}
-
+		else
+			filter = filter_create_simple(wsm_dialect, wsm_filter);
 		enumeration_mode = enum_mode;
 		binding_enumeration_mode =
 		    binding_enum_mode;
