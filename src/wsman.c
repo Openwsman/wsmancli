@@ -182,51 +182,51 @@ static char wsman_parse_options(int argc, char **argv)
 
 	u_option_entry_t options[] = {
 		{"debug", 'd', U_OPTION_ARG_INT, &debug_level,
-		 "Set the verbosity of debugging output.", "1-6"},
+			"Set the verbosity of debugging output.", "1-6"},
 		{"encoding", 'j', U_OPTION_ARG_STRING, &encoding,
-		"Set request message encoding"},
+			"Set request message encoding"},
 		{"cacert", 'c', U_OPTION_ARG_STRING, &cainfo,
-		 "Certificate file to verify the peer", "<filename>"},
+			"Certificate file to verify the peer", "<filename>"},
 		{"cert", 'A', U_OPTION_ARG_STRING, &cert,
-		 "Certificate file. The certificate must be in PEM format.", "<filename>"},
+			"Certificate file. The certificate must be in PEM format.", "<filename>"},
 		{"sslkey", 'K', U_OPTION_ARG_STRING, &sslkey,
-		 "SSL Key.", "<key>"},
+			"SSL Key.", "<key>"},
 		{"username", 'u', U_OPTION_ARG_STRING, &username,
-		 "User name", "<username>"},
+			"User name", "<username>"},
 		{"path", 'g', U_OPTION_ARG_STRING, &url_path,
-		 "Service Path (default: 'wsman')", "<path>"},
+			"Service Path (default: 'wsman')", "<path>"},
 		{"input", 'J', U_OPTION_ARG_STRING, &input,
-		 "File with resource for Create and Put operations in XML, can be a SOAP envelope",
-		 "<filename>"},
+			"File with resource for Create and Put operations in XML, can be a SOAP envelope",
+			"<filename>"},
 		{"password", 'p', U_OPTION_ARG_STRING, &password,
-		 "User Password", "<password>"},
+			"User Password", "<password>"},
 		{"hostname", 'h', U_OPTION_ARG_STRING, &server,
-		 "Host name", "<hostname>"},
+			"Host name", "<hostname>"},
 		{"endpoint", 'b', U_OPTION_ARG_STRING, &endpoint,
-		 "End point", "<url>"},
+			"End point", "<url>"},
 		{"port", 'P', U_OPTION_ARG_INT, &server_port,
-		 "Server Port", "<port>"},
+			"Server Port", "<port>"},
 		{"proxy", 'X', U_OPTION_ARG_STRING, &proxy,
-		 "Proxy name", "<proxy>"},
+			"Proxy name", "<proxy>"},
 		{"proxyauth", 'Y', U_OPTION_ARG_STRING, &proxy_upwd,
-		 "Proxy user:pwd", "<proxyauth>"},
+			"Proxy user:pwd", "<proxyauth>"},
 		{"auth", 'y', U_OPTION_ARG_STRING, &authentication_method,
-		 "Authentication Method", "<basic|digest|gss>"},
+			"Authentication Method", "<basic|digest|gss>"},
 		{"method", 'a', U_OPTION_ARG_STRING, &invoke_method,
-		 "Method (Works only with 'invoke')", "<custom method>"},
+			"Method (Works only with 'invoke')", "<custom method>"},
 		{"prop", 'k', U_OPTION_ARG_STRING_ARRAY, &properties,
-		 "Properties with key value pairs (For 'put', 'invoke' and 'create')",
-		 "<key=val>"},
+			"Properties with key value pairs (For 'put', 'invoke' and 'create')",
+			"<key=val>"},
 		{"config-file", 'C', U_OPTION_ARG_STRING, &config_file,
-		 "Alternate configuration file", "<file>"},
+			"Alternate configuration file", "<file>"},
 		{"out-file", 'O', U_OPTION_ARG_STRING, &output_file,
-		 "Write output to file", "<file>"},
+			"Write output to file", "<file>"},
 		{"noverifypeer", 'V', U_OPTION_ARG_NONE, &noverify_peer,
-		 "Not to verify peer certificate", NULL},
+			"Not to verify peer certificate", NULL},
 		{"noverifyhost", 'v', U_OPTION_ARG_NONE, &noverify_host,
-		 "Not to verify hostname", NULL},
+			"Not to verify hostname", NULL},
 		{"transport-timeout", 'I', U_OPTION_ARG_INT, &transport_timeout,
-		 "Transport timeout in seconds", "<time in sec>"},
+			"Transport timeout in seconds", "<time in sec>"},
 		{NULL}
 	};
 
@@ -234,94 +234,94 @@ static char wsman_parse_options(int argc, char **argv)
 
 	u_option_entry_t request_options[] = {
 		{"filter", 'x', U_OPTION_ARG_STRING, &wsm_filter,
-		 "Filter", "<filter>"},
+			"Filter", "<filter>"},
 		{"dialect", 'D', U_OPTION_ARG_STRING, &wsm_dialect,
-		 "Filter Dialect", "<dialect>"},
+			"Filter Dialect", "<dialect>"},
 		{"operation-timeout", 't', U_OPTION_ARG_INT, &operation_timeout,
-		 "Operation timeout in seconds", "<time in sec>"},
+			"Operation timeout in seconds", "<time in sec>"},
 		{"max-envelope-size", 'e', U_OPTION_ARG_INT,
-		 &max_envelope_size,
-		 "maximal envelope size", "<size>"},
+			&max_envelope_size,
+			"maximal envelope size", "<size>"},
 		{"fragment", 'F', U_OPTION_ARG_STRING, &fragment,
-		 "Fragment (Supported Dialects: XPATH)", "<fragment>"},
+			"Fragment (Supported Dialects: XPATH)", "<fragment>"},
 		{NULL}
 	};
 
 	u_option_entry_t enum_options[] = {
 
 		{"max-elements", 'm', U_OPTION_ARG_INT, &enum_max_elements,
-		 "Max Elements Per Pull/Optimized Enumeration",
-		 "<max number of elements>"},
+			"Max Elements Per Pull/Optimized Enumeration",
+			"<max number of elements>"},
 		{"optimize", 'o', U_OPTION_ARG_NONE, &enum_optimize,
-		 "Optimize enumeration results", NULL},
+			"Optimize enumeration results", NULL},
 		{"estimate-count", 'E', U_OPTION_ARG_NONE, &enum_estimate,
-		 "Return estimation of total items", NULL},
+			"Return estimation of total items", NULL},
 		{"enum-mode", 'M', U_OPTION_ARG_STRING, &enum_mode,
-		 "Enumeration Mode", "epr|objepr"},
+			"Enumeration Mode", "epr|objepr"},
 		{"enum-context", 'U', U_OPTION_ARG_STRING, &enum_context,
-		 "Enumeration Context (For use with Pull and Release)",
-		 "<enum context>"},
+			"Enumeration Context (For use with Pull and Release)",
+			"<enum context>"},
 		{NULL}
 	};
 
 	u_option_entry_t event_options[] = {
 		{"delivery-mode", 'G', U_OPTION_ARG_STRING, &event_delivery_mode,
-		"Four delivery modes available: push/pushwithack/events/pull",
-		"<mode>"},
+			"Four delivery modes available: push/pushwithack/events/pull",
+			"<mode>"},
 		{"delivery-sec-mode", 's', U_OPTION_ARG_STRING, &event_delivery_sec_mode,
-                "Four delivery modes available: httpbasic/httpdigest/httpsbasic/httpsdigest/httpsmutual/httpsmutualbasic/httpsmutualdigest",
-                "<mode>"},
+			"Four delivery modes available: httpbasic/httpdigest/httpsbasic/httpsdigest/httpsmutual/httpsmutualbasic/httpsmutualdigest",
+			"<mode>"},
 		{"delivery-username", 'n', U_OPTION_ARG_STRING, &event_username,
-		"username for the eventing receiver",
-		"<username>"},
+			"username for the eventing receiver",
+			"<username>"},
 		{"delivery-password", 'z', U_OPTION_ARG_STRING, &event_password,
-                "password for the eventing receiver",
-                "<password>"},
+			"password for the eventing receiver",
+			"<password>"},
 		{"delivery-thumbprint", 'Y', U_OPTION_ARG_STRING, &event_thumbprint,
-                "ceritificate thumbprint of the eventing receiver",
-                "<thumbprint>"},
+			"ceritificate thumbprint of the eventing receiver",
+			"<thumbprint>"},
 		{"notification-uri", 'Z', U_OPTION_ARG_STRING, &event_delivery_uri,
-		"Where notifications are sent",
-		"<uri>"},
+			"Where notifications are sent",
+			"<uri>"},
 		{"subscription-expiry-time", 'r', U_OPTION_ARG_INT, &event_subscription_expire,
-		"subscription expiry time in seconds",
-		"<seconds>"},
+			"subscription expiry time in seconds",
+			"<seconds>"},
 		{"heartbeat",'H', U_OPTION_ARG_INT, &event_heartbeat,
-		"Send hearbeat in an interval",
-		"<seconds>"},
+			"Send hearbeat in an interval",
+			"<seconds>"},
 		{"bookmark", 'l', U_OPTION_ARG_NONE, &event_sendbookmark,
-		"Send bookmark",NULL},
+			"Send bookmark",NULL},
 		{"subscription-identifier", 'i', U_OPTION_ARG_STRING, &event_subscription_id,
-		"Used to specify which subscription",
-		"<uuid:XXX>"},
+			"Used to specify which subscription",
+			"<uuid:XXX>"},
 		{"event-reference-properties", 'L', U_OPTION_ARG_STRING, &event_reference_properties,
-		"Event Reference Properties, correlation of Events with Subscription",
-		"<xml string>"},
+			"Event Reference Properties, correlation of Events with Subscription",
+			"<xml string>"},
 		{NULL}
 	};
 
 	u_option_entry_t cim_options[] = {
 
 		{"namespace", 'N', U_OPTION_ARG_STRING, &cim_namespace,
-		 "CIM Namespace (default is root/cimv2)", "<namespace>"},
+			"CIM Namespace (default is root/cimv2)", "<namespace>"},
 		{"binding-enum-mode", 'B', U_OPTION_ARG_STRING,
-		 &binding_enum_mode,
-		 "CIM binding Enumeration Mode", "none|include|exclude"},
+			&binding_enum_mode,
+			"CIM binding Enumeration Mode", "none|include|exclude"},
 		{"cim-extensions", 'T', U_OPTION_ARG_NONE, &cim_extensions,
-		 "Show CIM Extensions", NULL},
+			"Show CIM Extensions", NULL},
 		{NULL}
 	};
 
 	u_option_entry_t test_options[] = {
 		{"from-file", 'f', U_OPTION_ARG_STRING, &test_case,
-		 "Send request from file", "<file name>"},
+			"Send request from file", "<file name>"},
 		{"print-request", 'R', U_OPTION_ARG_NONE, &dump_request,
-		 "print request on stdout", NULL},
+			"print request on stdout", NULL},
 		{"request", 'Q', U_OPTION_ARG_NONE, &request_only,
-		 "Only output reqest. Not send it.", NULL},
+			"Only output reqest. Not send it.", NULL},
 		{"step", 'S', U_OPTION_ARG_NONE, &step,
-		 "Do not perform multiple operations (do not pull data when enumerating)",
-		 NULL},
+			"Do not perform multiple operations (do not pull data when enumerating)",
+			NULL},
 		//{ "print-response", 'N', 0, G_OPTION_ARG_NONE, &dump_response, "print all responses to stdout", NULL},
 		{NULL}
 	};
@@ -335,12 +335,12 @@ static char wsman_parse_options(int argc, char **argv)
 	u_option_context_t *opt_ctx;
 	opt_ctx = u_option_context_new("<action> <Resource Uri>");
 	enum_group = u_option_group_new("enumeration", "Enumeration",
-					"Enumeration Options");
+			"Enumeration Options");
 	test_group = u_option_group_new("tests", "Tests", "Test Cases");
 	cim_group = u_option_group_new("cim", "CIM", "CIM Options");
 	event_group = u_option_group_new("event", "Event subscription", "Subscription Options");
 	req_flag_group =
-	    u_option_group_new("flags", "Flags", "Request Flags");
+		u_option_group_new("flags", "Flags", "Request Flags");
 
 	u_option_group_add_entries(enum_group, enum_options);
 	u_option_group_add_entries(test_group, test_options);
@@ -371,15 +371,15 @@ static char wsman_parse_options(int argc, char **argv)
 		resource_uri_opt = argv[2];
 	} else {
 		if (argv[1] && (strcmp(argv[1], "identify") == 0 ||
-				strcmp(argv[1], "test") == 0 ||
-				strcmp(argv[1], "anonid") == 0 ||
-                                strcmp(argv[1], "unsubscribe") == 0 ||
-                                strcmp(argv[1], "renew") == 0)) {
+					strcmp(argv[1], "test") == 0 ||
+					strcmp(argv[1], "anonid") == 0 ||
+					strcmp(argv[1], "unsubscribe") == 0 ||
+					strcmp(argv[1], "renew") == 0)) {
 			_action = argv[1];
 		} else {
 			fprintf(stderr,
-				"Error: operation can not be completed."
-				" Action or/and Resource Uri missing.\n");
+					"Error: operation can not be completed."
+					" Action or/and Resource Uri missing.\n");
 			return FALSE;
 		}
 	}
@@ -433,39 +433,39 @@ static void wsman_output(WsManClient * cl, WsXmlDocH doc)
 static void initialize_logging(void)
 {
 	debug_add_handler(wsman_debug_message_handler, DEBUG_LEVEL_ALWAYS,
-			  NULL);
+			NULL);
 }
 
 
 
 static void
 request_usr_pwd( WsManClient *client, wsman_auth_type_t auth,
-                char **username,
-                char **password)
+		char **username,
+		char **password)
 {
-  char *pw;
-  char user[21];
-  char *p;
+	char *pw;
+	char user[21];
+	char *p;
 
-  fprintf(stdout,"Authentication failed, please retry\n");
-  /*
-  fprintf(stdout, "%s authentication is used\n",
-          wsmc_transport_get_auth_name( auth));
-	  */
-  printf("User name: ");
-  fflush(stdout);
-  if ( (p = fgets(user, 20, stdin) ) != NULL )
-  {
+	fprintf(stdout,"Authentication failed, please retry\n");
+	/*
+	   fprintf(stdout, "%s authentication is used\n",
+	   wsmc_transport_get_auth_name( auth));
+	   */
+	printf("User name: ");
+	fflush(stdout);
+	if ( (p = fgets(user, 20, stdin) ) != NULL )
+	{
 
-    if (strchr(user, '\n'))
-      (*(strchr(user, '\n'))) = '\0';
-    *username = u_strdup_printf ("%s", user);
-  } else {
-    *username = NULL;
-  }
+		if (strchr(user, '\n'))
+			(*(strchr(user, '\n'))) = '\0';
+		*username = u_strdup_printf ("%s", user);
+	} else {
+		*username = NULL;
+	}
 
-  pw = (char *)getpass("Password: ");
-  *password = u_strdup_printf ("%s", pw);
+	pw = (char *)getpass("Password: ");
+	*password = u_strdup_printf ("%s", pw);
 }
 
 
@@ -484,7 +484,7 @@ static hash_t *wsman_options_get_properties(void)
 			}
 		} else {
 			warn("duplicate not added to hash");
-		}		
+		}
 
 		c++;
 	}
@@ -507,15 +507,15 @@ static int wsman_options_get_delivery_mode(void)
 
 static int wsman_options_get_delivery_sec_mode(void)
 {
-        int mode = 0;
-        int i;
-        for (i = 0; delivery_sec_mode[i].action != NULL; i++) {
-                if (strcmp(delivery_sec_mode[i].action, event_delivery_sec_mode) == 0) {
-                        mode = delivery_sec_mode[i].value;
-                        break;
-                }
-        }
-        return mode;
+	int mode = 0;
+	int i;
+	for (i = 0; delivery_sec_mode[i].action != NULL; i++) {
+		if (strcmp(delivery_sec_mode[i].action, event_delivery_sec_mode) == 0) {
+			mode = delivery_sec_mode[i].value;
+			break;
+		}
+	}
+	return mode;
 }
 
 
@@ -524,10 +524,10 @@ static int wsman_read_client_config(dictionary * ini)
 	if (iniparser_find_entry(ini, "client")) {
 		agent = iniparser_getstr(ini, "client:agent");
 		server_port = server_port ?
-		    server_port : iniparser_getint(ini, "client:port", 80);
+			server_port : iniparser_getint(ini, "client:port", 80);
 		authentication_method = authentication_method ?
-		    authentication_method :
-		    iniparser_getstr(ini, "client:authentication_method");
+			authentication_method :
+			iniparser_getstr(ini, "client:authentication_method");
 	} else {
 		return 0;
 	}
@@ -549,7 +549,7 @@ int main(int argc, char **argv)
 	WsXmlDocH enum_response;
 	WsXmlDocH resource = NULL;
 	char *enumeration_mode, *binding_enumeration_mode,
-	    *resource_uri_with_selectors;
+		 *resource_uri_with_selectors;
 	char *event_mode, *delivery_uri;
 	char *resource_uri = NULL;
 	char subscontext[512];
@@ -562,7 +562,7 @@ int main(int argc, char **argv)
 		ini = iniparser_new(filename);
 		if (ini == NULL) {
 			fprintf(stderr, "cannot parse file [%s]",
-				filename);
+					filename);
 			exit(EXIT_FAILURE);
 		} else if (!wsman_read_client_config(ini)) {
 			fprintf(stderr, "Configuration file not found\n");
@@ -627,12 +627,12 @@ int main(int argc, char **argv)
 	if (resource_uri_with_selectors &&
 			strcmp(resource_uri_with_selectors,CIM_ALL_AVAILABLE_CLASSES) != 0) {
 		wsmc_set_options_from_uri(resource_uri_with_selectors,
-					   options);
+				options);
 		wsmc_remove_query_string(resource_uri_with_selectors,
-					  &resource_uri);
+				&resource_uri);
 	} else if (resource_uri_with_selectors) {
 		wsmc_remove_query_string(resource_uri_with_selectors,
-					  &resource_uri);
+				&resource_uri);
 	}
 	op = wsman_options_get_action();
 	if (encoding) {
@@ -680,8 +680,8 @@ int main(int argc, char **argv)
 			resource = wsmc_read_file(input, wsmc_get_encoding(cl), 0);
 		}
 		doc = wsmc_action_invoke(cl, resource_uri, options,
-				   invoke_method,
-				   resource);
+				invoke_method,
+				resource);
 		ws_xml_destroy_doc(resource);
 		wsman_output(cl, doc);
 		if (doc) {
@@ -700,8 +700,8 @@ int main(int argc, char **argv)
 		if (input) {
 			resource = wsmc_read_file(input, "UTF-8", 0);
 			doc =
-			    wsmc_action_create(cl, resource_uri, options,
-					       resource);
+				wsmc_action_create(cl, resource_uri, options,
+						resource);
 			ws_xml_destroy_doc(resource);
 			wsman_output(cl, doc);
 			if (doc) {
@@ -716,12 +716,12 @@ int main(int argc, char **argv)
 			printf("input file provided\n");
 			resource = wsmc_read_file(input, wsmc_get_encoding(cl), 0);
 			doc =  wsmc_action_put(cl, resource_uri, options,
-					    resource);
+					resource);
 			ws_xml_destroy_doc(resource);
 		} else {
 			doc =
-			    wsmc_action_get_and_put(cl, resource_uri,
-						    options);
+				wsmc_action_get_and_put(cl, resource_uri,
+						options);
 		}
 		wsman_output(cl, doc);
 		if (doc) {
@@ -744,8 +744,8 @@ int main(int argc, char **argv)
 		break;
 	case WSMAN_ACTION_RELEASE:
 		doc =
-		    wsmc_action_release(cl, resource_uri, options,
-				   enum_context);
+			wsmc_action_release(cl, resource_uri, options,
+					enum_context);
 		wsman_output(cl, doc);
 		if (doc) {
 			ws_xml_destroy_doc(doc);
@@ -766,52 +766,72 @@ int main(int argc, char **argv)
 			} else {
 				error("Filter Requied");
 			}
-		}
-		else
+		} else if (wsm_dialect && strcmp(wsm_dialect, WSM_SELECTOR_FILTER_DIALECT) == 0 ) {
+			// fixme: Namespace
+			if (wsm_filter) {
+				hscan_t hs;
+				hnode_t *hn;
+				hash_t *selfilter = NULL;
+				hash_t *selectors_new = NULL;
+				selector_entry *entry;
+				selectors_new = hash_create2(HASHCOUNT_T_MAX, 0, 0);
+				selfilter = u_parse_query(wsm_filter);
+				hash_scan_begin(&hs, selfilter);
+				while ((hn = hash_scan_next(&hs))) {
+					entry = u_malloc(sizeof(selector_entry));
+					entry->type = 0;
+					entry->entry.text = (char *)hnode_get(hn);
+					hash_alloc_insert(selectors_new, hnode_getkey(hn), entry);
+				}
+
+				if (hash_count(selectors_new) > 0 )
+					filter = filter_create_selector(selectors_new, NULL);
+			}
+		} else {
 			filter = filter_create_simple(wsm_dialect, wsm_filter);
+		}
 		enumeration_mode = enum_mode;
-		binding_enumeration_mode =
-		    binding_enum_mode;
+		binding_enumeration_mode = binding_enum_mode;
 
 		if (enumeration_mode) {
 			if (strcmp(enumeration_mode, "epr") == 0)
 				wsmc_set_action_option(options,
-							FLAG_ENUMERATION_ENUM_EPR);
+						FLAG_ENUMERATION_ENUM_EPR);
 			else if (strcmp(enumeration_mode, "objepr") == 0)
 				wsmc_set_action_option(options,
-							FLAG_ENUMERATION_ENUM_OBJ_AND_EPR);
+						FLAG_ENUMERATION_ENUM_OBJ_AND_EPR);
 		}
 		if (binding_enumeration_mode) {
 			if (strcmp(binding_enumeration_mode, "include") ==
-			    0)
+					0)
 				wsmc_set_action_option(options,
-							FLAG_IncludeSubClassProperties);
+						FLAG_IncludeSubClassProperties);
 			else if (strcmp
-				 (binding_enumeration_mode,
-				  "exclude") == 0)
+					(binding_enumeration_mode,
+					 "exclude") == 0)
 				wsmc_set_action_option(options,
-							FLAG_ExcludeSubClassProperties);
+						FLAG_ExcludeSubClassProperties);
 			else if (strcmp(binding_enumeration_mode, "none")
-				 == 0)
+					== 0)
 				wsmc_set_action_option(options,
-							FLAG_POLYMORPHISM_NONE);
+						FLAG_POLYMORPHISM_NONE);
 		}
 		if (enum_optimize) {
 			wsmc_set_action_option(options,
-						FLAG_ENUMERATION_OPTIMIZATION);
+					FLAG_ENUMERATION_OPTIMIZATION);
 		}
 		options->max_elements = enum_max_elements;
 
 		if (enum_estimate) {
 			wsmc_set_action_option(options,
-						FLAG_ENUMERATION_COUNT_ESTIMATION);
+					FLAG_ENUMERATION_COUNT_ESTIMATION);
 		}
 		enum_response = wsmc_action_enumerate(cl, resource_uri, options, filter);
 		wsman_output(cl, enum_response);
 		if (enum_response) {
 			if (!(wsmc_get_response_code(cl) == 200 ||
-			      wsmc_get_response_code(cl) == 400 ||
-			      wsmc_get_response_code(cl) == 500)) {
+						wsmc_get_response_code(cl) == 400 ||
+						wsmc_get_response_code(cl) == 500)) {
 				break;
 			}
 			enumContext = wsmc_get_enum_context(enum_response);
@@ -851,7 +871,7 @@ int main(int argc, char **argv)
 		if(event_delivery_mode)
 			options->delivery_mode = wsman_options_get_delivery_mode();
 		if(event_delivery_sec_mode)
-                        options->delivery_sec_mode = wsman_options_get_delivery_sec_mode();
+			options->delivery_sec_mode = wsman_options_get_delivery_sec_mode();
 		if(event_username)
 			options->delivery_username = event_username;
 		if(event_password)
@@ -877,8 +897,8 @@ int main(int argc, char **argv)
 		break;
 	case WSMAN_ACTION_UNSUBSCRIBE:
 		snprintf(subscontext, 512 , "<wsa:ReferenceParameters xmlns:wsa=\"http://schemas.xmlsoap.org/ws/2004/08/addressing\" \
-			xmlns:wse=\"http://schemas.xmlsoap.org/ws/2004/08/eventing\"><wse:Identifier>%s</wse:Identifier> \
-			</wsa:ReferenceParameters>", event_subscription_id);
+				xmlns:wse=\"http://schemas.xmlsoap.org/ws/2004/08/eventing\"><wse:Identifier>%s</wse:Identifier> \
+				</wsa:ReferenceParameters>", event_subscription_id);
 		rqstDoc = wsmc_action_unsubscribe(cl, resource_uri, options, subscontext);
 		wsman_output(cl, rqstDoc);
 		if (rqstDoc) {
@@ -889,8 +909,8 @@ int main(int argc, char **argv)
 		if(event_subscription_expire)
 			options->expires = event_subscription_expire;
 		snprintf(subscontext, 512 , "<wsa:ReferenceParameters xmlns:wsa=\"http://schemas.xmlsoap.org/ws/2004/08/addressing\" \
-                        xmlns:wse=\"http://schemas.xmlsoap.org/ws/2004/08/eventing\"><wse:Identifier>%s</wse:Identifier> \
-                        </wsa:ReferenceParameters>", event_subscription_id);
+				xmlns:wse=\"http://schemas.xmlsoap.org/ws/2004/08/eventing\"><wse:Identifier>%s</wse:Identifier> \
+				</wsa:ReferenceParameters>", event_subscription_id);
 		rqstDoc = wsmc_action_renew(cl, resource_uri, options, subscontext);
 		wsman_output(cl, rqstDoc);
 		if (rqstDoc) {
@@ -905,10 +925,10 @@ int main(int argc, char **argv)
 
 	if (wsmc_get_response_code(cl) != 200) {
 		fprintf(stderr, "Connection failed. response code = %ld\n",
-			wsmc_get_response_code(cl));
+				wsmc_get_response_code(cl));
 		if (wsmc_get_fault_string(cl)) {
 			fprintf(stderr, "%s\n",
-				wsmc_get_fault_string(cl));
+					wsmc_get_fault_string(cl));
 		}
 	}
 	wsmc_options_destroy(options);
@@ -920,7 +940,7 @@ int main(int argc, char **argv)
 	}
 #ifdef DEBUG_VERBOSE
 	printf("     ******   Transfer Time = %ull usecs ******\n",
-	       get_transfer_time());
+			get_transfer_time());
 #endif
 	return retVal;
 
