@@ -264,7 +264,7 @@ static void enumeration_test(void) {
 
     options->max_elements = tests[i].max_elements;
     WsXmlDocH enum_response = wsmc_action_enumerate(cl,
-                                (char *)tests[i].resource_uri, options);
+                                (char *)tests[i].resource_uri, options, NULL);
 
     CU_ASSERT_TRUE(wsmc_get_response_code(cl) == tests[i].final_status);
     if (wsmc_get_response_code(cl) != tests[i].final_status) {

@@ -161,7 +161,7 @@ static void pull_test(void) {
 
     options->max_elements = pull_tests[i].max_elements;
     WsXmlDocH enum_response = wsmc_action_enumerate(cl,
-                                (char *)pull_tests[i].resource_uri, options);
+                                (char *)pull_tests[i].resource_uri, options, NULL);
     CU_ASSERT_TRUE(wsmc_get_response_code(cl) ==
                                                 pull_tests[i].final_status);
     if (wsmc_get_response_code(cl) != pull_tests[i].final_status) {
@@ -182,7 +182,7 @@ static void pull_test(void) {
 
     while (enumContext != NULL) {
         WsXmlDocH docp = wsmc_action_pull(cl, (char *)pull_tests[i].resource_uri,
-                                     options, enumContext);
+                                     options, NULL, enumContext);
         CU_ASSERT_PTR_NOT_NULL(docp);
         if (!docp) {
             goto RETURN;
