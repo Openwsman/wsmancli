@@ -785,7 +785,7 @@ int main(int argc, char **argv)
 				}
 
 				if (hash_count(selectors_new) > 0 )
-					filter = filter_create_selector(selectors_new, NULL);
+					filter = filter_create_selector(selectors_new);
 			}
 		} else {
 			filter = filter_create_simple(wsm_dialect, wsm_filter);
