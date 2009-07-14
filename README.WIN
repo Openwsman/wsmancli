@@ -1,0 +1,7 @@
+README for wsmancli on Windows
+------------------------------
+
+wsmancli.vcproj, wseventmgr.vcproj, and wsmancli.sln are
+project files for Visual Studio 2005 (VS2005).
+
+You can open these in VS2008 which will do a conversion.
