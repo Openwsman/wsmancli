@@ -1,0 +1,4 @@
+Version 2.2.3
+  Bugfix release, synchronize version with openwsman
+  - fix double free error on enumeration (Chris Poblete)
+  - add '--version' to print version and build timestamp  

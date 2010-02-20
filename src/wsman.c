@@ -179,8 +179,11 @@ static char wsman_parse_options(int argc, char **argv)
 {
 	char retval = 0;
 	u_error_t *error = NULL;
+	char my_version = 0;
 
 	u_option_entry_t options[] = {
+		{"version", 'q', U_OPTION_ARG_NONE, &my_version,
+			"Display application version", NULL},
 		{"debug", 'd', U_OPTION_ARG_INT, &debug_level,
 			"Set the verbosity of debugging output.", "1-6"},
 		{"encoding", 'j', U_OPTION_ARG_STRING, &encoding,
@@ -364,6 +367,11 @@ static char wsman_parse_options(int argc, char **argv)
 			printf("%s\n", error->message);
 		u_error_free(error);
 		return FALSE;
+	}
+
+	if (my_version) {
+		fprintf(stdout, PACKAGE_STRING " (" PACKAGE_BUILDTS ")\n\n");
+		exit(0);
 	}
 
 	if (argc > 2) {
@@ -837,7 +845,6 @@ int main(int argc, char **argv)
 			enumContext = wsmc_get_enum_context(enum_response);
 			ws_xml_destroy_doc(enum_response);
 		} else {
-			u_free(enumContext);
 			break;
 		}
 
@@ -852,7 +859,6 @@ int main(int argc, char **argv)
 			if (wsmc_get_response_code(cl) != 200
 					&& wsmc_get_response_code(cl) != 400
 					&& wsmc_get_response_code(cl) != 500) {
-				u_free(enumContext);
 				break;
 			}
 			u_free(enumContext);

@@ -1,7 +1,8 @@
 AM_CFLAGS = @CFLAGS@
 
 CFLAGS = \
-       $(OPENWSMAN_CFLAGS)
+       $(OPENWSMAN_CFLAGS) \
+       -DPACKAGE_BUILDTS=\"$(PACKAGE_BUILDTS)\"
        
 wsman_LDADD = \
        $(OPENWSMAN_LIBS) \
