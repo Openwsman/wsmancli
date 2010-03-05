@@ -17,7 +17,7 @@ AC_SUBST(WSMAN_PKG)
 PACKAGE_BUILDTS=`date +%Y%m%d%H%M`
 AC_SUBST(PACKAGE_BUILDTS)
 
-PKG_CHECK_MODULES(OPENWSMAN, [openwsman >= 2.2.0])
+PKG_CHECK_MODULES(OPENWSMAN, [openwsman >= 2.2.3])
 have_cunit=no
 AC_CHECK_HEADERS([CUnit/Basic.h], have_cunit="yes" )
 AM_CONDITIONAL(BUILD_CUNIT_TESTS, test "$have_cunit" == "yes")
