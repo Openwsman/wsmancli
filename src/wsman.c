@@ -484,7 +484,7 @@ static hash_t *wsman_options_get_properties(void)
 	hash_t *h = hash_create(HASHCOUNT_T_MAX, 0, 0);
 
 	while (properties != NULL && properties[c] != NULL) {
-		char *cc[3];
+		char *cc[3] = { NULL, NULL, NULL };
 		u_tokenize1(cc, 2, properties[c], '=');
 		if (!hash_lookup(h, cc[0])) {
 			if (!hash_alloc_insert(h, cc[0], cc[1])) {
