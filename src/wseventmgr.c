@@ -292,7 +292,7 @@ static char wsman_parse_options(int argc, char **argv)
 
 	// set default options
 	if (server_port == 0) {
-		server_port = cainfo ? 8888 : 8889;
+		server_port = cainfo ? 5985 : 5986;
 	}
 	if (url_path == NULL) {
 		url_path = "/wsman";
