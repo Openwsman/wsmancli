@@ -542,6 +542,45 @@ static int wsman_read_client_config(dictionary * ini)
 	return 1;
 }
 
+static void free_include_result_property(char **resultProps)
+{
+       if (NULL != resultProps) {
+               char **tmp = resultProps;
+               while (*tmp != NULL) { // iterate until list terminator
+                       u_free(*tmp);
+                       tmp++;
+               }
+               u_free(resultProps);
+       }
+}
+
+static char ** get_include_result_property(int *propNum)
+{
+       char **resultProps = NULL;
+       char *tok, *val, *copy;
+       int idx = 0;
+
+       *propNum = 0;
+       if (NULL != enum_context) {
+               copy = u_strdup(enum_context);
+               for (tok = copy ; NULL != tok ; (*propNum)++, tok = strchr(tok, ',')) { // get count
+                       tok++;
+               }
+               resultProps = (char **)u_calloc((*propNum + 1), sizeof(char *)); // 1 more for list terminator
+               val = copy;
+               while (val) {
+                       tok = strchr(val, ',');
+                       if (NULL != tok) {
+                               *tok++ = '\0';
+                       }
+                       resultProps[idx++] = u_strdup(val);
+                       val = tok;
+               }
+               resultProps[idx] = NULL; // list terminator
+               u_free(copy);
+       }
+       return resultProps;
+}
 
 int main(int argc, char **argv)
 {
@@ -773,7 +812,24 @@ int main(int argc, char **argv)
 					epr_add_selector_text(epr, CIM_NAMESPACE_SELECTOR, options->cim_ns);
 				}
 				if (epr) {
-					filter = filter_create_assoc(epr, (op == WSMAN_ACTION_REFERENCES )?0:1, NULL, NULL, NULL, NULL, NULL, 0 );
+					char **resultProperties = NULL;
+					const char *assocClass, *resultClass, *role, *resultRole;
+					int propNum;
+
+					if (NULL != (assocClass = wsman_epr_selector_by_name(epr, "AssociationClassName")))
+						epr_delete_selector(epr, "AssociationClassName");
+					if (NULL != (resultClass = wsman_epr_selector_by_name(epr, "ResultClassName")))
+						epr_delete_selector(epr, "ResultClassName");
+					if (NULL != (role = wsman_epr_selector_by_name(epr, "Role")))
+						epr_delete_selector(epr, "Role");
+					if (NULL != (resultRole = wsman_epr_selector_by_name(epr, "ResultRole")))
+						epr_delete_selector(epr, "ResultRole");
+					resultProperties = get_include_result_property(&propNum);
+
+					filter = filter_create_assoc(epr, (op == WSMAN_ACTION_REFERENCES )?0:1,
+								     assocClass, resultClass, role, resultRole, resultProperties, propNum);
+
+					free_include_result_property(resultProperties);
 				}
 			} else {
 				error("Filter Requied");

@@ -1,3 +1,11 @@
+
+- Enhance enumerate with association filter to have the ability to
+  specify the optional elements namely: AssociationClassName, Role,
+  ResultClassName, ResultRole and IncludeResultProperty.
+  (IncludeResultProperty is a list, specify it as a comma separated list
+  in the “U” option.
+  (Chris Poblete)
+
 Version 2.2.3
   Bugfix release, synchronize version with openwsman
   - fix double free error on enumeration (Chris Poblete)
