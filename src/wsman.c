@@ -826,7 +826,7 @@ int main(int argc, char **argv)
 						epr_delete_selector(epr, "ResultRole");
 					resultProperties = get_include_result_property(&propNum);
 
-					filter = filter_create_assoc(epr, (op == WSMAN_ACTION_REFERENCES )?0:1,
+					filter = filter_create_assoc(epr, (op == WSMAN_ACTION_ASSOCIATORS )?0:1,
 								     assocClass, resultClass, role, resultRole, resultProperties, propNum);
 
 					free_include_result_property(resultProperties);
