@@ -454,9 +454,13 @@ int main(int argc, char **argv)
 	}
 	if (cert) {
 		wsman_transport_set_cert(cl, cert);
+		if (!cainfo)
+			fprintf(stderr, "Warning: --cacert not set to enable SSL operation\n");
 	}
 	if (sslkey) {
-		wsman_transport_set_cert(cl, sslkey);
+		wsman_transport_set_key(cl, sslkey);
+		if (!cainfo)
+			fprintf(stderr, "Warning: --cacert not set to enable SSL operation\n");
 	}
 	wsman_transport_set_verify_peer(cl, !noverify_peer);
 	wsman_transport_set_verify_host(cl, !noverify_host);
