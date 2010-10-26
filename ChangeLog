@@ -1,10 +1,14 @@
-
-- Enhance enumerate with association filter to have the ability to
-  specify the optional elements namely: AssociationClassName, Role,
-  ResultClassName, ResultRole and IncludeResultProperty.
-  (IncludeResultProperty is a list, specify it as a comma separated list
-  in the “U” option.)
-  (Chris Poblete)
+Version 2.2.4
+  - Enhance enumerate with association filter to have the ability to
+    specify the optional elements namely: AssociationClassName, Role,
+    ResultClassName, ResultRole and IncludeResultProperty.
+    (IncludeResultProperty is a list, specify it as a comma separated list
+    in the “U” option.)
+    (Chris Poblete)
+  Bugfixes
+  - fix default ports (5985/5986)
+  - fix --sslkey handling
+  - add warning if ssl used without --cacert
 
 Version 2.2.3
   Bugfix release, synchronize version with openwsman
