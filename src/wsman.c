@@ -424,7 +424,7 @@ static void wsman_output(WsManClient * cl, WsXmlDocH doc)
 		return;
 	}
 	if (filename) {
-		f = fopen(filename, "w+");
+		f = fopen(filename, "w");
 		if (f == NULL) {
 			error("Could not open file for writing");
 			return;
@@ -437,6 +437,22 @@ static void wsman_output(WsManClient * cl, WsXmlDocH doc)
 	return;
 }
 
+/*
+ * output pull results to separate files (appending "-<index>" to the name)
+ * 
+ */
+static void wsman_output_pull(WsManClient * cl, WsXmlDocH doc, int index)
+{
+   char *strbuf, *origfile = output_file;
+   int count = strlen(output_file) + 16;
+
+   strbuf = (char*)calloc(count, 1);
+   snprintf(strbuf, count, "%s-%u.xml", output_file, index);
+   output_file = strbuf;
+   wsman_output(cl, doc);
+   output_file = origfile;
+   free(strbuf);
+}
 
 static void initialize_logging(void)
 {
@@ -910,11 +926,13 @@ int main(int argc, char **argv)
 
 		if (step)
 			break;
+
+      int index = 0;
 		while (enumContext != NULL && enumContext[0] != 0) {
 
 			doc = wsmc_action_pull(cl, resource_uri, options, filter,
 					enumContext);
-			wsman_output(cl, doc);
+			wsman_output_pull(cl, doc, ++index);
 
 			if (wsmc_get_response_code(cl) != 200
 					&& wsmc_get_response_code(cl) != 400
