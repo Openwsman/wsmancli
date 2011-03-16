@@ -57,7 +57,7 @@
 extern char *getpass (const char *__prompt);
 #endif
 
-static int server_port = 0;
+static long int server_port = 0;
 static char *cainfo = NULL;
 static char *cert = NULL;
 static char *sslkey = NULL;
@@ -71,15 +71,15 @@ static char *authentication_method = NULL;
 static char noverify_peer = 0;
 static char noverify_host = 0;
 
-static int  transport_timeout = 0;
+static long int  transport_timeout = 0;
 static char *proxy = NULL;
 static char *proxy_upwd = NULL;
 
 
-static int debug_level = -1;
+static long int debug_level = -1;
 static char *encoding = NULL;
 static char *test_case = NULL;
-static int enum_max_elements = 0;
+static long int enum_max_elements = 0;
 char enum_optimize = 0;
 char enum_estimate = 0;
 char dump_request = 0;
@@ -92,8 +92,8 @@ static char *enum_context = NULL;
 static char *event_delivery_mode = NULL;
 static char *event_delivery_sec_mode = NULL;
 static char *event_delivery_uri = NULL;
-static int event_subscription_expire = 0;
-static int event_heartbeat = 0;
+static long int event_subscription_expire = 0;
+static long int event_heartbeat = 0;
 static int event_sendbookmark =0;
 static char *event_subscription_id = NULL;
 static char *event_reference_properties = NULL;
