@@ -443,15 +443,20 @@ static void wsman_output(WsManClient * cl, WsXmlDocH doc)
  */
 static void wsman_output_pull(WsManClient * cl, WsXmlDocH doc, int index)
 {
-   char *strbuf, *origfile = output_file;
-   int count = strlen(output_file) + 16;
+	char *strbuf, *origfile = output_file;
+	int count;
 
-   strbuf = (char*)calloc(count, 1);
-   snprintf(strbuf, count, "%s-%u.xml", output_file, index);
-   output_file = strbuf;
-   wsman_output(cl, doc);
-   output_file = origfile;
-   free(strbuf);
+	if (output_file) {
+		count = strlen(output_file) + 16;
+		strbuf = (char*)calloc(count, 1);
+		snprintf(strbuf, count, "%s-%u.xml", output_file, index);
+		output_file = strbuf;
+	}
+	wsman_output(cl, doc);
+	if (origfile) {
+		output_file = origfile;
+		free(strbuf);
+	}
 }
 
 static void initialize_logging(void)
