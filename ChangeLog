@@ -1,3 +1,6 @@
+Version 2.2.6
+  - fix segfault in output_file handling (Chris Poblete)
+
 Version 2.2.5
   - fix integral parameters on big endian architectures (Kamil Dudka)
 
