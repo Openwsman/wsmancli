@@ -1,3 +1,6 @@
+Version 2.2.5
+  - fix integral parameters on big endian architectures (Kamil Dudka)
+
 Version 2.2.4
   - Enhance enumerate with association filter to have the ability to
     specify the optional elements namely: AssociationClassName, Role,
