@@ -1,33 +1,54 @@
-Name:           wsmancli
-Version:       @PACKAGE_VERSION@
-Release:        1
-License:        BSD
-Url:            http://www.openwsman.org/
-Source:         %{name}-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-build
-Group:          Applications/Management
-BuildRequires:  openwsman-devel pkgconfig curl-devel
-Requires:       openwsman curl
-Summary:        Opensource Implementation of WS-Management - Command line Utility
+#
+# spec file for package wsmancli (Version @PACKAGE_VERSION@)
+#
 
+# norootforbuild
+
+
+Name:           wsmancli
+BuildRequires:  gcc-c++ libwsman-devel pkgconfig
+%if 0%{?suse_version} > 1010
+BuildRequires:  libcurl-devel
+%else
+# SLE 10
+BuildRequires:  curl-devel
+%endif
+Version:        @PACKAGE_VERSION@
+Release:        11
+Url:            http://www.openwsman.org/
+License:        BSD3c
+Group:          System/Management
+Summary:        Opensource Implementation of WS-Management - Command line utility
+Source:         %{name}-%{version}.tar.bz2
+BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
 %description
-Part of openwsman, an Opensource Implementation of WS-Management 
+Part of Openwsman, an Opensource Implementation of WS-Management
 
 
+
+Authors:
+--------
+    Anas Nashif <anas.nashif@intel.com>
+    Vadim Revyakin <vadim.revyakin@intel.com>
+    Denis Sadykov <denis.sadykov@intel.com>
 
 %prep
-%setup
+%setup -q -n %{name}-%{version}
 
 %build
-%configure 
-make
+%configure --disable-more-warnings
+make %{?jobs:-j%jobs}
 
 %install
-make DESTDIR=%{buildroot} install
+make DESTDIR=$RPM_BUILD_ROOT install
+
 %clean
-rm -rf "$RPM_BUILD_ROOT"
+rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
 %{_bindir}/wsman
+%{_bindir}/wseventmgr
+
+%changelog
