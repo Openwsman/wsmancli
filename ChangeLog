@@ -1,6 +1,8 @@
-
+Version 2.2.7
   - fix the default port setting to match wsmc_create() call. Use
     https (port 5986) when cainfo is set.
+  - in debug mode, dump the complete response XML if it can't
+    be parsed (Chris Poblete)
 
 Version 2.2.6
   - fix segfault in output_file handling (Chris Poblete)
