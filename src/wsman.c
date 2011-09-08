@@ -48,7 +48,7 @@
 #include <errno.h>
 #include <time.h>
 
-#include <wsman-client-api.h>
+#include <wsman-client.h>
 #include <wsman-client-transport.h>
 #include <wsman-debug.h>
 
@@ -407,12 +407,11 @@ static char wsman_parse_options(int argc, char **argv)
 }
 
 
-
-
 static void wsman_output(WsManClient * cl, WsXmlDocH doc)
 {
 	FILE *f = stdout;
 	const char *filename = output_file;
+	const char *badxml = NULL;
 	WS_LASTERR_Code err;
 
 	err = wsmc_get_last_error(cl);
@@ -421,19 +420,28 @@ static void wsman_output(WsManClient * cl, WsXmlDocH doc)
 	}
 	if (!doc) {
 		error("doc with NULL content");
-		return;
+		badxml = (char*)u_buf_ptr(cl->connection->response);
+		if ((-1 == debug_level) || (NULL == badxml)) {
+			goto error1;
+		}
 	}
 	if (filename) {
 		f = fopen(filename, "w");
 		if (f == NULL) {
 			error("Could not open file for writing");
-			return;
+			goto error1;
 		}
 	}
-	ws_xml_dump_node_tree(f, ws_xml_get_doc_root(doc));
+	if (NULL != badxml) {
+		fprintf(f, "%s", badxml); // on debug mode, output the bad xml
+	} else {
+		ws_xml_dump_node_tree(f, ws_xml_get_doc_root(doc));
+	}
 	if (f != stdout) {
 		fclose(f);
 	}
+
+error1:
 	return;
 }
 
