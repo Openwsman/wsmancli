@@ -41,7 +41,7 @@
 #include "wsman-xml-serializer.h"
 #include "wsman-client-api.h"
 #include "wsman-client-transport.h"
-
+#include "u/libu.h"
 
 #define RESOURCE_URI "http://example.com/wbem/wscim/1/schema/1/EXL_ExamplePolicy"
 #define CLASSNAME "EXL_ExamplePolicy"

@@ -51,7 +51,7 @@
 #include <wsman-client.h>
 #include <wsman-client-transport.h>
 #include <wsman-debug.h>
-
+#include <u/libu.h>
 
 #if __linux__
 extern char *getpass (const char *__prompt);

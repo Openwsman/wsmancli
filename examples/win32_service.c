@@ -40,6 +40,7 @@
 
 
 #include "wsman-api.h"
+#include "u/libu.h"
 
 #define RESOURCE_URI "http://schemas.microsoft.com/wbem/wsman/1/wmi/root/cimv2/Win32_Service"
 #define CLASSNAME "Win32_Service"

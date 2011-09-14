@@ -40,6 +40,7 @@
 
 
 #include "wsman-api.h"
+#include "u/libu.h"
 
 struct __wsmid_identify
 {
