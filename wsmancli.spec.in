@@ -6,7 +6,7 @@
 
 
 Name:           wsmancli
-BuildRequires:  gcc-c++ libwsman-devel pkgconfig
+BuildRequires:  gcc-c++ libwsman-devel >= 2.2.7 libwsman_clientpp-devel >= 2.2.7 pkgconfig
 %if 0%{?suse_version} > 1010
 BuildRequires:  libcurl-devel
 %else
