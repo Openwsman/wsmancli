@@ -84,7 +84,6 @@ char enum_optimize = 0;
 char enum_estimate = 0;
 char dump_request = 0;
 char step = 0;
-char request_only = 0;
 char cim_extensions = 0;
 static char *enum_mode = NULL;
 static char *binding_enum_mode = NULL;
@@ -320,8 +319,6 @@ static char wsman_parse_options(int argc, char **argv)
 			"Send request from file", "<file name>"},
 		{"print-request", 'R', U_OPTION_ARG_NONE, &dump_request,
 			"print request on stdout", NULL},
-		{"request", 'Q', U_OPTION_ARG_NONE, &request_only,
-			"Only output reqest. Not send it.", NULL},
 		{"step", 'S', U_OPTION_ARG_NONE, &step,
 			"Do not perform multiple operations (do not pull data when enumerating)",
 			NULL},
