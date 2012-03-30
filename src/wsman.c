@@ -870,6 +870,10 @@ int main(int argc, char **argv)
 				selector_entry *entry;
 				selectors_new = hash_create2(HASHCOUNT_T_MAX, 0, 0);
 				selfilter = u_parse_query(wsm_filter);
+                                if (!selfilter) {
+                                  error("Filter parse error");
+                                  break;
+                                }
 				hash_scan_begin(&hs, selfilter);
 				while ((hn = hash_scan_next(&hs))) {
 					entry = u_malloc(sizeof(selector_entry));
