@@ -1,3 +1,6 @@
+Version 2.3
+  - don't crash on filter parse error (Zoltan Micskei)
+
 Version 2.2.7.1
   - adapt to reduced libu exposure in openwsman
 
