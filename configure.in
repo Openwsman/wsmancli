@@ -21,6 +21,18 @@ PKG_CHECK_MODULES(OPENWSMAN, [openwsman >= 2.2.7])
 have_cunit=no
 AC_CHECK_HEADERS([CUnit/Basic.h], have_cunit="yes" )
 AM_CONDITIONAL(BUILD_CUNIT_TESTS, test "$have_cunit" == "yes")
+
+examples_default=no
+AC_ARG_WITH(examples,
+		[  --with-examples=[no/yes] build examples [default=no]],,
+              with_examples=$examples_default)
+AM_CONDITIONAL(BUILD_EXAMPLES, test "x$with_examples" = "xyes")
+tests_default=no
+AC_ARG_WITH(tests,
+		[  --with-tests=[no/yes] build tests [default=no]],,
+              with_tests=$tests_default)
+AM_CONDITIONAL(BUILD_TESTS, test "x$with_tests" = "xyes")
+
 dnl *************************************
 dnl *** Warnings to show if using GCC ***
 dnl *************************************
