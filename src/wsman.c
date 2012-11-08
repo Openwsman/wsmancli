@@ -359,11 +359,16 @@ static char wsman_parse_options(int argc, char **argv)
 	retval = u_option_context_parse(opt_ctx, &argc, &argv, &error);
 	u_option_context_free(opt_ctx);
 
-	if (error) {
+	if (retval == 0) {
+          if (error) {
 		if (error->message)
-			printf("%s\n", error->message);
+			fprintf(stderr, "%s\n", error->message);
 		u_error_free(error);
-		return FALSE;
+          }
+          else {
+		fprintf(stderr, "Can't parse context information\n");
+          }
+          return FALSE;
 	}
 
 	if (my_version) {
