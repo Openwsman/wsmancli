@@ -247,13 +247,10 @@ static char wsman_parse_options(int argc, char **argv)
 	};
 
 	u_option_group_t *event_group;
-	u_option_group_t *req_flag_group;
 
 	u_option_context_t *opt_ctx;
 	opt_ctx = u_option_context_new("<action> <Resource Uri>");
 	event_group = u_option_group_new("event", "Event subscription", "Subscription Options");
-	req_flag_group =
-	    u_option_group_new("flags", "Flags", "Request Flags");
 
 	u_option_group_add_entries(event_group, event_options);
 
@@ -264,11 +261,16 @@ static char wsman_parse_options(int argc, char **argv)
 	retval = u_option_context_parse(opt_ctx, &argc, &argv, &error);
 	u_option_context_free(opt_ctx);
 
-	if (error) {
+	if (retval == 0) {
+          if (error) {
 		if (error->message)
 			printf("%s\n", error->message);
 		u_error_free(error);
-		return FALSE;
+          }
+          else {
+		fprintf(stderr, "Can't parse context information\n");
+          }
+          return FALSE;
 	}
 
 	if (argc > 2) {
@@ -408,7 +410,6 @@ int main(int argc, char **argv)
 	WsXmlDocH rqstDoc;
 	client_opt_t *options;
 	char *resource_uri_with_selectors;
-	char *event_mode, *delivery_uri;
 	char *resource_uri = NULL;
 	char subscontext[512];
 	filter_t *filter = NULL;
@@ -504,8 +505,6 @@ int main(int argc, char **argv)
 		}
 		break;
 	case WSMAN_ACTION_SUBSCRIBE:
-		event_mode = event_delivery_mode;
-		delivery_uri = event_delivery_uri;
 		if(event_sendbookmark)
 			wsmc_set_action_option(options, FLAG_EVENT_SENDBOOKMARK);
 		if(event_delivery_mode)
