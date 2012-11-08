@@ -240,7 +240,7 @@ static char wsman_parse_options(int argc, char **argv)
 		{"dialect", 'D', U_OPTION_ARG_STRING, &wsm_dialect,
 			"Filter Dialect", "<dialect>"},
 		{"operation-timeout", 't', U_OPTION_ARG_INT, &operation_timeout,
-			"Operation timeout in seconds", "<time in sec>"},
+			"Operation timeout in milliseconds", "<time in msec>"},
 		{"max-envelope-size", 'e', U_OPTION_ARG_INT,
 			&max_envelope_size,
 			"maximal envelope size", "<size>"},
