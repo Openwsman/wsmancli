@@ -628,7 +628,6 @@ int main(int argc, char **argv)
 	WsXmlDocH resource = NULL;
 	char *enumeration_mode, *binding_enumeration_mode,
 		 *resource_uri_with_selectors;
-	char *event_mode, *delivery_uri;
 	char *resource_uri = NULL;
 	char subscontext[512];
 	filter_t *filter = NULL;
@@ -967,8 +966,6 @@ int main(int argc, char **argv)
 		u_free(enumContext);
 		break;
 	case WSMAN_ACTION_SUBSCRIBE:
-		event_mode = event_delivery_mode;
-		delivery_uri = event_delivery_uri;
 		if(event_sendbookmark)
 			wsmc_set_action_option(options, FLAG_EVENT_SENDBOOKMARK);
 		if(event_delivery_mode)
