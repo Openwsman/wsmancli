@@ -1,5 +1,8 @@
-Version 2.3
+Version 2.3.0
   - don't crash on filter parse error (Zoltan Micskei)
+  - remove -Q (don't send request) option
+  - complain about bad filter expression
+  - fix autotools build for MacOS (Dan Villiom Podlaski Christiansen)
 
 Version 2.2.7.1
   - adapt to reduced libu exposure in openwsman
