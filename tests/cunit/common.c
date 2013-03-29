@@ -39,8 +39,8 @@ int init_test(void) {
 
 
 int clean_test(void) {
-  wsmc_release(cl);
   wsmc_transport_fini(cl);
+  wsmc_release(cl);
   return 0;
 }
 
