@@ -1030,6 +1030,7 @@ int main(int argc, char **argv)
 			fprintf(stderr, "%s\n",
 					wsmc_get_fault_string(cl));
 		}
+                retVal = 1;
 	}
 	wsmc_options_destroy(options);
 	filter_destroy(filter);
