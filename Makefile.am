@@ -1,4 +1,4 @@
-SUBDIRS = src
+SUBDIRS = src man
 AUTOMAKE_OPTIONS = no-dist-gzip dist-bzip2
 
 if BUILD_EXAMPLES

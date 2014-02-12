@@ -58,5 +58,6 @@ AC_OUTPUT([
         tests/Makefile
         tests/interop/Makefile
         tests/cunit/Makefile
+        man/Makefile
 ])
 
