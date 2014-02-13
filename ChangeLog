@@ -1,5 +1,6 @@
 Version 2.3.1
   - exit non-zero code if connection fails
+  - man pages (Kent Baxley)
 
 Version 2.3.0
   - don't crash on filter parse error (Zoltan Micskei)
