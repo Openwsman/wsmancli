@@ -1,12 +1,26 @@
 #
-# spec file for package wsmancli (Version @PACKAGE_VERSION@)
+# spec file for package wsmancli
 #
+# Copyright (c) 2014 SUSE LINUX Products GmbH, Nuernberg, Germany.
+#
+# All modifications and additions to the file contributed by third parties
+# remain the property of their copyright owners, unless otherwise agreed
+# upon. The license for this file, and modifications and additions to the
+# file, is the same license as for the pristine package itself (unless the
+# license for the pristine package is not an Open Source License, in which
+# case the license is the MIT License). An "Open Source License" is a
+# license that conforms to the Open Source Definition (Version 1.9)
+# published by the Open Source Initiative.
 
-# norootforbuild
+# Please submit bugfixes or comments via http://bugs.opensuse.org/
+#
 
 
 Name:           wsmancli
-BuildRequires:  gcc-c++ libwsman-devel >= 2.2.7 libwsman_clientpp-devel >= 2.2.7 pkgconfig
+BuildRequires:  gcc-c++
+BuildRequires:  libwsman-devel >= 2.2.7
+BuildRequires:  libwsman_clientpp-devel >= 2.2.7
+BuildRequires:  pkgconfig
 %if 0%{?suse_version} > 1010
 BuildRequires:  libcurl-devel
 %else
@@ -16,22 +30,18 @@ BuildRequires:  curl-devel
 Version:        @PACKAGE_VERSION@
 Release:        11
 Url:            http://www.openwsman.org/
-License:        BSD3c
+Summary:        Command line client utilities for WS-Management
+License:        BSD-3-Clause
 Group:          System/Management
-Summary:        Opensource Implementation of WS-Management - Command line utility
 Source:         %{name}-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
 %description
-Part of Openwsman, an Opensource Implementation of WS-Management
+This package provides 'wsman', a CLI utility for resource management
+over the WS-Management protocol.
 
-
-
-Authors:
---------
-    Anas Nashif <anas.nashif@intel.com>
-    Vadim Revyakin <vadim.revyakin@intel.com>
-    Denis Sadykov <denis.sadykov@intel.com>
+Also included is 'wseventmgr', a CLI utility for event management over
+the WS-Management protocol.
 
 %prep
 %setup -q -n %{name}-%{version}
@@ -50,5 +60,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %{_bindir}/wsman
 %{_bindir}/wseventmgr
+%{_mandir}/man1/wsman*
+%{_mandir}/man1/wseventmgr*
 
 %changelog
