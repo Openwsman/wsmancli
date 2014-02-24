@@ -633,6 +633,10 @@ int main(int argc, char **argv)
 	filter_t *filter = NULL;
 
 
+	if (!wsman_parse_options(argc, argv)) {
+		exit(EXIT_FAILURE);
+	}
+
 	filename = (char *) config_file;
 
 	if (filename) {
@@ -645,9 +649,6 @@ int main(int argc, char **argv)
 			fprintf(stderr, "Configuration file not found\n");
 			exit(EXIT_FAILURE);
 		}
-	}
-	if (!wsman_parse_options(argc, argv)) {
-		exit(EXIT_FAILURE);
 	}
 	initialize_logging();
 	//      wsmc_transport_init(NULL);
