@@ -632,6 +632,14 @@ int main(int argc, char **argv)
 	char subscontext[512];
 	filter_t *filter = NULL;
 
+        /* read credentials from environment */
+        username = getenv("WSMAN_USER");
+        password = getenv("WSMAN_PASS");
+        event_username = getenv("WSMAN_EVENT_USER");
+        event_password = getenv("WSMAN_EVENT_PASS");
+
+        /* parse command line options
+           might overwrite environment credentials */
 
 	if (!wsman_parse_options(argc, argv)) {
 		exit(EXIT_FAILURE);
