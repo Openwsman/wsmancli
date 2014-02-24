@@ -51,6 +51,8 @@ SSL Key.
 .TP
 \fB\-u\fR, \fB\-\-username=\fR<username>
 User name
+Can also be passed by setting the WSMAN_USER environment variable. The
+command line option takes precedence.
 .TP
 \fB\-g\fR, \fB\-\-path=\fR<path>
 Service Path (default: 'wsman')
@@ -60,6 +62,8 @@ File with resource for Create and Put operations in XML, can be a SOAP envelope
 .TP
 \fB\-p\fR, \fB\-\-password=\fR<password>
 User Password
+Can also be passed by setting the WSMAN_PASS environment variable. The
+command line option takes precedence.
 .TP
 \fB\-h\fR, \fB\-\-hostname=\fR<hostname>
 Host name
