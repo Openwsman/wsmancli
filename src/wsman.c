@@ -76,6 +76,7 @@ static char *proxy = NULL;
 static char *proxy_upwd = NULL;
 
 
+static long int non_interactive = 0;
 static long int debug_level = -1;
 static char *encoding = NULL;
 static char *test_case = NULL;
@@ -181,6 +182,8 @@ static char wsman_parse_options(int argc, char **argv)
 	char my_version = 0;
 
 	u_option_entry_t options[] = {
+		{"non-interactive", 0, U_OPTION_ARG_NONE, &non_interactive,
+			"Non interactive mode, don't ask for credentials", NULL},
 		{"version", 'q', U_OPTION_ARG_NONE, &my_version,
 			"Display application version", NULL},
 		{"debug", 'd', U_OPTION_ARG_INT, &debug_level,
@@ -675,8 +678,9 @@ int main(int argc, char **argv)
 				password);
 	}
 
-	wsmc_transport_set_auth_request_func(cl ,  &request_usr_pwd );
-
+        if (non_interactive == 0) {
+          wsmc_transport_set_auth_request_func(cl ,  &request_usr_pwd );
+        }
 
 	if (cl == NULL) {
 		error("Null Client");

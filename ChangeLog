@@ -4,6 +4,7 @@ Version 2.3.1
   - read credentials from environment
     wsman: WSMAN_USER, WSMAN_PASS, WSMAN_EVENT_USER, WSMAN_EVENT_PASS
     wseventmgr: WSEVENTMGR_USER, WSEVENTMGR_PASS, WSEVENTMGR_EVENT_USER, WSEVENTMGR_EVENT_PASS
+  - add --non-interactive cli parameter to prevent asking for credentials
 
 Version 2.3.0
   - don't crash on filter parse error (Zoltan Micskei)
