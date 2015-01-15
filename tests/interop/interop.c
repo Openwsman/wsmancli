@@ -30,12 +30,7 @@ typedef enum {
 
 static void set_props(client_opt_t *op, char *k, char *v)
 {
-	op->properties = hash_create(HASHCOUNT_T_MAX, 0, 0);
-
-	if ( !hash_alloc_insert(op->properties, k, v)) {
-		fprintf(stderr, "hash_alloc_insert failed");
-	}
-	//op->properties = h;
+  wsmc_add_property(op, k, v);
 }
 
 static void
