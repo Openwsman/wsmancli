@@ -512,25 +512,18 @@ request_usr_pwd( WsManClient *client, wsman_auth_type_t auth,
 
 
 
-static hash_t *wsman_options_get_properties(void)
+static void
+wsman_options_set_properties(client_opt_t *options)
 {
 	int c = 0;
-	hash_t *h = hash_create(HASHCOUNT_T_MAX, 0, 0);
 
 	while (properties != NULL && properties[c] != NULL) {
 		char *cc[3] = { NULL, NULL, NULL };
 		u_tokenize1(cc, 2, properties[c], '=');
-		if (!hash_lookup(h, cc[0])) {
-			if (!hash_alloc_insert(h, cc[0], cc[1])) {
-				debug("hash_alloc_insert failed");
-			}
-		} else {
-			warn("duplicate not added to hash");
-		}
-
+                wsmc_add_property(options, cc[0], cc[1]);
 		c++;
 	}
-	return h;
+	return;
 }
 
 
@@ -745,7 +738,7 @@ int main(int argc, char **argv)
 		options->fragment = fragment;
 	}
 
-	options->properties = wsman_options_get_properties();
+	wsman_options_set_properties(options);
 	options->cim_ns = cim_namespace;
 	if (cim_extensions) {
 		wsmc_set_action_option(options, FLAG_CIM_EXTENSIONS);
