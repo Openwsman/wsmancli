@@ -272,6 +272,9 @@ static char wsman_parse_options(int argc, char **argv)
           }
           return FALSE;
 	}
+        else if (retval == 2) { /* found help */
+          exit(0);
+        }
 
 	if (argc > 2) {
 		_action = argv[1];

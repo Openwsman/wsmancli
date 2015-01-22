@@ -373,6 +373,9 @@ static char wsman_parse_options(int argc, char **argv)
           }
           return FALSE;
 	}
+        else if (retval == 2) { /* help */
+          exit(0);
+        }
 
 	if (my_version) {
 		fprintf(stdout, PACKAGE_STRING " (" PACKAGE_BUILDTS ")\n\n");
