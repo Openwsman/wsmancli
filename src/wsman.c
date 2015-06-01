@@ -880,7 +880,7 @@ int main(int argc, char **argv)
 				hnode_t *hn;
 				hash_t *selfilter = NULL;
 				hash_t *selectors_new = NULL;
-				selector_entry *entry;
+                                key_value_t *entry;
 				selectors_new = hash_create2(HASHCOUNT_T_MAX, 0, 0);
 				selfilter = u_parse_query(wsm_filter);
                                 if (!selfilter) {
@@ -889,9 +889,9 @@ int main(int argc, char **argv)
                                 }
 				hash_scan_begin(&hs, selfilter);
 				while ((hn = hash_scan_next(&hs))) {
-					entry = u_malloc(sizeof(selector_entry));
+                                        entry = u_malloc(sizeof(key_value_t));
 					entry->type = 0;
-					entry->entry.text = (char *)hnode_get(hn);
+					entry->v.text = (char *)hnode_get(hn);
 					hash_alloc_insert(selectors_new, hnode_getkey(hn), entry);
 				}
 
