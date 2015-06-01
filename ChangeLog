@@ -1,3 +1,14 @@
+Version 2.5
+  - 'wsman -h' exits with zero
+  - properties and selectors are kept sorted
+    (requires Openwsman 2.5 now)
+
+Version 2.4
+  - skipped -
+
+Version 2.3.2
+  - keep properties (invoke call parameters) sorted
+
 Version 2.3.1
   - exit with non-zero code if connection fails
   - man pages (Kent Baxley)

@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(wsmancli, 2.3.2)
+AC_INIT(wsmancli, 2.5.0)
 AC_CONFIG_SRCDIR(wsmancli.spec.in)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 AM_CONFIG_HEADER(config.h)
@@ -18,7 +18,7 @@ AC_SUBST(WSMAN_PKG)
 PACKAGE_BUILDTS=`date +%Y%m%d%H%M`
 AC_SUBST(PACKAGE_BUILDTS)
 
-PKG_CHECK_MODULES(OPENWSMAN, [openwsman >= 2.2.7])
+PKG_CHECK_MODULES(OPENWSMAN, [openwsman >= 2.5])
 have_cunit=no
 AC_CHECK_HEADERS([CUnit/Basic.h], have_cunit="yes" )
 AM_CONDITIONAL(BUILD_CUNIT_TESTS, test "$have_cunit" == "yes")
