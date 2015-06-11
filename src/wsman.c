@@ -103,6 +103,7 @@ static char *event_thumbprint = NULL;
 
 static char *cim_namespace = NULL;
 static char *fragment = NULL;
+static char *locale = NULL;
 static char *wsm_filter = NULL;
 static char *wsm_dialect = NULL;
 static char *input = NULL;
@@ -249,6 +250,8 @@ static char wsman_parse_options(int argc, char **argv)
 			"maximal envelope size", "<size>"},
 		{"fragment", 'F', U_OPTION_ARG_STRING, &fragment,
 			"Fragment (Supported Dialects: XPATH)", "<fragment>"},
+		{"locale", 'L', U_OPTION_ARG_STRING, &locale,
+			"Locale for this request", "<RFC 5646 language code>"},
 		{NULL}
 	};
 
@@ -739,6 +742,9 @@ int main(int argc, char **argv)
 	}
 	if (fragment) {
 		options->fragment = fragment;
+	}
+	if (locale) {
+		options->locale = locale;
 	}
 
 	wsman_options_set_properties(options);
