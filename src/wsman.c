@@ -117,6 +117,7 @@ static char *output_file = NULL;
 static char *resource_uri_opt = NULL;
 static char *invoke_method = NULL;
 static char **properties = NULL;
+static char **option_set_values = NULL;
 
 struct _WsActions {
 	char *action;
@@ -222,6 +223,9 @@ static char wsman_parse_options(int argc, char **argv)
 			"Method (Works only with 'invoke')", "<custom method>"},
 		{"prop", 'k', U_OPTION_ARG_STRING_ARRAY, &properties,
 			"Properties with key value pairs (For 'put', 'invoke' and 'create')",
+			"<key=val>"},
+		{"option", NULL, U_OPTION_ARG_STRING_ARRAY, &option_set_values,
+			"Option with key value pair for OptionSet (For 'put', 'invoke' and 'create')",
 			"<key=val>"},
 		{"config-file", 'C', U_OPTION_ARG_STRING, &config_file,
 			"Alternate configuration file", "<file>"},
@@ -533,6 +537,21 @@ wsman_options_set_properties(client_opt_t *options)
 }
 
 
+static void
+wsman_options_set_option_set_values(client_opt_t *options)
+{
+	int c = 0;
+
+	while (option_set_values != NULL && option_set_values[c] != NULL) {
+		char *cc[3] = { NULL, NULL, NULL };
+		u_tokenize1(cc, 2, option_set_values[c], '=');
+                wsmc_add_option(options, cc[0], cc[1]);
+		c++;
+	}
+	return;
+}
+
+
 static int wsman_options_get_delivery_mode(void)
 {
 	int mode = 0;
@@ -748,6 +767,8 @@ int main(int argc, char **argv)
 	}
 
 	wsman_options_set_properties(options);
+	wsman_options_set_option_set_values(options);
+
 	options->cim_ns = cim_namespace;
 	if (cim_extensions) {
 		wsmc_set_action_option(options, FLAG_CIM_EXTENSIONS);
