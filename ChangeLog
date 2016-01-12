@@ -1,3 +1,6 @@
+Version 2.6.1
+  - added commandline '--option key=value' to support OptionSet feature (kolbma)
+
 Version 2.6.0
   - add '-L <locale>' flag to specify request-locale
 
