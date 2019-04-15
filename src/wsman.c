@@ -224,7 +224,7 @@ static char wsman_parse_options(int argc, char **argv)
 		{"prop", 'k', U_OPTION_ARG_STRING_ARRAY, &properties,
 			"Properties with key value pairs (For 'put', 'invoke' and 'create')",
 			"<key=val>"},
-		{"option", NULL, U_OPTION_ARG_STRING_ARRAY, &option_set_values,
+		{"option", (char)0, U_OPTION_ARG_STRING_ARRAY, &option_set_values,
 			"Option with key value pair for OptionSet (For 'put', 'invoke' and 'create')",
 			"<key=val>"},
 		{"config-file", 'C', U_OPTION_ARG_STRING, &config_file,
