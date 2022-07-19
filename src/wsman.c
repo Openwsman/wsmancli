@@ -63,7 +63,11 @@ static char *cert = NULL;
 static char *sslkey = NULL;
 static char *endpoint = NULL;
 static char *username = NULL;
+static char *username_given = NULL; /* copy of either the username from env or cmdline*/
+static char *username_prev = NULL; /* input username to request_usr_pwd() when called last time */
 static char *password = NULL;
+static char *password_given = NULL; /* copy of either the password from env or cmdline */
+static char *password_prev = NULL; /* input password to request_usr_pwd() when called last time */
 static char *server = "localhost";
 static char *agent = NULL;
 static char *url_path = NULL;
@@ -499,28 +503,79 @@ request_usr_pwd( WsManClient *client, wsman_auth_type_t auth,
 	char user[21];
 	char *p;
 
-	fprintf(stdout,"Authentication failed, please retry\n");
-	/*
-	   fprintf(stdout, "%s authentication is used\n",
-	   wsmc_transport_get_auth_name( auth));
-	   */
-	printf("User name: ");
-	fflush(stdout);
-	if ( (p = fgets(user, 20, stdin) ) != NULL )
-	{
+    /*
+	 * fprintf(stdout,"Authentication failed, please retry\n");
+     *
+	 * this message shall not be printed by this function as it cannot decide on the
+	 * reason it was called for. It does not control the authentication process.
+	 * wsmc_handler is better suited for such a decision making.
+	 */
 
-		if (strchr(user, '\n'))
-			(*(strchr(user, '\n'))) = '\0';
-		*username = u_strdup_printf ("%s", user);
-	} else {
-		*username = NULL;
+    if (username_given) {
+		if (password_given) {
+			/* Initially provided combination of password and username is not valid.
+			 * Request user to type both. Here I assume, that wsmc_handler called back to
+			 * this function after trying a first authentication using these credentials.
+			 */
+		} else {
+            /* Initially no password was provided => no authentication tried during first
+			 * iteration of while loop in wsmc_handler. Check previously typed credentials
+			 */
+			if (username_prev) {
+			   /* This is a second call of this function, assuming only wsmc_handler is using it
+			    * as a callback function. Therefore, there must have been a previous attempt to
+				* authenticate, but this previous combination of username and password did not
+				* lead to a successful authentication. Request new credentials, username_prev will
+				* be set each time after user has provided a username.
+				*/
+			} else {
+				/* First time wsmc_handler calls back to this function. No password given on the
+				 * command line or via the environment variable. Therefore wsmc_handler cannot
+				 * have tried http authentication. A username was given on the command line or
+				 * via an environment variable. And the user wants us to try this name at least
+				 * at first. So, let's do him a favour and use it. When we are called back again,
+				 * we will ask the user to provide a new name or the same, but a different password.
+				 */
+				*username = u_strdup(username_given);
+			}
+		}
 	}
 
+    if (*username == NULL) {
+		printf("User name: ");
+		fflush(stdout);
+		if ( (p = fgets(user, 20, stdin) ) != NULL )
+		{
+			if (strchr(user, '\n'))
+				(*(strchr(user, '\n'))) = '\0';
+			*username = u_strdup_printf ("%s", user);
+		} else {
+			*username = NULL;
+		}
+	}
+
+	/* after successfull receipt of a new username, store a copy at username_prev */
+	if (*username) {
+		if ( username_prev ) {
+			u_free(username_prev);
+			username_prev = NULL;
+	}
+		username_prev = u_strdup(*username);
+	}
+
+    /* but always ask for the password !? */
 	pw = (char *)getpass("Password: ");
 	*password = u_strdup_printf ("%s", pw);
+
+    /* make backup, *password will become free'd when next try of http-auth fails */
+    if (*password) {
+		if (password_prev) {
+			u_free(password_prev);
+			password_prev = NULL;
+		}
+		password_prev = u_strdup(*password);
+	}
 }
-
-
 
 static void
 wsman_options_set_properties(client_opt_t *options)
@@ -664,6 +719,14 @@ int main(int argc, char **argv)
 
 	if (!wsman_parse_options(argc, argv)) {
 		exit(EXIT_FAILURE);
+	}
+
+    /* save copies of username or password when given on the command line or via environment variables */
+	if ( username != NULL ) {
+		username_given = u_strdup(username);
+	}
+	if ( password != NULL ) {
+		password_given = u_strdup(password);
 	}
 
 	filename = (char *) config_file;
