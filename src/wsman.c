@@ -40,6 +40,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <termios.h>
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
@@ -56,6 +57,8 @@
 #if __linux__
 extern char *getpass (const char *__prompt);
 #endif
+
+#define BASE_LEN 21
 
 static long int server_port = 0;
 static char *cainfo = NULL;
@@ -502,6 +505,10 @@ request_usr_pwd( WsManClient *client, wsman_auth_type_t auth,
 	char *pw;
 	char user[21];
 	char *p;
+	char c;
+	int len = BASE_LEN;
+	int pos = 0;
+	struct termios term;
 
     /*
 	 * fprintf(stdout,"Authentication failed, please retry\n");
@@ -564,8 +571,28 @@ request_usr_pwd( WsManClient *client, wsman_auth_type_t auth,
 	}
 
     /* but always ask for the password !? */
-	pw = (char *)getpass("Password: ");
+	/* set no echo */
+	tcgetattr(1, &term);
+	term.c_lflag &= ~ECHO;
+	tcsetattr(1, TCSANOW, &term);
+	/* get pass */
+	pw = (char*) u_malloc(sizeof(char) * len);
+	pw[0] = '\0';
+	printf("Password: ");
+	fflush(stdout);
+	while ((c = fgetc(stdin)) != '\n') {
+		pw[pos++] = (char) c;
+		if (pos >= len) {
+			len += BASE_LEN;
+			pw = realloc(pw, len);
+		}
+	}
+	pw[pos] = '\0';
 	*password = u_strdup_printf ("%s", pw);
+	u_free(pw);
+	/* set echo back again */
+	term.c_lflag |= ECHO;
+	tcsetattr(1, TCSANOW, &term);
 
     /* make backup, *password will become free'd when next try of http-auth fails */
     if (*password) {
