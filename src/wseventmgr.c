@@ -53,6 +53,8 @@
 #include <wsman-debug.h>
 #include <u/libu.h>
 
+int facility = LOG_DAEMON;
+
 #if __linux__
 extern char *getpass (const char *__prompt);
 #endif

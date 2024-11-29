@@ -2,6 +2,8 @@
 #include <cpp/OpenWsmanClient.h>
 #include <u/libu.h>
 
+int facility = LOG_DAEMON;
+
 using std::cout;
 
 using namespace WsmanClientNamespace;

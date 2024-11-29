@@ -42,6 +42,8 @@
 
 #include "u/libu.h"
 
+int facility = LOG_DAEMON;
+
 #include "wsman-client-api.h"
 #include "wsman-client-transport.h"
 #include "wsman-xml-serializer.h"
