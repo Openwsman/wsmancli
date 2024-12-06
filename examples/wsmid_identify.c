@@ -42,6 +42,8 @@
 #include "wsman-api.h"
 #include "u/libu.h"
 
+int facility = LOG_DAEMON;
+
 struct __wsmid_identify
 {
 	XML_TYPE_STR ProtocolVersion;
@@ -99,6 +101,10 @@ int main(int argc, char** argv)
 	u_option_context_set_ignore_unknown_options(opt_ctx, FALSE);
 	u_option_context_add_main_entries(opt_ctx, opt, "wsmid_identify");
 	retval = u_option_context_parse(opt_ctx, &argc, &argv, &error);
+	if (retval < 0) {
+		fprintf(stderr, "Failed to parse arguments\n");
+		return 1;
+	}
 
 	u_option_context_free(opt_ctx);
 

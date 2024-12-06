@@ -1,3 +1,7 @@
+Version 2.8.0
+  - fix compatibility with Openwsman 2.8.0
+  - fix compiler warnings
+
 Version 2.6.1
   - added commandline '--option key=value' to support OptionSet feature (kolbma)
 

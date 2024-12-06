@@ -18,8 +18,8 @@
 
 Name:           wsmancli
 BuildRequires:  gcc-c++
-BuildRequires:  libwsman-devel >= 2.4.12
-BuildRequires:  libwsman_clientpp-devel >= 2.4.12
+BuildRequires:  libwsman-devel >= 2.8.0
+BuildRequires:  libwsman_clientpp-devel >= 2.8.0
 BuildRequires:  pkgconfig
 %if 0%{?suse_version} > 1010
 BuildRequires:  libcurl-devel
