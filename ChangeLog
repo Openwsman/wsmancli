@@ -1,3 +1,6 @@
+Version 2.8.1
+  - add '--https' option to enforce https scheme (issue #16)
+
 Version 2.8.0
   - fix compatibility with Openwsman 2.8.0
   - fix compiler warnings

@@ -86,6 +86,7 @@ static char *proxy_upwd = NULL;
 
 
 static long int non_interactive = 0;
+static long int use_https = 0;
 static long int debug_level = -1;
 static char *encoding = NULL;
 static char *test_case = NULL;
@@ -195,6 +196,8 @@ static char wsman_parse_options(int argc, char **argv)
 	u_option_entry_t options[] = {
 		{"non-interactive", 0, U_OPTION_ARG_NONE, &non_interactive,
 			"Non interactive mode, don't ask for credentials", NULL},
+		{"https", 0, U_OPTION_ARG_NONE, &use_https,
+			"Enforce https scheme for transport", NULL},
 		{"version", 'q', U_OPTION_ARG_NONE, &my_version,
 			"Display application version", NULL},
 		{"debug", 'd', U_OPTION_ARG_INT, &debug_level,
@@ -783,7 +786,7 @@ int main(int argc, char **argv)
 		cl = wsmc_create(server,
 				server_port,
 				url_path,
-				cainfo ? "https" : "http",
+				(cainfo || use_https) ? "https" : "http",
 				username,
 				password);
 	}
